@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-category="ad">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advertisement - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* CRITICAL: Fixed 461×600px container */
+        .page-wrapper {
+            width: 461px;
+            height: 600px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ad-container {
+            text-align: center;
+            padding: 30px;
+            width: 100%;
+        }
+
+        .ad-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            margin-bottom: 15px;
+        }
+
+        .ad-icon {
+            font-size: 80px;
+            margin-bottom: 25px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .ad-headline {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .ad-subheadline {
+            font-size: 16px;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+
+        .ad-cta {
+            background: white;
+            color: #ff6b6b;
+            padding: 14px 36px;
+            border-radius: 28px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .ad-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .ad-features {
+            margin-top: 25px;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .ad-features div {
+            margin: 6px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="ad-container">
+            <div class="ad-label">Advertisement</div>
+
+            <div class="ad-icon">🍕</div>
+
+            <h1 class="ad-headline">Pizza Paradise!</h1>
+            <p class="ad-subheadline">Get 50% OFF your first order</p>
+
+            <button class="ad-cta">
+                Order Now! 🚀
+            </button>
+
+            <div class="ad-features">
+                <div>✓ Free Delivery in 30 mins</div>
+                <div>✓ Fresh ingredients daily</div>
+                <div>✓ Student discounts available</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

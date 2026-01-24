@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers & Jobs - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: #3498db;
+            border-radius: 3px;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 35px 25px;
+        }
+
+        .header-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .header-title {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            opacity: 0.95;
+        }
+
+        .content-section {
+            padding: 25px;
+        }
+
+        .featured-badge {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .job-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s;
+        }
+
+        .job-card:hover {
+            background: #e8f4f8;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .job-company {
+            font-size: 12px;
+            color: #3498db;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .job-type {
+            background: #3498db;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .job-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1e2b42;
+            margin-bottom: 12px;
+        }
+
+        .job-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .job-detail {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .job-description {
+            font-size: 13px;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .job-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .job-deadline {
+            font-size: 11px;
+            color: #e74c3c;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .apply-button {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .apply-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .tip-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-text {
+            font-size: 13px;
+            line-height: 1.7;
+            opacity: 0.95;
+        }
+
+        .highlight {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="header-section">
+            <div class="header-icon">💼</div>
+            <h1 class="header-title">Careers & Jobs</h1>
+            <p class="header-subtitle">Opportunities for Africa's talent</p>
+        </div>
+
+        <div class="content-section">
+            <div class="featured-badge">
+                <i class="fas fa-star"></i>
+                <span>FEATURED OPPORTUNITIES</span>
+            </div>
+
+            <div class="job-card">
+                <div class="job-header">
+                    <div class="job-company">Safaricom PLC</div>
+                    <div class="job-type">Full-Time</div>
+                </div>
+                <div class="job-title">Software Engineer - Mobile Apps</div>
+                <div class="job-details">
+                    <div class="job-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Nairobi, Kenya</span>
+                    </div>
+                    <div class="job-detail">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Bachelor's Degree</span>
+                    </div>
+                    <div class="job-detail">
+                        <i class="fas fa-clock"></i>
+                        <span>2+ Years Exp</span>
+                    </div>
+                </div>
+                <div class="job-description">
+                    Join East Africa's leading telecom to build innovative mobile solutions for millions of users. Work with React Native, Flutter, and cutting-edge fintech APIs. Competitive salary + stock options.
+                </div>
+                <div class="job-footer">
+                    <div class="job-deadline">
+                        <i class="fas fa-calendar-times"></i>
+                        <span>Deadline: Nov 15, 2025</span>
+                    </div>
+                    <button class="apply-button">Apply Now →</button>
+                </div>
+            </div>
+
+            <div class="job-card">
+                <div class="job-header">
+                    <div class="job-company">Flutterwave</div>
+                    <div class="job-type">Remote</div>
+                </div>
+                <div class="job-title">Product Manager - Payments</div>
+                <div class="job-details">
+                    <div class="job-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Remote (Africa)</span>
+                    </div>
+                    <div class="job-detail">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Bachelor's/Master's</span>
+                    </div>
+                    <div class="job-detail">
+                        <i class="fas fa-clock"></i>
+                        <span>3+ Years Exp</span>
+                    </div>
+                </div>
+                <div class="job-description">
+                    Shape the future of African payments at a unicorn startup. Lead product strategy for cross-border transactions serving 290M+ people. Equity + global impact.
+                </div>
+                <div class="job-footer">
+                    <div class="job-deadline">
+                        <i class="fas fa-calendar-times"></i>
+                        <span>Deadline: Nov 20, 2025</span>
+                    </div>
+                    <button class="apply-button">Apply Now →</button>
+                </div>
+            </div>
+
+            <div class="job-card">
+                <div class="job-header">
+                    <div class="job-company">Uganda Revenue Authority</div>
+                    <div class="job-type">Contract</div>
+                </div>
+                <div class="job-title">Tax Consultant (Graduate Program)</div>
+                <div class="job-details">
+                    <div class="job-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Kampala, Uganda</span>
+                    </div>
+                    <div class="job-detail">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Fresh Graduates</span>
+                    </div>
+                    <div class="job-detail">
+                        <i class="fas fa-clock"></i>
+                        <span>Entry Level</span>
+                    </div>
+                </div>
+                <div class="job-description">
+                    12-month graduate program in taxation, policy, and public finance. Mentorship from senior tax experts. Path to permanent employment. UGX 2.5M/month stipend.
+                </div>
+                <div class="job-footer">
+                    <div class="job-deadline">
+                        <i class="fas fa-calendar-times"></i>
+                        <span>Deadline: Nov 10, 2025</span>
+                    </div>
+                    <button class="apply-button">Apply Now →</button>
+                </div>
+            </div>
+
+            <div class="job-card">
+                <div class="job-header">
+                    <div class="job-company">Andela</div>
+                    <div class="job-type">Remote</div>
+                </div>
+                <div class="job-title">Junior Data Analyst</div>
+                <div class="job-details">
+                    <div class="job-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Remote (East Africa)</span>
+                    </div>
+                    <div class="job-detail">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Bachelor's Preferred</span>
+                    </div>
+                    <div class="job-detail">
+                        <i class="fas fa-clock"></i>
+                        <span>0-1 Year Exp</span>
+                    </div>
+                </div>
+                <div class="job-description">
+                    Learn from global tech companies while building dashboards, analyzing trends, and driving insights. Python, SQL, Tableau. Paid training + mentorship program.
+                </div>
+                <div class="job-footer">
+                    <div class="job-deadline">
+                        <i class="fas fa-calendar-times"></i>
+                        <span>Deadline: Nov 25, 2025</span>
+                    </div>
+                    <button class="apply-button">Apply Now →</button>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <div class="tip-title">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Pro Tip: Stand Out</span>
+                </div>
+                <div class="tip-text">
+                    Don't just list skills on your CV—<span class="highlight">prove them</span>. Built an app? Share the GitHub link. Led a project? Quantify the impact ("increased sales by 30%"). Employers hire problem-solvers, not list-makers.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

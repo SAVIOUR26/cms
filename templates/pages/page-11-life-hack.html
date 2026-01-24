@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Hack - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #48dbfb 100%);
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.5);
+            border-radius: 3px;
+        }
+
+        .header-section {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 35px 30px;
+            text-align: center;
+        }
+
+        .header-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .header-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            color: white;
+            opacity: 0.95;
+        }
+
+        .content-section {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .hack-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .hack-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .hack-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1e2b42;
+            margin-bottom: 15px;
+        }
+
+        .hack-subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .hack-text {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .step-list {
+            margin-top: 15px;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #48dbfb, #0abde3);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #555;
+            flex: 1;
+        }
+
+        .step-text strong {
+            color: #1e2b42;
+        }
+
+        .pro-tip {
+            background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%);
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .pro-tip-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e2b42;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pro-tip-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #5f27cd 0%, #341f97 100%);
+            color: white;
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .result-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .result-text {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="header-section">
+            <div class="header-icon">💡</div>
+            <h1 class="header-title">Life Hack of the Week</h1>
+            <p class="header-subtitle">Simple tricks for big wins</p>
+        </div>
+
+        <div class="content-section">
+            <div class="hack-card">
+                <div class="hack-number">⏰</div>
+                <div class="hack-title">The 2-Minute Rule</div>
+                <div class="hack-subtitle">Beat procrastination & boost productivity instantly</div>
+                
+                <div class="hack-text">
+                    Ever notice how the hardest part of any task is just <strong>starting</strong>? Your brain resists big tasks but loves quick wins. Here's the hack that changed everything:
+                </div>
+
+                <div class="step-list">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-text">
+                            <strong>If a task takes less than 2 minutes, do it NOW.</strong> Reply to that email. Make your bed. Send that message. No thinking, just action.
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-text">
+                            <strong>For bigger tasks, commit to just 2 minutes.</strong> Tell yourself: "I'll study for just 2 minutes." Once you start, momentum takes over and you'll likely continue.
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-text">
+                            <strong>Stack your habits.</strong> After a 2-minute task, add another. "After I make my bed, I'll do 2 minutes of stretching." Small wins compound.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pro-tip">
+                    <div class="pro-tip-title">
+                        <i class="fas fa-star"></i>
+                        <span>Pro Tip</span>
+                    </div>
+                    <div class="pro-tip-text">
+                        Set a timer on your phone. When it goes off, ask: "What can I knock out in 2 minutes right now?" You'll be shocked how much gets done in a week.
+                    </div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-icon">🚀</div>
+                    <div class="result-text">
+                        By the end of this week, you'll have completed 50+ small tasks that would've piled up otherwise. That's the power of 2 minutes.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

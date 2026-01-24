@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en" data-category="product">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Ads - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* STANDARD: 461×600px - Scrollable */
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Custom scrollbar */
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: #f05a1a;
+            border-radius: 3px;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #1e2b42 0%, #2a3f5f 100%);
+            color: white;
+            padding: 30px 25px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .category {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            color: #f05a1a;
+        }
+
+        .headline {
+            font-size: 26px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+
+        .subheadline {
+            font-size: 13px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        .content-section {
+            padding: 25px;
+        }
+
+        .pricing-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 18px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card:hover {
+            border-color: #f05a1a;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(240, 90, 26, 0.2);
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, #f05a1a, #ff7a3d);
+        }
+
+        .pricing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .pricing-title {
+            flex: 1;
+        }
+
+        .ad-type {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1e2b42;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ad-type i {
+            color: #f05a1a;
+            font-size: 22px;
+        }
+
+        .ad-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .pricing-amount {
+            text-align: right;
+        }
+
+        .price {
+            font-size: 28px;
+            font-weight: 800;
+            color: #f05a1a;
+            line-height: 1;
+        }
+
+        .price-unit {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 3px;
+        }
+
+        .specs-list {
+            background: rgba(240, 90, 26, 0.05);
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-top: 12px;
+        }
+
+        .specs-list li {
+            font-size: 12px;
+            color: #555;
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .specs-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #f05a1a;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #f05a1a, #ff7a3d);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(240, 90, 26, 0.4);
+        }
+
+        .footer-bar {
+            padding: 18px 25px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="header-section">
+            <div class="category">📺 DISPLAY ADVERTISING</div>
+            <h1 class="headline">Display Ad Placements</h1>
+            <p class="subheadline">Premium visibility for your brand</p>
+        </div>
+
+        <div class="content-section">
+            <div class="pricing-card">
+                <div class="featured-badge">⭐ MOST POPULAR</div>
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Full Page</span>
+                        </div>
+                        <div class="ad-description">Entire page dedicated to your brand</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">200K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <ul class="specs-list">
+                    <li>Dimensions: 540 × 780px</li>
+                    <li>Maximum impact & visibility</li>
+                    <li>Free design support included</li>
+                </ul>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-clone"></i>
+                            <span>Half Page</span>
+                        </div>
+                        <div class="ad-description">Half screen placement</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">120K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <ul class="specs-list">
+                    <li>Dimensions: 540 × 390px</li>
+                    <li>Great visibility, cost-effective</li>
+                    <li>Can pair with content</li>
+                </ul>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-video"></i>
+                            <span>Video Ad (60 sec)</span>
+                        </div>
+                        <div class="ad-description">Auto-play within content</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">120K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <ul class="specs-list">
+                    <li>Up to 1 minute / 60 seconds</li>
+                    <li>Auto-play feature</li>
+                    <li>High engagement rate</li>
+                </ul>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-video"></i>
+                            <span>Video Ad (30 sec)</span>
+                        </div>
+                        <div class="ad-description">Short-form video content</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">60K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <ul class="specs-list">
+                    <li>Up to 30 seconds</li>
+                    <li>Perfect for quick messages</li>
+                    <li>Budget-friendly video option</li>
+                </ul>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-film"></i>
+                            <span>GIF Insert</span>
+                        </div>
+                        <div class="ad-description">Looping graphic / 4 image slider</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">80K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <ul class="specs-list">
+                    <li>Up to 15 seconds loop</li>
+                    <li>Eye-catching animation</li>
+                    <li>Multiple images showcase</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bar">
+            <span><i class="fas fa-newspaper"></i> KandaNews Africa</span>
+            <span>Page 3</span>
+        </div>
+    </div>
+</body>
+
+</html>

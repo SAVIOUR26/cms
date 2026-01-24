@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" data-category="cover">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Card Cover - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* STANDARD: 461×600px - Fixed (No Scroll) */
+        .page-wrapper {
+            width: 461px;
+            height: 600px;
+            background: linear-gradient(135deg, #1e2b42 0%, #2a3f5f 50%, #1e2b42 100%);
+            color: white;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(240, 90, 26, 0.6);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .particle:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            top: 70%;
+            left: 80%;
+            animation-delay: 2s;
+        }
+
+        .particle:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            top: 40%;
+            left: 70%;
+            animation-delay: 4s;
+        }
+
+        .particle:nth-child(4) {
+            width: 70px;
+            height: 70px;
+            top: 80%;
+            left: 20%;
+            animation-delay: 6s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.3;
+            }
+            25% {
+                transform: translate(30px, -30px) scale(1.1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translate(-20px, 20px) scale(0.9);
+                opacity: 0.4;
+            }
+            75% {
+                transform: translate(20px, 30px) scale(1.05);
+                opacity: 0.5;
+            }
+        }
+
+        .cover-container {
+            text-align: center;
+            padding: 40px 30px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .cover-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            animation: float-icon 3s ease-in-out infinite;
+            background: linear-gradient(135deg, #f05a1a, #ff7a3d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes float-icon {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .cover-title {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #ffffff 0%, #f05a1a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cover-subtitle {
+            font-size: 24px;
+            margin-bottom: 25px;
+            opacity: 0.9;
+            font-weight: 600;
+        }
+
+        .cover-tagline {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.85;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .badge-container {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f05a1a, #ff7a3d);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 700;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(240, 90, 26, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .page-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .footer-badge {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(240, 90, 26, 0.3);
+        }
+
+        /* Shine effect */
+        .shine {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg,
+                    transparent 30%,
+                    rgba(255, 255, 255, 0.1) 50%,
+                    transparent 70%);
+            animation: shine 3s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="shine"></div>
+        <div class="particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+
+        <div class="cover-container">
+            <div class="cover-icon">
+                <i class="fas fa-bullhorn"></i>
+            </div>
+            <h1 class="cover-title">Advertising<br>Rate Card</h1>
+            <p class="cover-subtitle">2025 Edition</p>
+            <p class="cover-tagline">Your Brand. Right in Their Pocket.<br>Advertise Smarter, Not Harder</p>
+            
+            <div class="badge-container">
+                <div class="badge">💼 VERIFIED REACH</div>
+                <div class="badge">📱 CLICK-ENABLED</div>
+                <div class="badge">🎯 TARGETED</div>
+            </div>
+        </div>
+
+        <div class="footer-badge">
+            🇺🇬 Uganda Edition • KandaNews Africa
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thirdsan - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: #e91e63;
+            border-radius: 3px;
+        }
+
+        /* Slider Section */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            background: #f5f5f5;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Navigation Arrows */
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(233, 30, 99, 0.8);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+
+        .slider-arrow:hover {
+            background: rgba(233, 30, 99, 1);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .slider-arrow.prev {
+            left: 10px;
+        }
+
+        .slider-arrow.next {
+            right: 10px;
+        }
+
+        /* Slider Dots */
+        .slider-dots {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: #e91e63;
+            width: 24px;
+            border-radius: 5px;
+        }
+
+        /* Content Section */
+        .content-section {
+            padding: 30px 25px;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .brand-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .logo-squares {
+            display: flex;
+            gap: 5px;
+        }
+
+        .logo-square {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .square-pink {
+            background: #e91e63;
+        }
+
+        .square-blue {
+            background: #2196F3;
+        }
+
+        .square-brown {
+            background: #795548;
+        }
+
+        .brand-name {
+            font-size: 28px;
+            font-weight: 800;
+            color: #e91e63;
+            margin-bottom: 8px;
+        }
+
+        .brand-tagline {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 18px;
+            border-radius: 12px;
+            border: 2px solid #e91e63;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.2);
+        }
+
+        .service-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .service-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e2b42;
+            margin-bottom: 5px;
+        }
+
+        .service-desc {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .features-box {
+            background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .features-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .feature-check {
+            width: 20px;
+            height: 20px;
+            background: white;
+            color: #e91e63;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .cta-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1e2b42;
+            margin-bottom: 15px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .contact-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            border: 2px solid #e9ecef;
+        }
+
+        .contact-icon {
+            color: #e91e63;
+            font-size: 16px;
+        }
+
+        .cta-button {
+            width: 100%;
+            background: linear-gradient(135deg, #e91e63, #c2185b);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Image Slider -->
+        <div class="slider-container">
+            <button class="slider-arrow prev" onclick="changeSlide(-1)">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="slider-arrow next" onclick="changeSlide(1)">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            
+            <div class="slider-wrapper" id="sliderWrapper">
+                <div class="slide">
+                    <img src="https://i.ibb.co/Rps6xjm8/POS-System.jpg" alt="POS System">
+                </div>
+                <div class="slide">
+                    <img src="https://i.ibb.co/bRjT5jKV/web-development-services.jpg" alt="Web Development">
+                </div>
+                <div class="slide">
+                    <img src="https://i.ibb.co/BFHpFG1/mobile-app-development-services.jpg" alt="Mobile App Development">
+                </div>
+                <div class="slide">
+                    <img src="https://i.ibb.co/zV3Xpsy5/software-development.jpg" alt="Software Solutions">
+                </div>
+                <div class="slide">
+                    <img src="https://i.ibb.co/QvCyjhSN/Professional-Payment-Integration.png" alt="Payment Integration">
+                </div>
+            </div>
+
+            <div class="slider-dots">
+                <span class="dot active" onclick="goToSlide(0)"></span>
+                <span class="dot" onclick="goToSlide(1)"></span>
+                <span class="dot" onclick="goToSlide(2)"></span>
+                <span class="dot" onclick="goToSlide(3)"></span>
+                <span class="dot" onclick="goToSlide(4)"></span>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content-section">
+            <div class="brand-header">
+                <div class="brand-logo">
+                    <div class="logo-squares">
+                        <div class="logo-square square-pink"></div>
+                        <div class="logo-square square-blue"></div>
+                        <div class="logo-square square-brown"></div>
+                    </div>
+                </div>
+                <h1 class="brand-name">THIRDSAN</h1>
+                <p class="brand-tagline">Digital Solutions for Your Business</p>
+            </div>
+
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">💻</div>
+                    <div class="service-name">POS Systems</div>
+                    <div class="service-desc">Complete business management solution starting at 500K UGX</div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🌐</div>
+                    <div class="service-name">Web Development</div>
+                    <div class="service-desc">Stunning websites from 350,000 UGX</div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">📱</div>
+                    <div class="service-name">Mobile Apps</div>
+                    <div class="service-desc">iOS, Android & Cross-platform solutions</div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">💳</div>
+                    <div class="service-name">Payment Integration</div>
+                    <div class="service-desc">MTN, Airtel Money & Card payments</div>
+                </div>
+            </div>
+
+            <div class="features-box">
+                <div class="features-title">Why Choose Thirdsan?</div>
+                <div class="feature-item">
+                    <div class="feature-check">✓</div>
+                    <span>Custom Software Development</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-check">✓</div>
+                    <span>Cloud Consulting & Integration</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-check">✓</div>
+                    <span>Quality Assurance & Testing</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-check">✓</div>
+                    <span>Ongoing Support & Maintenance</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-check">✓</div>
+                    <span>Affordable Pricing for SMEs</span>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <div class="cta-title">Get Your Digital Solution Today</div>
+                <div class="contact-grid">
+                    <div class="contact-item">
+                        <i class="fas fa-phone contact-icon"></i>
+                        <span>+256 759 123345</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone contact-icon"></i>
+                        <span>0200 991234</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope contact-icon"></i>
+                        <span>enterprise@thirdsan.digital</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-globe contact-icon"></i>
+                        <span>www.thirdsan.digital</span>
+                    </div>
+                </div>
+                <button class="cta-button" onclick="window.open('https://www.thirdsan.digital', '_blank')">
+                    <i class="fas fa-rocket"></i> Visit Our Website
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        const sliderWrapper = document.getElementById('sliderWrapper');
+
+        function updateSlider() {
+            sliderWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            
+            if (currentSlide < 0) {
+                currentSlide = slides.length - 1;
+            } else if (currentSlide >= slides.length) {
+                currentSlide = 0;
+            }
+            
+            updateSlider();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlider();
+        }
+
+        // Auto-advance slider every 4 seconds
+        setInterval(() => {
+            changeSlide(1);
+        }, 4000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" data-category="news">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Overview - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* STANDARD: 461×600px - Scrollable */
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Custom scrollbar */
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: #f05a1a;
+            border-radius: 3px;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #f05a1a 0%, #ff7a3d 100%);
+            color: white;
+            padding: 30px 25px;
+            position: relative;
+        }
+
+        .header-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><circle cx="1" cy="1" r="1" fill="white" opacity="0.1"/></svg>');
+            pointer-events: none;
+        }
+
+        .category {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .headline {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subheadline {
+            font-size: 14px;
+            line-height: 1.5;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content-section {
+            padding: 25px;
+            background: white;
+            color: #333;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 18px;
+            border-left: 5px solid #f05a1a;
+            transition: all 0.3s;
+        }
+
+        .info-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(240, 90, 26, 0.15);
+        }
+
+        .info-card-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #f05a1a;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-card-title i {
+            font-size: 22px;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-list li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .info-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #f05a1a;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #1e2b42 0%, #2a3f5f 100%);
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: #f05a1a;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(240, 90, 26, 0.1) 0%, rgba(255, 122, 61, 0.05) 100%);
+            padding: 18px;
+            border-radius: 12px;
+            border: 2px solid rgba(240, 90, 26, 0.3);
+            text-align: center;
+            font-weight: 700;
+            color: #f05a1a;
+            font-size: 14px;
+        }
+
+        .footer-bar {
+            padding: 15px 25px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="header-section">
+            <div class="category">📱 PLATFORM & REACH</div>
+            <h1 class="headline">Reach Uganda's Future Today</h1>
+            <p class="subheadline">Digital Flipbook Platform with Verified, Active Daily Users</p>
+        </div>
+
+        <div class="content-section">
+            <div class="info-card">
+                <div class="info-card-title">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>Platform Features</span>
+                </div>
+                <ul class="info-list">
+                    <li>Digital Flipbook Format</li>
+                    <li>All Multimedia Ads are Click-Enabled</li>
+                    <li>Direct Links to Your Website or Store</li>
+                    <li>Smart Cart Integration for Products</li>
+                    <li>Built-in Engagement Metrics</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-title">
+                    <i class="fas fa-users"></i>
+                    <span>Target Audience</span>
+                </div>
+                <ul class="info-list">
+                    <li>University Students across Uganda</li>
+                    <li>Young Professionals & Entrepreneurs</li>
+                    <li>Verified Subscribers Only</li>
+                    <li>Active Daily Engagement</li>
+                    <li>Mobile-First Generation</li>
+                </ul>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Verified Users</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">Daily</span>
+                    <span class="stat-label">Active Reach</span>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                💡 Every Ad is Interactive & Trackable
+            </div>
+        </div>
+
+        <div class="footer-bar">
+            <span><i class="fas fa-newspaper"></i> KandaNews Africa</span>
+            <span>Page 2</span>
+        </div>
+    </div>
+</body>
+</html>

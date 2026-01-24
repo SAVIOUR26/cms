@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Back Cover - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: linear-gradient(135deg, #1e2b42 0%, #2a3f5f 100%);
+            color: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: #f05a1a;
+            border-radius: 3px;
+        }
+
+        .page-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(rgba(240, 90, 26, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(240, 90, 26, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+        }
+
+        .tagline-section {
+            padding: 40px 30px 30px;
+            text-align: center;
+            background: linear-gradient(135deg, #f05a1a 0%, #ff7a3d 100%);
+            position: relative;
+        }
+
+        .tagline-main {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .tagline-sub {
+            font-size: 15px;
+            opacity: 0.95;
+            font-style: italic;
+        }
+
+        .content-section {
+            padding: 30px;
+        }
+
+        .info-block {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #f05a1a;
+        }
+
+        .info-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #f05a1a;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-title i {
+            font-size: 20px;
+        }
+
+        .info-content {
+            font-size: 14px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .info-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-icon {
+            color: #f05a1a;
+            width: 18px;
+            text-align: center;
+        }
+
+        .info-link {
+            color: #ff7a3d;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .info-link:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .social-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .social-item {
+            background: rgba(240, 90, 26, 0.15);
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .social-item:hover {
+            background: rgba(240, 90, 26, 0.25);
+            transform: translateX(3px);
+        }
+
+        .social-icon {
+            color: #f05a1a;
+            font-size: 18px;
+        }
+
+        .stats-section {
+            background: linear-gradient(135deg, rgba(240, 90, 26, 0.2) 0%, rgba(255, 122, 61, 0.1) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(240, 90, 26, 0.3);
+        }
+
+        .stats-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #f05a1a;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #f05a1a;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+
+        .footer-section {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-text {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .footer-badge {
+            background: #f05a1a;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .thank-you-box {
+            background: white;
+            color: #1e2b42;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .thank-you-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .thank-you-title {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .thank-you-text {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="tagline-section">
+            <div class="tagline-main">Tap to Know<br>Tap to Grow</div>
+            <div class="tagline-sub">Your gateway to Africa's digital future</div>
+        </div>
+
+        <div class="content-section">
+            <div class="thank-you-box">
+                <div class="thank-you-icon">🙏</div>
+                <div class="thank-you-title">Thank You for Reading!</div>
+                <div class="thank-you-text">
+                    You just finished today's edition. See you tomorrow with more news, inspiration, and opportunities that matter.
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <div class="stats-title">📊 Our Growing Community</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">50K+</div>
+                        <div class="stat-label">Readers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">Countries</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">Daily</div>
+                        <div class="stat-label">Updates</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-title">
+                    <i class="fas fa-envelope"></i>
+                    Contact Us
+                </div>
+                <div class="info-content">
+                    <div class="info-item">
+                        <i class="fas fa-at info-icon"></i>
+                        <a href="mailto:editor@kandanews.africa" class="info-link">editor@kandanews.africa</a>
+                    </div>
+                    <div class="info-item">
+                        <i class="fab fa-whatsapp info-icon"></i>
+                        <span>+256 700 000 000</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-globe info-icon"></i>
+                        <a href="https://kandanews.africa" class="info-link">www.kandanews.africa</a>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt info-icon"></i>
+                        <span>Kampala, Uganda</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-title">
+                    <i class="fas fa-bullhorn"></i>
+                    Advertise With Us
+                </div>
+                <div class="info-content">
+                    <div class="info-item">
+                        <i class="fas fa-envelope info-icon"></i>
+                        <a href="mailto:ads@kandanews.africa" class="info-link">ads@kandanews.africa</a>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-users info-icon"></i>
+                        <span>Reach 50,000+ engaged readers daily</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-title">
+                    <i class="fas fa-share-alt"></i>
+                    Follow Us
+                </div>
+                <div class="social-grid">
+                    <div class="social-item">
+                        <i class="fab fa-facebook social-icon"></i>
+                        <span>@KandaNewsAfrica</span>
+                    </div>
+                    <div class="social-item">
+                        <i class="fab fa-twitter social-icon"></i>
+                        <span>@KandaNews</span>
+                    </div>
+                    <div class="social-item">
+                        <i class="fab fa-instagram social-icon"></i>
+                        <span>@KandaNews</span>
+                    </div>
+                    <div class="social-item">
+                        <i class="fab fa-linkedin social-icon"></i>
+                        <span>KandaNews Africa</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-section">
+            <div class="footer-text">
+                © 2025 KandaNews Africa<br>
+                All rights reserved
+            </div>
+            <div class="footer-badge">
+                <span>🇺🇬</span>
+                <span>Made in Uganda</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

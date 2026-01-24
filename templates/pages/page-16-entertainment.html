@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entertainment Hub - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: linear-gradient(135deg, #8e44ad 0%, #c0392b 50%, #e74c3c 100%);
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.5);
+            border-radius: 3px;
+        }
+
+        .header-section {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 35px 25px;
+            text-align: center;
+            color: white;
+        }
+
+        .header-icon {
+            font-size: 52px;
+            margin-bottom: 15px;
+            animation: rotate 3s ease-in-out infinite;
+        }
+
+        @keyframes rotate {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(15deg); }
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .content-section {
+            padding: 25px;
+        }
+
+        .trending-badge {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        .entertainment-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .card-image {
+            height: 140px;
+            background: linear-gradient(135deg, #8e44ad, #e74c3c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            position: relative;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-category {
+            font-size: 11px;
+            color: #8e44ad;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .card-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: #1e2b42;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .card-description {
+            font-size: 13px;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #999;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .rating-stars {
+            color: #f39c12;
+        }
+
+        .quick-picks {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .quick-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #8e44ad;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quick-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .quick-item:hover {
+            background: #f0e8f5;
+            transform: translateX(5px);
+        }
+
+        .quick-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #8e44ad, #c0392b);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .quick-info {
+            flex: 1;
+        }
+
+        .quick-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e2b42;
+            margin-bottom: 3px;
+        }
+
+        .quick-desc {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(142, 68, 173, 0.15), rgba(231, 76, 60, 0.15));
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            color: #8e44ad;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="header-section">
+            <div class="header-icon">🎬</div>
+            <h1 class="header-title">Entertainment Hub</h1>
+            <p class="header-subtitle">What's hot in movies, music & culture</p>
+        </div>
+
+        <div class="content-section">
+            <div class="trending-badge">
+                <i class="fas fa-fire"></i>
+                <span>TRENDING NOW</span>
+            </div>
+
+            <div class="entertainment-card">
+                <div class="card-image">
+                    🎭
+                    <div class="card-badge">MUST WATCH</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-category">🎬 Movie Review</div>
+                    <div class="card-title">The Queen of Katwe Legacy</div>
+                    <div class="card-description">
+                        This powerful documentary follows <span class="highlight-box">Phiona Mutesi's</span> journey 10 years after the original film. From Katwe's slums to international chess champion, her story continues to inspire millions across Africa. A testament that <span class="highlight-box">circumstances don't define destiny</span>.
+                    </div>
+                    <div class="card-meta">
+                        <div class="meta-item">
+                            <span class="rating-stars">⭐⭐⭐⭐⭐</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>2h 15m</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-film"></i>
+                            <span>Netflix</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="entertainment-card">
+                <div class="card-image">
+                    📺
+                    <div class="card-badge">BINGE-WORTHY</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-category">📺 Series Spotlight</div>
+                    <div class="card-title">Lagos Tech Dreams (Season 2)</div>
+                    <div class="card-description">
+                        The hit African series is back! Follow 5 young entrepreneurs navigating Nigeria's startup ecosystem—<span class="highlight-box">funding dramas, betrayals, and triumphs</span>. Every episode feels like your own hustle. Season 2 ups the stakes with international investors and billion-dollar exits.
+                    </div>
+                    <div class="card-meta">
+                        <div class="meta-item">
+                            <span class="rating-stars">⭐⭐⭐⭐½</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-list"></i>
+                            <span>8 Episodes</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-tv"></i>
+                            <span>Showmax</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="entertainment-card">
+                <div class="card-image">
+                    🎤
+                    <div class="card-badge">VIRAL HIT</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-category">🎤 Music Buzz</div>
+                    <div class="card-title">Burna Boy Drops Surprise EP</div>
+                    <div class="card-description">
+                        The African Giant just released <span class="highlight-box">"Ubuntu Sessions"</span>—a 6-track project celebrating Pan-African unity. Features collabs with <span class="highlight-box">Diamond Platnumz, Shallipopi & Ayra Starr</span>. Track 3 ("Rise Together") is already TikTok's #1 sound.
+                    </div>
+                    <div class="card-meta">
+                        <div class="meta-item">
+                            <span class="rating-stars">⭐⭐⭐⭐⭐</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-music"></i>
+                            <span>6 Tracks</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fab fa-spotify"></i>
+                            <span>Spotify</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-picks">
+                <div class="quick-title">
+                    <i class="fas fa-bolt"></i>
+                    <span>Quick Picks This Week</span>
+                </div>
+
+                <div class="quick-item">
+                    <div class="quick-icon">📚</div>
+                    <div class="quick-info">
+                        <div class="quick-name">Book: "Half of a Yellow Sun" by Chimamanda</div>
+                        <div class="quick-desc">A timeless Nigerian classic on resilience & identity</div>
+                    </div>
+                </div>
+
+                <div class="quick-item">
+                    <div class="quick-icon">🎮</div>
+                    <div class="quick-info">
+                        <div class="quick-name">Game: EA Sports FC 25 - African Teams Update</div>
+                        <div class="quick-desc">Play as Uganda Cranes & other African national teams</div>
+                    </div>
+                </div>
+
+                <div class="quick-item">
+                    <div class="quick-icon">🎙️</div>
+                    <div class="quick-info">
+                        <div class="quick-name">Podcast: "The Sauce" with Osagie Alonge</div>
+                        <div class="quick-desc">Deep dives into African music industry trends</div>
+                    </div>
+                </div>
+
+                <div class="quick-item">
+                    <div class="quick-icon">🎨</div>
+                    <div class="quick-info">
+                        <div class="quick-name">Event: Kampala Art Week (Nov 10-17)</div>
+                        <div class="quick-desc">Showcasing East Africa's emerging artists</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

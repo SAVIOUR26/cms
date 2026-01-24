@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Did You Know - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.4);
+            border-radius: 3px;
+        }
+
+        .header-section {
+            padding: 35px 25px 25px;
+            text-align: center;
+        }
+
+        .header-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .content-section {
+            padding: 0 25px 30px;
+        }
+
+        .fact-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+
+        .fact-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .fact-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .fact-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #FFD700;
+        }
+
+        .fact-text {
+            font-size: 13px;
+            line-height: 1.7;
+            opacity: 0.95;
+        }
+
+        .fact-stat {
+            font-size: 28px;
+            font-weight: 800;
+            color: #FFD700;
+            margin: 10px 0;
+            display: block;
+        }
+
+        .wisdom-section {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            text-align: center;
+        }
+
+        .wisdom-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .wisdom-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            color: #FFD700;
+        }
+
+        .wisdom-quote {
+            font-size: 18px;
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .wisdom-author {
+            font-size: 13px;
+            opacity: 0.8;
+            font-weight: 600;
+        }
+
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.5), transparent);
+            margin: 25px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="header-section">
+            <div class="header-icon">💡</div>
+            <h1 class="header-title">Did You Know?</h1>
+            <p class="header-subtitle">Fascinating facts about Africa</p>
+        </div>
+
+        <div class="content-section">
+            <div class="fact-card">
+                <span class="fact-icon">🌍</span>
+                <div class="fact-title">Africa's Youth Power</div>
+                <span class="fact-stat">60%</span>
+                <div class="fact-text">
+                    Africa has the youngest population in the world, with 60% of its people under the age of 25. By 2050, Africa will be home to 1 in 4 young people globally—a demographic dividend waiting to be unlocked.
+                </div>
+            </div>
+
+            <div class="fact-card">
+                <span class="fact-icon">📱</span>
+                <div class="fact-title">Mobile Money Revolution</div>
+                <span class="fact-stat">$490B</span>
+                <div class="fact-text">
+                    Africa processes more mobile money transactions than any other continent. In 2024, over $490 billion flowed through mobile money platforms, with East Africa leading innovation in digital finance and financial inclusion.
+                </div>
+            </div>
+
+            <div class="fact-card">
+                <span class="fact-icon">🌱</span>
+                <div class="fact-title">The Great Green Wall</div>
+                <span class="fact-stat">8,000km</span>
+                <div class="fact-text">
+                    Africa is building the world's largest living structure—an 8,000km green wall of trees across the Sahel region. This ambitious project fights desertification, creates jobs, and captures millions of tons of carbon.
+                </div>
+            </div>
+
+            <div class="fact-card">
+                <span class="fact-icon">🎓</span>
+                <div class="fact-title">University Boom</div>
+                <span class="fact-stat">1,600+</span>
+                <div class="fact-text">
+                    Africa now has over 1,600 universities, and enrollment has tripled in the past 20 years. Countries like Uganda, Nigeria, and Kenya are producing world-class graduates in STEM, business, and the arts.
+                </div>
+            </div>
+
+            <div class="fact-card">
+                <span class="fact-icon">🚀</span>
+                <div class="fact-title">Africa's Tech Unicorns</div>
+                <span class="fact-stat">13</span>
+                <div class="fact-text">
+                    Africa is home to 13 tech unicorns (startups valued over $1 billion) including Flutterwave, Andela, and Wave. The continent's startup ecosystem raised over $6 billion in funding in 2024 alone.
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="wisdom-section">
+                <div class="wisdom-icon">🌟</div>
+                <div class="wisdom-title">African Wisdom of the Day</div>
+                <div class="wisdom-quote">
+                    "If you want to go fast, go alone. If you want to go far, go together."
+                </div>
+                <div class="wisdom-author">— African Proverb</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

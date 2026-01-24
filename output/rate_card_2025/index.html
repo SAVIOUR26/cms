@@ -1,0 +1,2149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rate Card 2025</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #1e2b42;
+    color: #fff;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    background: #e5e7eb;
+    border-bottom: 1px solid #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.logo { 
+    height: 28px;
+    object-fit: contain;
+    margin-right: 12px;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.fullscreen-prompt {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    cursor: pointer;
+    animation: fadeIn 0.3s;
+}
+
+.fullscreen-prompt.hidden {
+    display: none;
+}
+
+.fs-message {
+    text-align: center;
+    color: white;
+}
+
+.fs-message i {
+    font-size: 48px;
+    color: #f05a1a;
+    margin-bottom: 15px;
+    animation: pulse 2s infinite;
+}
+
+.fs-message p {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.sidebar {
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.thumbs {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 5px;
+}
+
+.thumbs::-webkit-scrollbar {
+    width: 4px;
+}
+
+.thumbs::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+    border-radius: 2px;
+}
+
+.thumbs::-webkit-scrollbar-thumb {
+    background: rgba(240,90,26,0.6);
+    border-radius: 2px;
+}
+
+.thumbs .swiper-slide {
+    height: 110px !important;
+    margin-bottom: 12px;
+    cursor: pointer;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px solid rgba(255,255,255,0.1);
+    transition: all 0.3s;
+    background: rgba(0,0,0,0.4);
+    position: relative;
+}
+
+.thumbs .swiper-slide:hover {
+    border-color: rgba(240,90,26,0.8);
+    transform: scale(1.05);
+}
+
+.thumbs .swiper-slide-thumb-active {
+    border-color: #f05a1a;
+    box-shadow: 0 0 20px rgba(240,90,26,0.6);
+    transform: scale(1.08);
+}
+
+.thumb-page {
+    width: 461px;
+    height: 600px;
+    transform: scale(0.19);
+    transform-origin: top left;
+    pointer-events: none;
+}
+
+.thumb-num {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(240,90,26,0.95);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.viewer {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.main-swiper {
+    width: 100%;
+    max-width: 490px;
+    height: 640px;
+}
+
+.main-swiper .swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.page-label {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    padding: 6px 14px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.swiper-slide > * {
+    border: 2px solid #f05a1a;
+    border-radius: 8px;
+    box-shadow: 
+        0 25px 60px rgba(0,0,0,0.5),
+        0 10px 30px rgba(240,90,26,0.2),
+        0 0 0 1px rgba(240,90,26,0.1);
+}
+
+/* Scroll indicator for scrollable pages */
+.page-wrapper.scrollable {
+    position: relative;
+}
+
+.page-wrapper.scrollable::after {
+    content: '↓';
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(240, 90, 26, 0.9);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    pointer-events: none;
+    animation: pulseArrow 2s ease-in-out infinite;
+    box-shadow: 0 4px 15px rgba(240, 90, 26, 0.5);
+    z-index: 100;
+}
+
+@keyframes pulseArrow {
+    0%, 100% { 
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+    50% { 
+        transform: translateX(-50%) translateY(8px);
+        opacity: 0.7;
+    }
+}
+
+/* Hide indicator when scrolled near bottom */
+.page-wrapper.scrollable.scrolled::after {
+    display: none;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    background: rgba(255,255,255,.08);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255,255,255,.15);
+}
+
+.btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg,#f05a1a,#ff7a3d);
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(240,90,26,.4);
+}
+
+.btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(240,90,26,.6);
+}
+
+.btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.btn.muted { 
+    background: linear-gradient(135deg,#666,#888);
+}
+
+.page-num {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    min-width: 70px;
+    text-align: center;
+    padding: 8px 16px;
+    background: rgba(240,90,26,0.15);
+    border-radius: 8px;
+    border: 1px solid rgba(240,90,26,0.3);
+}
+
+@media (max-width: 768px) {
+    .container { 
+        padding: 10px;
+        padding-bottom: 5px;
+        justify-content: center;
+    }
+    .sidebar { display: none; }
+    .viewer {
+        padding: 0;
+        width: 100%;
+        max-width: 100%;
+    }
+    .main-swiper { 
+        height: calc(100% - 20px);
+        max-width: calc(100vw - 24px);
+        margin: 0 auto;
+    }
+    .page-label {
+        bottom: -35px;
+        font-size: 12px;
+    }
+}
+
+/* Page-specific CSS */
+/* Page 0 */
+@keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.3;
+            }
+            25% {
+                transform: translate(30px, -30px) scale(1.1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translate(-20px, 20px) scale(0.9);
+                opacity: 0.4;
+            }
+            75% {
+                transform: translate(20px, 30px) scale(1.05);
+                opacity: 0.5;
+            }
+        }
+@keyframes float-icon {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+@keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+@keyframes shine {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+.page-0 * { margin: 0;
+            padding: 0;
+            box-sizing: border-box; }
+.page-0 .page-wrapper { width: 461px;
+            height: 600px;
+            background: linear-gradient(135deg, #1e2b42 0%, #2a3f5f 50%, #1e2b42 100%);
+            color: white;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center; }
+.page-0 .particles { position: absolute;
+            inset: 0;
+            overflow: hidden; }
+.page-0 .particle { position: absolute;
+            background: rgba(240, 90, 26, 0.6);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out; }
+.page-0 .particle:nth-child(1) { width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s; }
+.page-0 .particle:nth-child(2) { width: 60px;
+            height: 60px;
+            top: 70%;
+            left: 80%;
+            animation-delay: 2s; }
+.page-0 .particle:nth-child(3) { width: 100px;
+            height: 100px;
+            top: 40%;
+            left: 70%;
+            animation-delay: 4s; }
+.page-0 .particle:nth-child(4) { width: 70px;
+            height: 70px;
+            top: 80%;
+            left: 20%;
+            animation-delay: 6s; }
+.page-0 .cover-container { text-align: center;
+            padding: 40px 30px;
+            width: 100%;
+            position: relative;
+            z-index: 10; }
+.page-0 .cover-icon { font-size: 80px;
+            margin-bottom: 30px;
+            animation: float-icon 3s ease-in-out infinite;
+            background: linear-gradient(135deg, #f05a1a, #ff7a3d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text; }
+.page-0 .cover-title { font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #ffffff 0%, #f05a1a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text; }
+.page-0 .cover-subtitle { font-size: 24px;
+            margin-bottom: 25px;
+            opacity: 0.9;
+            font-weight: 600; }
+.page-0 .cover-tagline { font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.85;
+            margin-bottom: 30px;
+            padding: 0 20px; }
+.page-0 .badge-container { display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 25px; }
+.page-0 .badge { display: inline-block;
+            background: linear-gradient(135deg, #f05a1a, #ff7a3d);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 700;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(240, 90, 26, 0.4);
+            animation: pulse 2s ease-in-out infinite; }
+.page-0 .page-wrapper::before { content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none; }
+.page-0 .footer-badge { position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(240, 90, 26, 0.3); }
+.page-0 .shine { position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg,
+                    transparent 30%,
+                    rgba(255, 255, 255, 0.1) 50%,
+                    transparent 70%);
+            animation: shine 3s infinite;
+            pointer-events: none; }
+
+/* Page 1 */
+.page-1 * { margin: 0;
+            padding: 0;
+            box-sizing: border-box; }
+.page-1 .page-wrapper { width: 461px;
+            max-height: 600px;
+            background: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative; }
+.page-1 .page-wrapper::-webkit-scrollbar { width: 6px; }
+.page-1 .page-wrapper::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+.page-1 .page-wrapper::-webkit-scrollbar-thumb { background: #f05a1a;
+            border-radius: 3px; }
+.page-1 .header-section { background: linear-gradient(135deg, #f05a1a 0%, #ff7a3d 100%);
+            color: white;
+            padding: 30px 25px;
+            position: relative; }
+.page-1 .header-section::before { content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><circle cx="1" cy="1" r="1" fill="white" opacity="0.1"/></svg>');
+            pointer-events: none; }
+.page-1 .category { font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1; }
+.page-1 .headline { font-size: 28px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1; }
+.page-1 .subheadline { font-size: 14px;
+            line-height: 1.5;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1; }
+.page-1 .content-section { padding: 25px;
+            background: white;
+            color: #333; }
+.page-1 .info-card { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 18px;
+            border-left: 5px solid #f05a1a;
+            transition: all 0.3s; }
+.page-1 .info-card:hover { transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(240, 90, 26, 0.15); }
+.page-1 .info-card-title { font-size: 16px;
+            font-weight: 800;
+            color: #f05a1a;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px; }
+.page-1 .info-card-title i { font-size: 22px; }
+.page-1 .info-list { list-style: none;
+            padding: 0; }
+.page-1 .info-list li { padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #555; }
+.page-1 .info-list li::before { content: '✓';
+            position: absolute;
+            left: 0;
+            color: #f05a1a;
+            font-weight: 700;
+            font-size: 16px; }
+.page-1 .stats-grid { display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 18px; }
+.page-1 .stat-box { background: linear-gradient(135deg, #1e2b42 0%, #2a3f5f 100%);
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+            color: white; }
+.page-1 .stat-number { font-size: 28px;
+            font-weight: 800;
+            color: #f05a1a;
+            margin-bottom: 5px;
+            display: block; }
+.page-1 .stat-label { font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9; }
+.page-1 .highlight-box { background: linear-gradient(135deg, rgba(240, 90, 26, 0.1) 0%, rgba(255, 122, 61, 0.05) 100%);
+            padding: 18px;
+            border-radius: 12px;
+            border: 2px solid rgba(240, 90, 26, 0.3);
+            text-align: center;
+            font-weight: 700;
+            color: #f05a1a;
+            font-size: 14px; }
+.page-1 .footer-bar { padding: 15px 25px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+            border-top: 1px solid #e0e0e0; }
+
+/* Page 2 */
+.page-2 * { margin: 0;
+            padding: 0;
+            box-sizing: border-box; }
+.page-2 .page-wrapper { width: 461px;
+            max-height: 600px;
+            background: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative; }
+.page-2 .page-wrapper::-webkit-scrollbar { width: 6px; }
+.page-2 .page-wrapper::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+.page-2 .page-wrapper::-webkit-scrollbar-thumb { background: #f05a1a;
+            border-radius: 3px; }
+.page-2 .header-section { background: linear-gradient(135deg, #1e2b42 0%, #2a3f5f 100%);
+            color: white;
+            padding: 30px 25px;
+            position: sticky;
+            top: 0;
+            z-index: 100; }
+.page-2 .category { font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            color: #f05a1a; }
+.page-2 .headline { font-size: 26px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 10px; }
+.page-2 .subheadline { font-size: 13px;
+            line-height: 1.5;
+            opacity: 0.9; }
+.page-2 .content-section { padding: 25px; }
+.page-2 .pricing-card { background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 18px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden; }
+.page-2 .pricing-card:hover { border-color: #f05a1a;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(240, 90, 26, 0.2); }
+.page-2 .pricing-card::before { content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, #f05a1a, #ff7a3d); }
+.page-2 .pricing-header { display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px; }
+.page-2 .pricing-title { flex: 1; }
+.page-2 .ad-type { font-size: 18px;
+            font-weight: 800;
+            color: #1e2b42;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px; }
+.page-2 .ad-type i { color: #f05a1a;
+            font-size: 22px; }
+.page-2 .ad-description { font-size: 13px;
+            color: #666;
+            line-height: 1.4; }
+.page-2 .pricing-amount { text-align: right; }
+.page-2 .price { font-size: 28px;
+            font-weight: 800;
+            color: #f05a1a;
+            line-height: 1; }
+.page-2 .price-unit { font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 3px; }
+.page-2 .specs-list { background: rgba(240, 90, 26, 0.05);
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-top: 12px; }
+.page-2 .specs-list li { font-size: 12px;
+            color: #555;
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative; }
+.page-2 .specs-list li::before { content: '•';
+            position: absolute;
+            left: 0;
+            color: #f05a1a;
+            font-weight: 700;
+            font-size: 16px; }
+.page-2 .featured-badge { position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #f05a1a, #ff7a3d);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(240, 90, 26, 0.4); }
+.page-2 .footer-bar { padding: 18px 25px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+            border-top: 1px solid #e0e0e0; }
+
+/* Page 3 */
+.page-3 * { margin: 0;
+            padding: 0;
+            box-sizing: border-box; }
+.page-3 .page-wrapper { width: 461px;
+            height: 600px;
+            background: white;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column; }
+.page-3 .header-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 25px; }
+.page-3 .category { font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            opacity: 0.9; }
+.page-3 .headline { font-size: 26px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 10px; }
+.page-3 .subheadline { font-size: 13px;
+            line-height: 1.5;
+            opacity: 0.9; }
+.page-3 .content-section { flex: 1;
+            padding: 25px;
+            overflow-y: auto; }
+.page-3 .content-section::-webkit-scrollbar { width: 5px; }
+.page-3 .content-section::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+.page-3 .content-section::-webkit-scrollbar-thumb { background: #667eea;
+            border-radius: 3px; }
+.page-3 .pricing-card { background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            border: 2px solid #e9ecef; }
+.page-3 .pricing-card:hover { border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15); }
+.page-3 .pricing-header { display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px; }
+.page-3 .ad-type { font-size: 17px;
+            font-weight: 800;
+            color: #1e2b42;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px; }
+.page-3 .ad-type i { color: #667eea;
+            font-size: 20px; }
+.page-3 .ad-description { font-size: 12px;
+            color: #666;
+            line-height: 1.4; }
+.page-3 .price { font-size: 26px;
+            font-weight: 800;
+            color: #667eea;
+            line-height: 1; }
+.page-3 .price-unit { font-size: 10px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 3px; }
+.page-3 .specs-tag { display: inline-block;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px; }
+.page-3 .highlight-card { background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 15px; }
+.page-3 .highlight-title { font-size: 14px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px; }
+.page-3 .highlight-text { font-size: 12px;
+            color: #555;
+            line-height: 1.5; }
+.page-3 .footer-bar { padding: 15px 25px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+            border-top: 1px solid #e0e0e0; }
+.page-3 .divider { height: 2px;
+            background: linear-gradient(90deg, transparent, #667eea, transparent);
+            margin: 20px 0; }
+
+/* Page 4 */
+.page-4 * { margin: 0;
+            padding: 0;
+            box-sizing: border-box; }
+.page-4 .page-wrapper { width: 461px;
+            max-height: 600px;
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden; }
+.page-4 .page-wrapper::-webkit-scrollbar { width: 6px; }
+.page-4 .page-wrapper::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+.page-4 .page-wrapper::-webkit-scrollbar-thumb { background: #16a34a;
+            border-radius: 3px; }
+.page-4 .header-section { background: rgba(0, 0, 0, 0.2);
+            color: white;
+            padding: 30px 25px 25px; }
+.page-4 .category { font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            opacity: 0.9; }
+.page-4 .headline { font-size: 28px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 10px; }
+.page-4 .subheadline { font-size: 13px;
+            line-height: 1.5;
+            opacity: 0.9; }
+.page-4 .content-section { flex: 1;
+            padding: 25px;
+            background: white;
+            color: #333; }
+.page-4 .section-title { font-size: 18px;
+            font-weight: 800;
+            color: #16a34a;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px; }
+.page-4 .section-title i { font-size: 22px; }
+.page-4 .package-grid { display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px; }
+.page-4 .package-card { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #16a34a;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative; }
+.page-4 .package-card:hover { transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(22, 163, 74, 0.3); }
+.page-4 .package-badge { position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #16a34a;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4); }
+.page-4 .package-name { font-size: 16px;
+            font-weight: 800;
+            color: #16a34a;
+            margin-bottom: 8px; }
+.page-4 .package-duration { font-size: 12px;
+            color: #666;
+            margin-bottom: 12px; }
+.page-4 .package-discount { font-size: 28px;
+            font-weight: 800;
+            color: #16a34a;
+            margin-bottom: 5px; }
+.page-4 .package-note { font-size: 10px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px; }
+.page-4 .benefits-list { list-style: none;
+            padding: 0; }
+.page-4 .benefits-list li { padding: 10px 15px;
+            margin-bottom: 8px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #16a34a;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s; }
+.page-4 .benefits-list li:hover { background: #f0fdf4;
+            transform: translateX(5px); }
+.page-4 .benefit-icon { color: #16a34a;
+            font-size: 18px;
+            flex-shrink: 0; }
+.page-4 .highlight-box { background: linear-gradient(135deg, rgba(22, 163, 74, 0.15) 0%, rgba(34, 197, 94, 0.1) 100%);
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid rgba(22, 163, 74, 0.3);
+            text-align: center;
+            margin-top: 15px; }
+.page-4 .highlight-text { font-size: 13px;
+            font-weight: 700;
+            color: #16a34a; }
+.page-4 .footer-bar { padding: 15px 25px;
+            background: rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #666;
+            font-weight: 600; }
+
+/* Page 5 */
+@keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+.page-5 * { margin: 0;
+            padding: 0;
+            box-sizing: border-box; }
+.page-5 .page-wrapper { width: 461px;
+            max-height: 600px;
+            background: #1e2b42;
+            color: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column; }
+.page-5 .page-wrapper::-webkit-scrollbar { width: 6px; }
+.page-5 .page-wrapper::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+.page-5 .page-wrapper::-webkit-scrollbar-thumb { background: #f05a1a;
+            border-radius: 3px; }
+.page-5 .page-wrapper::before { content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(rgba(240, 90, 26, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(240, 90, 26, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none; }
+.page-5 .tagline-section { padding: 35px 30px 25px;
+            text-align: center;
+            background: linear-gradient(135deg, #f05a1a 0%, #ff7a3d 100%);
+            position: relative; }
+.page-5 .tagline-main { font-size: 30px;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); }
+.page-5 .tagline-sub { font-size: 14px;
+            opacity: 0.9;
+            font-style: italic; }
+.page-5 .content-section { flex: 1;
+            padding: 25px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            z-index: 1; }
+.page-5 .info-block { background: rgba(255, 255, 255, 0.05);
+            padding: 18px;
+            border-radius: 12px;
+            border-left: 4px solid #f05a1a; }
+.page-5 .info-title { font-size: 15px;
+            font-weight: 700;
+            color: #f05a1a;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px; }
+.page-5 .info-title i { font-size: 18px; }
+.page-5 .info-content { font-size: 13px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9); }
+.page-5 .info-item { margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px; }
+.page-5 .info-item:last-child { margin-bottom: 0; }
+.page-5 .info-icon { color: #f05a1a;
+            width: 18px;
+            text-align: center;
+            font-size: 14px; }
+.page-5 .info-link { color: #ff7a3d;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 600; }
+.page-5 .info-link:hover { color: #fff;
+            text-decoration: underline; }
+.page-5 .contact-grid { display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px; }
+.page-5 .contact-box { background: rgba(240, 90, 26, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(240, 90, 26, 0.3);
+            transition: all 0.3s; }
+.page-5 .contact-box:hover { background: rgba(240, 90, 26, 0.2);
+            transform: translateY(-3px); }
+.page-5 .contact-icon { font-size: 28px;
+            color: #f05a1a;
+            margin-bottom: 8px; }
+.page-5 .contact-label { font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+            margin-bottom: 5px; }
+.page-5 .contact-value { font-size: 13px;
+            font-weight: 700; }
+.page-5 .highlight-box { background: linear-gradient(135deg, rgba(240, 90, 26, 0.2) 0%, rgba(255, 122, 61, 0.1) 100%);
+            padding: 18px;
+            border-radius: 12px;
+            border: 2px solid rgba(240, 90, 26, 0.4);
+            text-align: center; }
+.page-5 .highlight-title { font-size: 14px;
+            font-weight: 800;
+            color: #f05a1a;
+            margin-bottom: 8px; }
+.page-5 .highlight-text { font-size: 12px;
+            line-height: 1.5; }
+.page-5 .footer-section { padding: 18px 30px;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1); }
+.page-5 .footer-text { font-size: 11px;
+            opacity: 0.7; }
+.page-5 .footer-badge { background: #f05a1a;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px; }
+.page-5 .pulse { animation: pulse 2s ease-in-out infinite; }
+
+
+</style>
+</head>
+<body>
+<div class="header">
+<img src="appLogoIcon.png" alt="KandaNews Africa" class="logo" 
+     onerror="this.onerror=null; this.src='../assets/appLogoIcon.png'; this.onerror=function(){this.src='../../assets/appLogoIcon.png'; this.onerror=function(){this.style.display='none'}}">
+<span>Rate Card 2025</span>
+</div>
+
+<div class="container">
+<div class="fullscreen-prompt" id="fs-prompt">
+    <div class="fs-message">
+        <i class="fas fa-expand"></i>
+        <p>Tap anywhere to enter fullscreen</p>
+    </div>
+</div>
+
+<div class="sidebar">
+<div class="swiper thumbs">
+<div class="swiper-wrapper">
+<div class="swiper-slide"><div class="thumb-page page-0"><div class="page-wrapper">
+        <div class="shine"></div>
+        <div class="particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+
+        <div class="cover-container">
+            <div class="cover-icon">
+                <i class="fas fa-bullhorn"></i>
+            </div>
+            <h1 class="cover-title">Advertising<br>Rate Card</h1>
+            <p class="cover-subtitle">2025 Edition</p>
+            <p class="cover-tagline">Your Brand. Right in Their Pocket.<br>Advertise Smarter, Not Harder</p>
+            
+            <div class="badge-container">
+                <div class="badge">💼 VERIFIED REACH</div>
+                <div class="badge">📱 CLICK-ENABLED</div>
+                <div class="badge">🎯 TARGETED</div>
+            </div>
+        </div>
+
+        <div class="footer-badge">
+            🇺🇬 Uganda Edition • KandaNews Africa
+        </div>
+    </div></div><span class="thumb-num">1</span></div>
+<div class="swiper-slide"><div class="thumb-page page-1"><div class="page-wrapper">
+        <div class="header-section">
+            <div class="category">📱 PLATFORM & REACH</div>
+            <h1 class="headline">Reach Uganda's Future Today</h1>
+            <p class="subheadline">Digital Flipbook Platform with Verified, Active Daily Users</p>
+        </div>
+
+        <div class="content-section">
+            <div class="info-card">
+                <div class="info-card-title">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>Platform Features</span>
+                </div>
+                <ul class="info-list">
+                    <li>Digital Flipbook Format</li>
+                    <li>All Multimedia Ads are Click-Enabled</li>
+                    <li>Direct Links to Your Website or Store</li>
+                    <li>Smart Cart Integration for Products</li>
+                    <li>Built-in Engagement Metrics</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-title">
+                    <i class="fas fa-users"></i>
+                    <span>Target Audience</span>
+                </div>
+                <ul class="info-list">
+                    <li>University Students across Uganda</li>
+                    <li>Young Professionals & Entrepreneurs</li>
+                    <li>Verified Subscribers Only</li>
+                    <li>Active Daily Engagement</li>
+                    <li>Mobile-First Generation</li>
+                </ul>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Verified Users</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">Daily</span>
+                    <span class="stat-label">Active Reach</span>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                💡 Every Ad is Interactive & Trackable
+            </div>
+        </div>
+
+        <div class="footer-bar">
+            <span><i class="fas fa-newspaper"></i> KandaNews Africa</span>
+            <span>Page 2</span>
+        </div>
+    </div></div><span class="thumb-num">2</span></div>
+<div class="swiper-slide"><div class="thumb-page page-2"><div class="page-wrapper">
+        <div class="header-section">
+            <div class="category">📺 DISPLAY ADVERTISING</div>
+            <h1 class="headline">Display Ad Placements</h1>
+            <p class="subheadline">Premium visibility for your brand</p>
+        </div>
+
+        <div class="content-section">
+            <div class="pricing-card">
+                <div class="featured-badge">⭐ MOST POPULAR</div>
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Full Page</span>
+                        </div>
+                        <div class="ad-description">Entire page dedicated to your brand</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">200K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <ul class="specs-list">
+                    <li>Dimensions: 540 × 780px</li>
+                    <li>Maximum impact & visibility</li>
+                    <li>Free design support included</li>
+                </ul>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-clone"></i>
+                            <span>Half Page</span>
+                        </div>
+                        <div class="ad-description">Half screen placement</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">120K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <ul class="specs-list">
+                    <li>Dimensions: 540 × 390px</li>
+                    <li>Great visibility, cost-effective</li>
+                    <li>Can pair with content</li>
+                </ul>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-video"></i>
+                            <span>Video Ad (60 sec)</span>
+                        </div>
+                        <div class="ad-description">Auto-play within content</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">120K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <ul class="specs-list">
+                    <li>Up to 1 minute / 60 seconds</li>
+                    <li>Auto-play feature</li>
+                    <li>High engagement rate</li>
+                </ul>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-video"></i>
+                            <span>Video Ad (30 sec)</span>
+                        </div>
+                        <div class="ad-description">Short-form video content</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">60K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <ul class="specs-list">
+                    <li>Up to 30 seconds</li>
+                    <li>Perfect for quick messages</li>
+                    <li>Budget-friendly video option</li>
+                </ul>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-film"></i>
+                            <span>GIF Insert</span>
+                        </div>
+                        <div class="ad-description">Looping graphic / 4 image slider</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">80K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <ul class="specs-list">
+                    <li>Up to 15 seconds loop</li>
+                    <li>Eye-catching animation</li>
+                    <li>Multiple images showcase</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bar">
+            <span><i class="fas fa-newspaper"></i> KandaNews Africa</span>
+            <span>Page 3</span>
+        </div>
+    </div></div><span class="thumb-num">3</span></div>
+<div class="swiper-slide"><div class="thumb-page page-3"><div class="page-wrapper">
+        <div class="header-section">
+            <div class="category">🎵 MULTIMEDIA & AUDIO</div>
+            <h1 class="headline">Audio & Interactive Ads</h1>
+            <p class="subheadline">Engage your audience with sound and motion</p>
+        </div>
+
+        <div class="content-section">
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-headphones"></i>
+                            <span>Audio Ad (60 sec)</span>
+                        </div>
+                        <div class="ad-description">Voicenote or podcast-style audio</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">60K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <span class="specs-tag">⏱️ Up to 1 minute</span>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-headphones"></i>
+                            <span>Audio Ad (30 sec)</span>
+                        </div>
+                        <div class="ad-description">Short audio message</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">30K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <span class="specs-tag">⏱️ Up to 30 seconds</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Cart Ad</span>
+                        </div>
+                        <div class="ad-description">Product image with cart button</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">50K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <span class="specs-tag">🛒 Direct Purchase</span>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-store"></i>
+                            <span>Kanda Market</span>
+                        </div>
+                        <div class="ad-description">Classified listing / Hustle link</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">10K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <span class="specs-tag">💼 Budget-Friendly</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-film"></i>
+                            <span>Sponsored Content</span>
+                        </div>
+                        <div class="ad-description">5-minute documentary/feature</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">300K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <span class="specs-tag">⭐ Premium Feature</span>
+            </div>
+
+            <div class="highlight-card">
+                <div class="highlight-title">💡 All Ads Are Interactive</div>
+                <div class="highlight-text">Every ad includes clickable links, engagement tracking, and direct customer connection</div>
+            </div>
+        </div>
+
+        <div class="footer-bar">
+            <span><i class="fas fa-newspaper"></i> KandaNews Africa</span>
+            <span>Page 4</span>
+        </div>
+    </div></div><span class="thumb-num">4</span></div>
+<div class="swiper-slide"><div class="thumb-page page-4"><div class="page-wrapper">
+        <div class="header-section">
+            <div class="category">💰 SAVINGS & VALUE</div>
+            <h1 class="headline">Discount Packages</h1>
+            <p class="subheadline">Save more with weekly & monthly bookings</p>
+        </div>
+
+        <div class="content-section">
+            <div class="package-grid">
+                <div class="package-card">
+                    <div class="package-badge">📅</div>
+                    <div class="package-name">Weekly Plan</div>
+                    <div class="package-duration">7 Days</div>
+                    <div class="package-discount">10% OFF</div>
+                    <div class="package-note">Pre-booked & Prepaid</div>
+                </div>
+
+                <div class="package-card">
+                    <div class="package-badge">🎯</div>
+                    <div class="package-name">Monthly Plan</div>
+                    <div class="package-duration">30 Days</div>
+                    <div class="package-discount">20% OFF</div>
+                    <div class="package-note">Pre-booked & Prepaid</div>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <i class="fas fa-star"></i>
+                <span>Advertiser Benefits</span>
+            </div>
+
+            <ul class="benefits-list">
+                <li>
+                    <i class="fas fa-check-circle benefit-icon"></i>
+                    <span>Direct to verified subscribers</span>
+                </li>
+                <li>
+                    <i class="fas fa-link benefit-icon"></i>
+                    <span>Clickable links to website/store</span>
+                </li>
+                <li>
+                    <i class="fas fa-chart-line benefit-icon"></i>
+                    <span>Built-in engagement metrics</span>
+                </li>
+                <li>
+                    <i class="fas fa-shopping-cart benefit-icon"></i>
+                    <span>Smart cart integration</span>
+                </li>
+                <li>
+                    <i class="fas fa-user-tie benefit-icon"></i>
+                    <span>Dedicated ad manager</span>
+                </li>
+            </ul>
+
+            <div class="highlight-box">
+                <div class="highlight-text">✨ Free Design Support for Full-Page Ads</div>
+            </div>
+        </div>
+
+        <div class="footer-bar">
+            <span><i class="fas fa-newspaper"></i> KandaNews Africa</span>
+            <span>Page 5</span>
+        </div>
+    </div></div><span class="thumb-num">5</span></div>
+<div class="swiper-slide"><div class="thumb-page page-5"><div class="page-wrapper">
+        <div class="tagline-section">
+            <div class="tagline-main">Ready to Reach<br>Uganda's Future?</div>
+            <div class="tagline-sub">Let's grow your brand together</div>
+        </div>
+
+        <div class="content-section">
+            <div class="contact-grid">
+                <div class="contact-box">
+                    <div class="contact-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="contact-label">WhatsApp</div>
+                    <div class="contact-value">+256 772 253804</div>
+                </div>
+
+                <div class="contact-box">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-label">Email</div>
+                    <div class="contact-value">adverts@ug.kandanews.africa</div>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-title">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Booking & Submission</span>
+                </div>
+                <div class="info-content">
+                    <div class="info-item">
+                        <i class="fas fa-envelope info-icon"></i>
+                        <a href="mailto:adverts@ug.kandanews.africa" class="info-link">adverts@ug.kandanews.africa</a>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-globe info-icon"></i>
+                        <a href="https://www.kandanews.africa" class="info-link">www.kandanews.africa</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-title">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Submission Guidelines</span>
+                </div>
+                <div class="info-content">
+                    <div class="info-item">
+                        <i class="fas fa-clock info-icon"></i>
+                        <span>Deadline: 24 hours before publish</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-file info-icon"></i>
+                        <span>Formats: JPG, PNG, MP4, MP3, GIF</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box pulse">
+                <div class="highlight-title">🎨 Free Design Support</div>
+                <div class="highlight-text">Graphics, layout & formatting included for full-page and native content ads</div>
+            </div>
+        </div>
+
+        <div class="footer-section">
+            <div class="footer-text">
+                © 2025 KandaNews Africa<br>
+                All rights reserved
+            </div>
+            <div class="footer-badge">
+                <span>🇺🇬</span>
+                <span>Made in Uganda</span>
+            </div>
+        </div>
+    </div></div><span class="thumb-num">6</span></div>
+
+</div>
+</div>
+</div>
+
+<div class="viewer">
+<div class="swiper main-swiper">
+<div class="swiper-wrapper">
+<div class="swiper-slide page-0"><div class="page-wrapper">
+        <div class="shine"></div>
+        <div class="particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+
+        <div class="cover-container">
+            <div class="cover-icon">
+                <i class="fas fa-bullhorn"></i>
+            </div>
+            <h1 class="cover-title">Advertising<br>Rate Card</h1>
+            <p class="cover-subtitle">2025 Edition</p>
+            <p class="cover-tagline">Your Brand. Right in Their Pocket.<br>Advertise Smarter, Not Harder</p>
+            
+            <div class="badge-container">
+                <div class="badge">💼 VERIFIED REACH</div>
+                <div class="badge">📱 CLICK-ENABLED</div>
+                <div class="badge">🎯 TARGETED</div>
+            </div>
+        </div>
+
+        <div class="footer-badge">
+            🇺🇬 Uganda Edition • KandaNews Africa
+        </div>
+    </div></div>
+<div class="swiper-slide page-1"><div class="page-wrapper">
+        <div class="header-section">
+            <div class="category">📱 PLATFORM & REACH</div>
+            <h1 class="headline">Reach Uganda's Future Today</h1>
+            <p class="subheadline">Digital Flipbook Platform with Verified, Active Daily Users</p>
+        </div>
+
+        <div class="content-section">
+            <div class="info-card">
+                <div class="info-card-title">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>Platform Features</span>
+                </div>
+                <ul class="info-list">
+                    <li>Digital Flipbook Format</li>
+                    <li>All Multimedia Ads are Click-Enabled</li>
+                    <li>Direct Links to Your Website or Store</li>
+                    <li>Smart Cart Integration for Products</li>
+                    <li>Built-in Engagement Metrics</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-title">
+                    <i class="fas fa-users"></i>
+                    <span>Target Audience</span>
+                </div>
+                <ul class="info-list">
+                    <li>University Students across Uganda</li>
+                    <li>Young Professionals & Entrepreneurs</li>
+                    <li>Verified Subscribers Only</li>
+                    <li>Active Daily Engagement</li>
+                    <li>Mobile-First Generation</li>
+                </ul>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Verified Users</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">Daily</span>
+                    <span class="stat-label">Active Reach</span>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                💡 Every Ad is Interactive & Trackable
+            </div>
+        </div>
+
+        <div class="footer-bar">
+            <span><i class="fas fa-newspaper"></i> KandaNews Africa</span>
+            <span>Page 2</span>
+        </div>
+    </div></div>
+<div class="swiper-slide page-2"><div class="page-wrapper">
+        <div class="header-section">
+            <div class="category">📺 DISPLAY ADVERTISING</div>
+            <h1 class="headline">Display Ad Placements</h1>
+            <p class="subheadline">Premium visibility for your brand</p>
+        </div>
+
+        <div class="content-section">
+            <div class="pricing-card">
+                <div class="featured-badge">⭐ MOST POPULAR</div>
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Full Page</span>
+                        </div>
+                        <div class="ad-description">Entire page dedicated to your brand</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">200K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <ul class="specs-list">
+                    <li>Dimensions: 540 × 780px</li>
+                    <li>Maximum impact & visibility</li>
+                    <li>Free design support included</li>
+                </ul>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-clone"></i>
+                            <span>Half Page</span>
+                        </div>
+                        <div class="ad-description">Half screen placement</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">120K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <ul class="specs-list">
+                    <li>Dimensions: 540 × 390px</li>
+                    <li>Great visibility, cost-effective</li>
+                    <li>Can pair with content</li>
+                </ul>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-video"></i>
+                            <span>Video Ad (60 sec)</span>
+                        </div>
+                        <div class="ad-description">Auto-play within content</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">120K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <ul class="specs-list">
+                    <li>Up to 1 minute / 60 seconds</li>
+                    <li>Auto-play feature</li>
+                    <li>High engagement rate</li>
+                </ul>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-video"></i>
+                            <span>Video Ad (30 sec)</span>
+                        </div>
+                        <div class="ad-description">Short-form video content</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">60K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <ul class="specs-list">
+                    <li>Up to 30 seconds</li>
+                    <li>Perfect for quick messages</li>
+                    <li>Budget-friendly video option</li>
+                </ul>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-film"></i>
+                            <span>GIF Insert</span>
+                        </div>
+                        <div class="ad-description">Looping graphic / 4 image slider</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">80K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <ul class="specs-list">
+                    <li>Up to 15 seconds loop</li>
+                    <li>Eye-catching animation</li>
+                    <li>Multiple images showcase</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bar">
+            <span><i class="fas fa-newspaper"></i> KandaNews Africa</span>
+            <span>Page 3</span>
+        </div>
+    </div></div>
+<div class="swiper-slide page-3"><div class="page-wrapper">
+        <div class="header-section">
+            <div class="category">🎵 MULTIMEDIA & AUDIO</div>
+            <h1 class="headline">Audio & Interactive Ads</h1>
+            <p class="subheadline">Engage your audience with sound and motion</p>
+        </div>
+
+        <div class="content-section">
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-headphones"></i>
+                            <span>Audio Ad (60 sec)</span>
+                        </div>
+                        <div class="ad-description">Voicenote or podcast-style audio</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">60K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <span class="specs-tag">⏱️ Up to 1 minute</span>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-headphones"></i>
+                            <span>Audio Ad (30 sec)</span>
+                        </div>
+                        <div class="ad-description">Short audio message</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">30K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <span class="specs-tag">⏱️ Up to 30 seconds</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Cart Ad</span>
+                        </div>
+                        <div class="ad-description">Product image with cart button</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">50K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <span class="specs-tag">🛒 Direct Purchase</span>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-store"></i>
+                            <span>Kanda Market</span>
+                        </div>
+                        <div class="ad-description">Classified listing / Hustle link</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">10K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <span class="specs-tag">💼 Budget-Friendly</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-film"></i>
+                            <span>Sponsored Content</span>
+                        </div>
+                        <div class="ad-description">5-minute documentary/feature</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">300K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <span class="specs-tag">⭐ Premium Feature</span>
+            </div>
+
+            <div class="highlight-card">
+                <div class="highlight-title">💡 All Ads Are Interactive</div>
+                <div class="highlight-text">Every ad includes clickable links, engagement tracking, and direct customer connection</div>
+            </div>
+        </div>
+
+        <div class="footer-bar">
+            <span><i class="fas fa-newspaper"></i> KandaNews Africa</span>
+            <span>Page 4</span>
+        </div>
+    </div></div>
+<div class="swiper-slide page-4"><div class="page-wrapper">
+        <div class="header-section">
+            <div class="category">💰 SAVINGS & VALUE</div>
+            <h1 class="headline">Discount Packages</h1>
+            <p class="subheadline">Save more with weekly & monthly bookings</p>
+        </div>
+
+        <div class="content-section">
+            <div class="package-grid">
+                <div class="package-card">
+                    <div class="package-badge">📅</div>
+                    <div class="package-name">Weekly Plan</div>
+                    <div class="package-duration">7 Days</div>
+                    <div class="package-discount">10% OFF</div>
+                    <div class="package-note">Pre-booked & Prepaid</div>
+                </div>
+
+                <div class="package-card">
+                    <div class="package-badge">🎯</div>
+                    <div class="package-name">Monthly Plan</div>
+                    <div class="package-duration">30 Days</div>
+                    <div class="package-discount">20% OFF</div>
+                    <div class="package-note">Pre-booked & Prepaid</div>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <i class="fas fa-star"></i>
+                <span>Advertiser Benefits</span>
+            </div>
+
+            <ul class="benefits-list">
+                <li>
+                    <i class="fas fa-check-circle benefit-icon"></i>
+                    <span>Direct to verified subscribers</span>
+                </li>
+                <li>
+                    <i class="fas fa-link benefit-icon"></i>
+                    <span>Clickable links to website/store</span>
+                </li>
+                <li>
+                    <i class="fas fa-chart-line benefit-icon"></i>
+                    <span>Built-in engagement metrics</span>
+                </li>
+                <li>
+                    <i class="fas fa-shopping-cart benefit-icon"></i>
+                    <span>Smart cart integration</span>
+                </li>
+                <li>
+                    <i class="fas fa-user-tie benefit-icon"></i>
+                    <span>Dedicated ad manager</span>
+                </li>
+            </ul>
+
+            <div class="highlight-box">
+                <div class="highlight-text">✨ Free Design Support for Full-Page Ads</div>
+            </div>
+        </div>
+
+        <div class="footer-bar">
+            <span><i class="fas fa-newspaper"></i> KandaNews Africa</span>
+            <span>Page 5</span>
+        </div>
+    </div></div>
+<div class="swiper-slide page-5"><div class="page-wrapper">
+        <div class="tagline-section">
+            <div class="tagline-main">Ready to Reach<br>Uganda's Future?</div>
+            <div class="tagline-sub">Let's grow your brand together</div>
+        </div>
+
+        <div class="content-section">
+            <div class="contact-grid">
+                <div class="contact-box">
+                    <div class="contact-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="contact-label">WhatsApp</div>
+                    <div class="contact-value">+256 772 253804</div>
+                </div>
+
+                <div class="contact-box">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-label">Email</div>
+                    <div class="contact-value">adverts@ug.kandanews.africa</div>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-title">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Booking & Submission</span>
+                </div>
+                <div class="info-content">
+                    <div class="info-item">
+                        <i class="fas fa-envelope info-icon"></i>
+                        <a href="mailto:adverts@ug.kandanews.africa" class="info-link">adverts@ug.kandanews.africa</a>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-globe info-icon"></i>
+                        <a href="https://www.kandanews.africa" class="info-link">www.kandanews.africa</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-title">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Submission Guidelines</span>
+                </div>
+                <div class="info-content">
+                    <div class="info-item">
+                        <i class="fas fa-clock info-icon"></i>
+                        <span>Deadline: 24 hours before publish</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-file info-icon"></i>
+                        <span>Formats: JPG, PNG, MP4, MP3, GIF</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box pulse">
+                <div class="highlight-title">🎨 Free Design Support</div>
+                <div class="highlight-text">Graphics, layout & formatting included for full-page and native content ads</div>
+            </div>
+        </div>
+
+        <div class="footer-section">
+            <div class="footer-text">
+                © 2025 KandaNews Africa<br>
+                All rights reserved
+            </div>
+            <div class="footer-badge">
+                <span>🇺🇬</span>
+                <span>Made in Uganda</span>
+            </div>
+        </div>
+    </div></div>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="controls">
+<button class="btn" id="sound"><i class="fas fa-volume-up"></i></button>
+<button class="btn" id="prev"><i class="fas fa-chevron-left"></i></button>
+<span class="page-num" id="num">1 / 6</span>
+<button class="btn" id="next"><i class="fas fa-chevron-right"></i></button>
+<button class="btn" id="full"><i class="fas fa-expand"></i></button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+let soundOn = true;
+const audio = new Audio('turn.mp3');
+audio.volume = 0.3;
+
+const thumbSwiper = new Swiper('.thumbs', {
+    direction: 'vertical',
+    slidesPerView: 'auto',
+    freeMode: true,
+    watchSlidesProgress: true
+});
+
+const mainSwiper = new Swiper('.main-swiper', {
+    effect: 'flip',
+    flipEffect: {
+        slideShadows: true,
+        limitRotation: true
+    },
+    speed: 600,
+    keyboard: { enabled: true },
+    thumbs: { swiper: thumbSwiper },
+    on: {
+        slideChange: function() {
+            const current = this.activeIndex + 1;
+            const total = this.slides.length;
+            document.getElementById('num').textContent = current + ' / ' + total;
+            document.getElementById('prev').disabled = current === 1;
+            document.getElementById('next').disabled = current === total;
+            
+            if (soundOn) {
+                audio.currentTime = 0;
+                audio.play().catch(() => {});
+            }
+            
+            if (navigator.vibrate) navigator.vibrate(10);
+        }
+    }
+});
+
+document.getElementById('prev').onclick = () => mainSwiper.slidePrev();
+document.getElementById('next').onclick = () => mainSwiper.slideNext();
+document.getElementById('sound').onclick = function() {
+    soundOn = !soundOn;
+    this.classList.toggle('muted');
+    this.querySelector('i').classList.toggle('fa-volume-up');
+    this.querySelector('i').classList.toggle('fa-volume-mute');
+};
+
+let isFullscreen = false;
+document.getElementById('full').onclick = function() {
+    if (!isFullscreen) {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        }
+        isFullscreen = true;
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+        isFullscreen = false;
+    }
+};
+
+document.getElementById('prev').disabled = true;
+
+// Handle scrollable page indicators
+function updateScrollIndicators() {
+    document.querySelectorAll('.page-wrapper.scrollable').forEach(page => {
+        page.addEventListener('scroll', function() {
+            const scrollTop = this.scrollTop;
+            const scrollHeight = this.scrollHeight;
+            const clientHeight = this.clientHeight;
+            
+            // Hide indicator when scrolled near bottom (within 50px)
+            if (scrollTop + clientHeight >= scrollHeight - 50) {
+                this.classList.add('scrolled');
+            } else {
+                this.classList.remove('scrolled');
+            }
+        });
+        
+        // Trigger initial check
+        page.dispatchEvent(new Event('scroll'));
+    });
+}
+
+// Check on page change
+mainSwiper.on('slideChange', function() {
+    setTimeout(updateScrollIndicators, 100);
+});
+
+// Initial check
+updateScrollIndicators();
+
+// Fullscreen on first interaction (browsers require user action)
+let hasInteracted = false;
+const fsPrompt = document.getElementById('fs-prompt');
+
+function enterFullscreen() {
+    if (!hasInteracted) {
+        hasInteracted = true;
+        fsPrompt.classList.add('hidden');
+        
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(() => {});
+        } else if (document.documentElement.webkitRequestFullscreen) {
+            document.documentElement.webkitRequestFullscreen().catch(() => {});
+        }
+    }
+}
+
+// Trigger fullscreen on any interaction
+fsPrompt.addEventListener('click', enterFullscreen);
+fsPrompt.addEventListener('touchstart', enterFullscreen);
+
+console.log('KandaNews - 6 pages loaded');
+</script>
+</body>
+</html>

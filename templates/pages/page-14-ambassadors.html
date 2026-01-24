@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join the Movement - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.5);
+            border-radius: 3px;
+        }
+
+        .header-section {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header-icon {
+            font-size: 52px;
+            margin-bottom: 15px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .header-subtitle {
+            font-size: 15px;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+
+        .content-section {
+            padding: 30px;
+        }
+
+        .intro-box {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .intro-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ee0979;
+            margin-bottom: 12px;
+        }
+
+        .intro-text {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .roles-section {
+            margin-bottom: 20px;
+        }
+
+        .role-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .role-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .role-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #ee0979, #ff6a00);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .role-info {
+            flex: 1;
+        }
+
+        .role-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1e2b42;
+            margin-bottom: 3px;
+        }
+
+        .role-subtitle {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .role-description {
+            font-size: 13px;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .benefits-list {
+            margin-bottom: 15px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .benefit-check {
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, #ee0979, #ff6a00);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .requirements-box {
+            background: #fff8f0;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #ff6a00;
+        }
+
+        .requirements-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ee0979;
+            margin-bottom: 10px;
+        }
+
+        .requirement-item {
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 6px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .requirement-item:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #ff6a00;
+            font-weight: 700;
+        }
+
+        .cta-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .cta-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1e2b42;
+            margin-bottom: 15px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #ee0979, #ff6a00);
+            color: white;
+            padding: 15px 35px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(238, 9, 121, 0.3);
+            margin-bottom: 15px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(238, 9, 121, 0.5);
+        }
+
+        .contact-info {
+            font-size: 13px;
+            color: #666;
+            margin-top: 15px;
+        }
+
+        .contact-detail {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 8px 0;
+        }
+
+        .perks-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .perk-card {
+            background: linear-gradient(135deg, rgba(238, 9, 121, 0.1), rgba(255, 106, 0, 0.1));
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .perk-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .perk-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="header-section">
+            <div class="header-icon">🚀</div>
+            <h1 class="header-title">Join the Movement</h1>
+            <p class="header-subtitle">Become a KandaNews Ambassador & Shape Africa's Future</p>
+        </div>
+
+        <div class="content-section">
+            <div class="intro-box">
+                <div class="intro-title">Are You Passionate About Change?</div>
+                <div class="intro-text">
+                    KandaNews is looking for <strong>bold, driven individuals</strong> who believe in the power of information to transform communities. Whether you're on campus or in the corporate world, this is your chance to lead, inspire, and grow.
+                </div>
+            </div>
+
+            <div class="roles-section">
+                <div class="role-card">
+                    <div class="role-header">
+                        <div class="role-icon">🎓</div>
+                        <div class="role-info">
+                            <div class="role-title">University Ambassador</div>
+                            <div class="role-subtitle">Campus Leader • Storyteller • Connector</div>
+                        </div>
+                    </div>
+                    <div class="role-description">
+                        Be the voice of KandaNews on your campus. Share our editions, organize events, and connect students to opportunities that matter.
+                    </div>
+
+                    <div class="benefits-list">
+                        <div class="benefit-item">
+                            <div class="benefit-check">✓</div>
+                            <span>Monthly stipend + performance bonuses</span>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">✓</div>
+                            <span>Leadership training & mentorship</span>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">✓</div>
+                            <span>Networking with top entrepreneurs</span>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">✓</div>
+                            <span>Certificate of recognition</span>
+                        </div>
+                    </div>
+
+                    <div class="requirements-box">
+                        <div class="requirements-title">What We're Looking For:</div>
+                        <div class="requirement-item">Currently enrolled in any Ugandan university</div>
+                        <div class="requirement-item">Active on social media & WhatsApp groups</div>
+                        <div class="requirement-item">Passion for news, entrepreneurship, or community building</div>
+                        <div class="requirement-item">Ability to commit 5-10 hours per week</div>
+                    </div>
+                </div>
+
+                <div class="role-card">
+                    <div class="role-header">
+                        <div class="role-icon">💼</div>
+                        <div class="role-info">
+                            <div class="role-title">Corporate Ambassador</div>
+                            <div class="role-subtitle">Professional • Influencer • Bridge-Builder</div>
+                        </div>
+                    </div>
+                    <div class="role-description">
+                        Connect KandaNews with your professional network. Help us reach young professionals, entrepreneurs, and corporate decision-makers.
+                    </div>
+
+                    <div class="benefits-list">
+                        <div class="benefit-item">
+                            <div class="benefit-check">✓</div>
+                            <span>Commission on corporate ad deals</span>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">✓</div>
+                            <span>Exclusive business networking events</span>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">✓</div>
+                            <span>Featured in KandaNews success stories</span>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">✓</div>
+                            <span>Personal brand growth support</span>
+                        </div>
+                    </div>
+
+                    <div class="requirements-box">
+                        <div class="requirements-title">What We're Looking For:</div>
+                        <div class="requirement-item">Working professional or entrepreneur</div>
+                        <div class="requirement-item">Strong professional network (LinkedIn/Twitter)</div>
+                        <div class="requirement-item">Interest in media, advertising, or partnerships</div>
+                        <div class="requirement-item">Flexible schedule (5-8 hours per week)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="perks-grid">
+                <div class="perk-card">
+                    <div class="perk-icon">💰</div>
+                    <div class="perk-label">Get Paid</div>
+                </div>
+                <div class="perk-card">
+                    <div class="perk-icon">🌍</div>
+                    <div class="perk-label">Make Impact</div>
+                </div>
+                <div class="perk-card">
+                    <div class="perk-icon">🤝</div>
+                    <div class="perk-label">Build Network</div>
+                </div>
+                <div class="perk-card">
+                    <div class="perk-icon">📈</div>
+                    <div class="perk-label">Grow Skills</div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <div class="cta-title">Ready to Lead?</div>
+                <a href="#" class="cta-button">Apply Now 🚀</a>
+                
+                <div class="contact-info">
+                    <div class="contact-detail">
+                        <i class="fas fa-envelope"></i>
+                        <span>ambassadors@kandanews.africa</span>
+                    </div>
+                    <div class="contact-detail">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>+256 700 000 000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

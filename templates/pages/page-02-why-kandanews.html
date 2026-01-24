@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why KandaNews - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: linear-gradient(135deg, #1e2b42 0%, #2a3f5f 100%);
+            color: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Custom scrollbar */
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: #f05a1a;
+            border-radius: 3px;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #f05a1a 0%, #ff7a3d 100%);
+            padding: 35px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content-section {
+            padding: 30px;
+        }
+
+        .section-block {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #f05a1a;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #f05a1a;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-text {
+            font-size: 13px;
+            line-height: 1.7;
+            opacity: 0.9;
+        }
+
+        .value-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .value-item {
+            background: rgba(240, 90, 26, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .value-item:hover {
+            background: rgba(240, 90, 26, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .value-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .value-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .tagline {
+            text-align: center;
+            padding: 20px;
+            font-size: 20px;
+            font-weight: 700;
+            font-style: italic;
+            color: #f05a1a;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="header-section">
+            <div class="header-icon">🎯</div>
+            <h1 class="header-title">Why KandaNews?</h1>
+            <p class="header-subtitle">Built for Africa's Next Generation</p>
+        </div>
+
+        <div class="content-section">
+            <div class="section-block">
+                <div class="section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Our Vision
+                </div>
+                <div class="section-text">
+                    To become Africa's #1 digital platform that empowers students, entrepreneurs, and professionals with news that inspires action, growth, and change.
+                </div>
+            </div>
+
+            <div class="section-block">
+                <div class="section-title">
+                    <i class="fas fa-rocket"></i>
+                    Our Mission
+                </div>
+                <div class="section-text">
+                    Delivering curated, multimedia news experiences directly to your WhatsApp—stories that matter, opportunities that transform, and voices that inspire.
+                </div>
+            </div>
+
+            <div class="section-block">
+                <div class="section-title">
+                    <i class="fas fa-users"></i>
+                    Who We Serve
+                </div>
+                <div class="section-text">
+                    University students seeking knowledge • Entrepreneurs building empires • Young professionals climbing ladders • Anyone hungry for growth
+                </div>
+            </div>
+
+            <div class="value-grid">
+                <div class="value-item">
+                    <div class="value-icon">⚡</div>
+                    <div class="value-label">Fast</div>
+                </div>
+                <div class="value-item">
+                    <div class="value-icon">🎯</div>
+                    <div class="value-label">Relevant</div>
+                </div>
+                <div class="value-item">
+                    <div class="value-icon">💡</div>
+                    <div class="value-label">Inspiring</div>
+                </div>
+                <div class="value-item">
+                    <div class="value-icon">📱</div>
+                    <div class="value-label">Mobile-First</div>
+                </div>
+            </div>
+
+            <div class="tagline">
+                "Tap to Know. Tap to Grow."
+            </div>
+        </div>
+    </div>
+</body>
+</html>

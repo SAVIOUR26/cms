@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Matters - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: #16a085;
+            border-radius: 3px;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);
+            color: white;
+            padding: 35px 30px;
+            text-align: center;
+        }
+
+        .header-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .header-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            opacity: 0.95;
+        }
+
+        .content-section {
+            padding: 30px;
+        }
+
+        .intro-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #16a085;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .intro-text {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #333;
+        }
+
+        .tip-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .tip-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(22, 160, 133, 0.15);
+        }
+
+        .tip-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .tip-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #16a085, #1abc9c);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .tip-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #16a085;
+        }
+
+        .tip-text {
+            font-size: 13px;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .emergency-box {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .emergency-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .emergency-text {
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .emergency-number {
+            font-size: 24px;
+            font-weight: 800;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+        }
+
+        .reminder-box {
+            background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .reminder-text {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.6;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="header-section">
+            <div class="header-icon">🧠</div>
+            <h1 class="header-title">Mental Health Matters</h1>
+            <p class="header-subtitle">Taking care of your mind</p>
+        </div>
+
+        <div class="content-section">
+            <div class="intro-box">
+                <div class="intro-text">
+                    Between exams, deadlines, hustles, and life pressures—it's easy to forget your mental health. But here's the truth: <strong>you can't pour from an empty cup</strong>. Taking care of your mind isn't a luxury; it's essential for success.
+                </div>
+            </div>
+
+            <div class="tip-card">
+                <div class="tip-header">
+                    <div class="tip-icon"><i class="fas fa-pause"></i></div>
+                    <div class="tip-title">Take Breaks Without Guilt</div>
+                </div>
+                <div class="tip-text">
+                    Rest is productive. Step away from your screen every 90 minutes. Take a 10-minute walk, stretch, or simply breathe. Your brain needs downtime to process information and maintain creativity.
+                </div>
+            </div>
+
+            <div class="tip-card">
+                <div class="tip-header">
+                    <div class="tip-icon"><i class="fas fa-comments"></i></div>
+                    <div class="tip-title">Talk to Someone You Trust</div>
+                </div>
+                <div class="tip-text">
+                    Bottling emotions drains energy. Share your struggles with a friend, mentor, or counselor. You'll be surprised how many people have felt exactly what you're feeling right now.
+                </div>
+            </div>
+
+            <div class="tip-card">
+                <div class="tip-header">
+                    <div class="tip-icon"><i class="fas fa-bed"></i></div>
+                    <div class="tip-title">Prioritize Sleep</div>
+                </div>
+                <div class="tip-text">
+                    You can't hustle on empty. Aim for 7-8 hours of quality sleep. Turn off screens 30 minutes before bed. A well-rested mind makes better decisions and solves problems faster.
+                </div>
+            </div>
+
+            <div class="tip-card">
+                <div class="tip-header">
+                    <div class="tip-icon"><i class="fas fa-heartbeat"></i></div>
+                    <div class="tip-title">Move Your Body</div>
+                </div>
+                <div class="tip-text">
+                    Exercise isn't just for physical health. A 20-minute walk, yoga session, or dance break releases endorphins that naturally reduce stress and boost mood. Movement is medicine.
+                </div>
+            </div>
+
+            <div class="tip-card">
+                <div class="tip-header">
+                    <div class="tip-icon"><i class="fas fa-ban"></i></div>
+                    <div class="tip-title">Set Boundaries</div>
+                </div>
+                <div class="tip-text">
+                    It's okay to say no. You don't have to attend every event, accept every project, or reply to every message instantly. Protect your peace. Your mental health is more important than being available 24/7.
+                </div>
+            </div>
+
+            <div class="tip-card">
+                <div class="tip-header">
+                    <div class="tip-icon"><i class="fas fa-smile"></i></div>
+                    <div class="tip-title">Celebrate Small Wins</div>
+                </div>
+                <div class="tip-text">
+                    You finished an assignment? Celebrate. You showed up today despite feeling low? That's a victory. Acknowledge your progress, no matter how small. Progress over perfection.
+                </div>
+            </div>
+
+            <div class="emergency-box">
+                <div class="emergency-title">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>Crisis Support</span>
+                </div>
+                <div class="emergency-text">
+                    If you're in crisis or having thoughts of self-harm, reach out immediately. You're not alone.
+                </div>
+                <div class="emergency-number">
+                    📞 Uganda: 0800 221 222
+                </div>
+                <div style="font-size: 12px; margin-top: 10px; opacity: 0.9;">
+                    Mental Health Helpline • Available 24/7 • Free & Confidential
+                </div>
+            </div>
+
+            <div class="reminder-box">
+                <div class="reminder-text">
+                    "Your mental health is not a weakness. It's a part of being human. Take care of it like you'd take care of your phone battery—recharge before you run out."
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

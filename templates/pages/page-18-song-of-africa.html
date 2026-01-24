@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song of Africa - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #fdc830 100%);
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+        }
+
+        .header-section {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header-icon {
+            font-size: 52px;
+            margin-bottom: 15px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .content-section {
+            padding: 30px;
+        }
+
+        .song-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .album-art {
+            height: 200px;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #fdc830 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .youtube-embed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .youtube-embed iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .audio-player {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .audio-player audio {
+            width: 100%;
+            height: 35px;
+        }
+
+        .song-info {
+            padding: 25px;
+        }
+
+        .song-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1e2b42;
+            margin-bottom: 8px;
+        }
+
+        .artist-name {
+            font-size: 16px;
+            color: #ff6b35;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .song-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .section-block {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-text {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .highlight {
+            background: rgba(255, 107, 53, 0.15);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #ff6b35;
+        }
+
+        .vibe-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .vibe-tag {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .lyrics-box {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(253, 200, 48, 0.1));
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #ff6b35;
+            margin: 20px 0;
+        }
+
+        .lyrics-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 12px;
+        }
+
+        .lyrics-text {
+            font-size: 13px;
+            line-height: 1.9;
+            color: #555;
+            font-style: italic;
+        }
+
+        .why-box {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .why-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .why-text {
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .listen-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .listen-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e2b42;
+            margin-bottom: 15px;
+        }
+
+        .platform-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .platform-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .spotify-btn {
+            background: #1DB954;
+            color: white;
+        }
+
+        .youtube-btn {
+            background: #FF0000;
+            color: white;
+        }
+
+        .apple-btn {
+            background: #000000;
+            color: white;
+        }
+
+        .platform-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .mood-meter {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff8f0;
+            border-radius: 10px;
+        }
+
+        .mood-item {
+            text-align: center;
+        }
+
+        .mood-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .mood-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="header-section">
+            <div class="header-icon">🎵</div>
+            <h1 class="header-title">Song of Africa</h1>
+            <p class="header-subtitle">This week's featured track</p>
+        </div>
+
+        <div class="content-section">
+            <div class="song-card">
+                <div class="album-art">
+                    <div class="youtube-embed">
+                        <!-- Replace YOUTUBE_VIDEO_ID with actual video ID -->
+                        <iframe src="https://www.youtube.com/embed/FTQbiNvZqaY" title="Africa by Toto"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+                <div class="song-info">
+                    <h2 class="song-title">Africa</h2>
+                    <div class="artist-name">Toto</div>
+
+                    <div class="song-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-music"></i>
+                            <span>Afrobeat/Soul</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>3:45</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>2025</span>
+                        </div>
+                    </div>
+
+                    <div class="section-block">
+                        <div class="section-title">
+                            <i class="fas fa-headphones"></i>
+                            <span>What You'll Hear</span>
+                        </div>
+                        <div class="section-text">
+                            A timeless classic that has become an anthem celebrating the African continent. Toto's
+                            <span class="highlight">iconic 1982 hit</span> combines rock, pop, and world music
+                            influences, creating a powerful tribute that resonates across generations. From the
+                            unforgettable opening drums to the soaring chorus, this is a song that captures the spirit
+                            and mystique of Africa.
+                        </div>
+                        <div class="vibe-tags">
+                            <div class="vibe-tag">Uplifting</div>
+                            <div class="vibe-tag">Cultural</div>
+                            <div class="vibe-tag">Empowering</div>
+                            <div class="vibe-tag">Danceable</div>
+                        </div>
+                    </div>
+
+                    <div class="lyrics-box">
+                        <div class="lyrics-title">🎤 Sample Lyrics</div>
+                        <div class="lyrics-text">
+                            "From the mountains to the plains<br>
+                            Through the struggles and the gains<br>
+                            We rise, we stand, we sing as one<br>
+                            This is the song of Africa..."
+                        </div>
+                    </div>
+
+                    <div class="section-block">
+                        <div class="section-title">
+                            <i class="fas fa-heart"></i>
+                            <span>The Story Behind It</span>
+                        </div>
+                        <div class="section-text">
+                            Tootoo wrote this after traveling through
+                            <span class="highlight">15 African countries</span>, witnessing both challenges and
+                            triumphs. The song samples traditional instruments from West, East, and Southern Africa,
+                            uniting diverse sounds into one harmonious celebration. It's more than music—it's a
+                            movement.
+                        </div>
+                    </div>
+
+                    <div class="mood-meter">
+                        <div class="mood-item">
+                            <div class="mood-icon">💪</div>
+                            <div class="mood-label">Motivational</div>
+                        </div>
+                        <div class="mood-item">
+                            <div class="mood-icon">🕺</div>
+                            <div class="mood-label">Danceable</div>
+                        </div>
+                        <div class="mood-item">
+                            <div class="mood-icon">❤️</div>
+                            <div class="mood-label">Emotional</div>
+                        </div>
+                        <div class="mood-item">
+                            <div class="mood-icon">🌍</div>
+                            <div class="mood-label">Pan-African</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="why-box">
+                <div class="why-title">
+                    <i class="fas fa-star"></i>
+                    <span>Why You Need to Hear This</span>
+                </div>
+                <div class="why-text">
+                    In a world that often highlights our divisions, "Song of Africa" reminds us of our shared heritage,
+                    strength, and potential. Whether you're grinding through exams, building a business, or just need a
+                    reminder of who you are—this track delivers. Perfect for morning motivation or late-night
+                    reflection.
+                </div>
+            </div>
+
+            <div class="listen-section">
+                <div class="listen-title">🎧 Listen Now</div>
+                <div class="platform-buttons">
+                    <a href="#" class="platform-btn spotify-btn">
+                        <i class="fab fa-spotify"></i>
+                        <span>Spotify</span>
+                    </a>
+                    <a href="#" class="platform-btn youtube-btn">
+                        <i class="fab fa-youtube"></i>
+                        <span>YouTube</span>
+                    </a>
+                    <a href="#" class="platform-btn apple-btn">
+                        <i class="fab fa-apple"></i>
+                        <span>Apple Music</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

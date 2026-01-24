@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPECIAL EDITION</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #1e2b42;
+    color: #fff;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    background: #e5e7eb;
+    border-bottom: 1px solid #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.logo { 
+    height: 28px;
+    object-fit: contain;
+    margin-right: 12px;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.fullscreen-prompt {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    cursor: pointer;
+    animation: fadeIn 0.3s;
+}
+
+.fullscreen-prompt.hidden {
+    display: none;
+}
+
+.fs-message {
+    text-align: center;
+    color: white;
+}
+
+.fs-message i {
+    font-size: 48px;
+    color: #f05a1a;
+    margin-bottom: 15px;
+    animation: pulse 2s infinite;
+}
+
+.fs-message p {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.sidebar {
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.thumbs {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 5px;
+}
+
+.thumbs::-webkit-scrollbar {
+    width: 4px;
+}
+
+.thumbs::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+    border-radius: 2px;
+}
+
+.thumbs::-webkit-scrollbar-thumb {
+    background: rgba(240,90,26,0.6);
+    border-radius: 2px;
+}
+
+.thumbs .swiper-slide {
+    height: 110px !important;
+    margin-bottom: 12px;
+    cursor: pointer;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px solid rgba(255,255,255,0.1);
+    transition: all 0.3s;
+    background: rgba(0,0,0,0.4);
+    position: relative;
+}
+
+.thumbs .swiper-slide:hover {
+    border-color: rgba(240,90,26,0.8);
+    transform: scale(1.05);
+}
+
+.thumbs .swiper-slide-thumb-active {
+    border-color: #f05a1a;
+    box-shadow: 0 0 20px rgba(240,90,26,0.6);
+    transform: scale(1.08);
+}
+
+.thumb-page {
+    width: 461px;
+    height: 600px;
+    transform: scale(0.19);
+    transform-origin: top left;
+    pointer-events: none;
+}
+
+.thumb-num {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(240,90,26,0.95);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.viewer {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.main-swiper {
+    width: 100%;
+    max-width: 490px;
+    height: 640px;
+}
+
+.main-swiper .swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.page-label {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    padding: 6px 14px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.swiper-slide > * {
+    border: 2px solid #f05a1a;
+    border-radius: 8px;
+    box-shadow: 
+        0 25px 60px rgba(0,0,0,0.5),
+        0 10px 30px rgba(240,90,26,0.2),
+        0 0 0 1px rgba(240,90,26,0.1);
+}
+
+/* Scroll indicator for scrollable pages */
+.page-wrapper.scrollable {
+    position: relative;
+}
+
+.page-wrapper.scrollable::after {
+    content: '↓';
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(240, 90, 26, 0.9);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    pointer-events: none;
+    animation: pulseArrow 2s ease-in-out infinite;
+    box-shadow: 0 4px 15px rgba(240, 90, 26, 0.5);
+    z-index: 100;
+}
+
+@keyframes pulseArrow {
+    0%, 100% { 
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+    50% { 
+        transform: translateX(-50%) translateY(8px);
+        opacity: 0.7;
+    }
+}
+
+/* Hide indicator when scrolled near bottom */
+.page-wrapper.scrollable.scrolled::after {
+    display: none;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    background: rgba(255,255,255,.08);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255,255,255,.15);
+}
+
+.btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg,#f05a1a,#ff7a3d);
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(240,90,26,.4);
+}
+
+.btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(240,90,26,.6);
+}
+
+.btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.btn.muted { 
+    background: linear-gradient(135deg,#666,#888);
+}
+
+.page-num {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    min-width: 70px;
+    text-align: center;
+    padding: 8px 16px;
+    background: rgba(240,90,26,0.15);
+    border-radius: 8px;
+    border: 1px solid rgba(240,90,26,0.3);
+}
+
+@media (max-width: 768px) {
+    .container { 
+        padding: 10px;
+        padding-bottom: 5px;
+        justify-content: center;
+    }
+    .sidebar { display: none; }
+    .viewer {
+        padding: 0;
+        width: 100%;
+        max-width: 100%;
+    }
+    .main-swiper { 
+        height: calc(100% - 20px);
+        max-width: calc(100vw - 24px);
+        margin: 0 auto;
+    }
+    .page-label {
+        bottom: -35px;
+        font-size: 12px;
+    }
+}
+
+/* Page-specific CSS */
+/* Page 0 */
+@keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+.page-0 * { margin: 0;
+            padding: 0;
+            box-sizing: border-box; }
+.page-0 .page-wrapper { width: 461px;
+            height: 600px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center; }
+.page-0 .cover-container { text-align: center;
+            padding: 40px 30px;
+            width: 100%; }
+.page-0 .cover-icon { font-size: 64px;
+            margin-bottom: 25px;
+            animation: float 3s ease-in-out infinite; }
+.page-0 .cover-title { font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); }
+.page-0 .cover-subtitle { font-size: 22px;
+            margin-bottom: 20px;
+            opacity: 0.9; }
+.page-0 .cover-date { font-size: 16px;
+            opacity: 0.8;
+            margin-bottom: 30px; }
+.page-0 .cover-tagline { font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 25px; }
+.page-0 .badge { display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            backdrop-filter: blur(10px); }
+.page-0 .page-wrapper::before { content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none; }
+
+/* Page 1 */
+.page-1 * { margin: 0;
+            padding: 0;
+            box-sizing: border-box; }
+.page-1 .page-wrapper { width: 461px;
+            max-height: 600px;
+            background: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative; }
+.page-1 .page-wrapper::-webkit-scrollbar { width: 6px; }
+.page-1 .page-wrapper::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+.page-1 .page-wrapper::-webkit-scrollbar-thumb { background: #667eea;
+            border-radius: 3px; }
+.page-1 .header-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 25px; }
+.page-1 .category { font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            opacity: 0.9; }
+.page-1 .headline { font-size: 28px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 12px; }
+.page-1 .subheadline { font-size: 14px;
+            line-height: 1.5;
+            opacity: 0.9; }
+.page-1 .content-section { padding: 25px; }
+.page-1 .news-item { padding: 18px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 15px;
+            transition: all 0.3s; }
+.page-1 .news-item:hover { background: #f0f3ff;
+            transform: translateX(5px); }
+.page-1 .news-title { font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #667eea; }
+.page-1 .news-text { font-size: 13px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 8px; }
+.page-1 .timestamp { font-size: 11px;
+            color: #999;
+            display: flex;
+            align-items: center;
+            gap: 5px; }
+.page-1 .footer-bar { padding: 18px 25px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            border-top: 1px solid #e0e0e0; }
+
+/* Page 2 */
+.page-2 * { margin: 0;
+            padding: 0;
+            box-sizing: border-box; }
+.page-2 .page-wrapper { width: 461px;
+            height: 600px;
+            background: #1e2b42;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden; }
+.page-2 .badge { position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #f05a1a;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(240, 90, 26, 0.4); }
+.page-2 .product-image { height: 220px;
+            background: linear-gradient(135deg, #f05a1a 0%, #ff7a3d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            color: white; }
+.page-2 .content { flex: 1;
+            padding: 25px;
+            background: white;
+            color: #333; }
+.page-2 .product-name { font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #1e2b42; }
+.page-2 .product-tagline { font-size: 13px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5; }
+.page-2 .features { margin-bottom: 20px; }
+.page-2 .feature-item { display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 12px; }
+.page-2 .feature-icon { width: 34px;
+            height: 34px;
+            background: linear-gradient(135deg, #f05a1a, #ff7a3d);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 15px;
+            flex-shrink: 0; }
+.page-2 .feature-text strong { display: block;
+            margin-bottom: 2px;
+            font-size: 13px; }
+.page-2 .feature-text span { font-size: 11px;
+            color: #999; }
+.page-2 .price-section { background: #f8f9fa;
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center; }
+.page-2 .price-label { font-size: 11px;
+            color: #666;
+            margin-bottom: 6px;
+            font-weight: 600; }
+.page-2 .price { font-size: 34px;
+            font-weight: 800;
+            color: #f05a1a;
+            margin-bottom: 12px; }
+.page-2 .cta-button { width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #f05a1a, #ff7a3d);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(240, 90, 26, 0.3); }
+.page-2 .cta-button:hover { transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(240, 90, 26, 0.5); }
+
+/* Page 3 */
+.page-3 * { margin: 0; padding: 0; box-sizing: border-box; }
+.page-3 .page-wrapper { width: 360px;
+            height: 540px;
+            background: white;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+.page-3 .category { font-size: 11px;
+            color: #f05a1a;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: inline-block;
+            padding: 4px 10px;
+            background: #fff5f0;
+            border-radius: 12px; }
+.page-3 .headline { font-size: 28px;
+            color: #1e2b42;
+            font-weight: 700;
+            line-height: 34px;
+            margin-bottom: 12px; }
+.page-3 .meta { font-size: 11px;
+            color: #666;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center; }
+.page-3 .meta-item { display: flex;
+            align-items: center;
+            gap: 4px; }
+.page-3 .featured-image { width: 320px;
+            height: 180px;
+            background: linear-gradient(135deg, #f05a1a 0%, #1e2b42 100%);
+            border-radius: 10px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 60px;
+            position: relative;
+            overflow: hidden; }
+.page-3 .featured-image::after { content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, transparent 60%); }
+.page-3 .content { font-size: 13px;
+            line-height: 20px;
+            color: #333; }
+.page-3 .content p { margin-bottom: 8px; }
+.page-3 .content strong { color: #1e2b42;
+            font-weight: 600; }
+.page-3 .highlight { background: #fff5f0;
+            padding: 8px 10px;
+            border-left: 3px solid #f05a1a;
+            margin: 10px 0;
+            font-style: italic;
+            font-size: 12px;
+            line-height: 18px;
+            color: #1e2b42; }
+.page-3 .tags { position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap; }
+.page-3 .tag { background: #f1f2f3;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            color: #1e2b42;
+            border: 1px solid #e0e0e0; }
+
+/* Page 4 */
+.page-4 * { margin: 0; padding: 0; box-sizing: border-box; }
+.page-4 .page-wrapper { width: 360px;
+            height: 540px;
+            background: linear-gradient(135deg, #f05a1a 0%, #ff7a3d 100%);
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+.page-4 .badge { font-size: 11px;
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            backdrop-filter: blur(10px); }
+.page-4 .headline { font-size: 26px;
+            color: white;
+            font-weight: 700;
+            line-height: 32px;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+.page-4 .video-placeholder { width: 320px;
+            height: 140px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 50px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden; }
+.page-4 .video-placeholder::before { content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 70%); }
+.page-4 .play-button { position: absolute;
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #f05a1a;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.page-4 .play-button:hover { transform: scale(1.1); }
+.page-4 .intro-text { font-size: 12px;
+            line-height: 18px;
+            color: white;
+            margin-bottom: 15px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+.page-4 .poll-container { background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+.page-4 .poll-title { font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1e2b42;
+            display: flex;
+            align-items: center;
+            gap: 8px; }
+.page-4 .poll-option { background: #f1f2f3;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px; }
+.page-4 .poll-option:hover { border-color: #f05a1a;
+            background: #fff5f0;
+            transform: translateX(3px); }
+.page-4 .poll-option input { accent-color: #f05a1a;
+            width: 18px;
+            height: 18px; }
+.page-4 .poll-btn { background: linear-gradient(135deg, #f05a1a 0%, #ff7a3d 100%);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 13px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(240, 90, 26, 0.3); }
+.page-4 .poll-btn:hover { transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(240, 90, 26, 0.5); }
+.page-4 .social-share { display: flex;
+            gap: 6px;
+            margin-top: 12px; }
+.page-4 .share-btn { padding: 8px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            flex: 1;
+            color: white;
+            transition: all 0.3s; }
+.page-4 .share-twitter { background: #1da1f2; }
+.page-4 .share-facebook { background: #4267B2; }
+.page-4 .share-whatsapp { background: #25D366; }
+.page-4 .share-btn:hover { transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+
+/* Page 5 */
+.page-5 * { margin: 0; padding: 0; box-sizing: border-box; }
+.page-5 .page-wrapper { width: 360px;
+            height: 540px;
+            background: #1e2b42;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            flex-direction: column; }
+.page-5 .top-section { background: linear-gradient(135deg, #f05a1a 0%, #ff7a3d 100%);
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden; }
+.page-5 .top-section::before { content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, transparent 70%); }
+.page-5 .badge { font-size: 11px;
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            backdrop-filter: blur(10px); }
+.page-5 .headline { font-size: 32px;
+            color: white;
+            font-weight: 700;
+            line-height: 38px;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 1; }
+.page-5 .subheadline { font-size: 14px;
+            color: rgba(255,255,255,0.95);
+            font-weight: 500;
+            position: relative;
+            z-index: 1; }
+.page-5 .product-image { width: 100%;
+            height: 200px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            position: relative; }
+.page-5 .product-image::after { content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(to top, #1e2b42, transparent); }
+.page-5 .content-section { padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column; }
+.page-5 .features { margin-bottom: 15px; }
+.page-5 .feature-item { display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            color: white;
+            font-size: 13px; }
+.page-5 .feature-icon { width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #f05a1a 0%, #ff7a3d 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0; }
+.page-5 .feature-text { line-height: 18px; }
+.page-5 .feature-text strong { color: #f05a1a;
+            font-weight: 600; }
+.page-5 .price-section { background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            text-align: center;
+            border: 2px solid rgba(240,90,26,0.3); }
+.page-5 .price-label { font-size: 11px;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px; }
+.page-5 .price { font-size: 36px;
+            color: #f05a1a;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 5px; }
+.page-5 .price-detail { font-size: 12px;
+            color: rgba(255,255,255,0.8); }
+.page-5 .cta-button { background: linear-gradient(135deg, #f05a1a 0%, #ff7a3d 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            font-size: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(240, 90, 26, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px; }
+.page-5 .cta-button:hover { transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(240, 90, 26, 0.6); }
+.page-5 .disclaimer { font-size: 9px;
+            color: rgba(255,255,255,0.5);
+            text-align: center;
+            margin-top: 10px;
+            line-height: 12px; }
+
+
+</style>
+</head>
+<body>
+<div class="header">
+<img src="appLogoIcon.png" alt="KandaNews Africa" class="logo" 
+     onerror="this.onerror=null; this.src='../assets/appLogoIcon.png'; this.onerror=function(){this.src='../../assets/appLogoIcon.png'; this.onerror=function(){this.style.display='none'}}">
+<span>SPECIAL EDITION</span>
+</div>
+
+<div class="container">
+<div class="fullscreen-prompt" id="fs-prompt">
+    <div class="fs-message">
+        <i class="fas fa-expand"></i>
+        <p>Tap anywhere to enter fullscreen</p>
+    </div>
+</div>
+
+<div class="sidebar">
+<div class="swiper thumbs">
+<div class="swiper-wrapper">
+<div class="swiper-slide"><div class="thumb-page page-0"><div class="page-wrapper">
+        <div class="cover-container">
+            <div class="cover-icon">📰</div>
+            <h1 class="cover-title">KandaNews Africa</h1>
+            <p class="cover-subtitle">Daily Edition</p>
+            <p class="cover-date">📅 November 3, 2024</p>
+            <p class="cover-tagline">🚀 The Future of News</p>
+            <div class="badge">Uganda Edition 🇺🇬</div>
+        </div>
+    </div></div><span class="thumb-num">1</span></div>
+<div class="swiper-slide"><div class="thumb-page page-1"><div class="page-wrapper scrollable">
+        <div class="header-section">
+            <div class="category">🌍 BREAKING NEWS</div>
+            <h1 class="headline">Uganda Launches Digital ID System</h1>
+            <p class="subheadline">Blockchain-based identification rolls out nationwide by Q2 2025</p>
+        </div>
+
+        <div class="content-section">
+            <div class="news-item">
+                <div class="news-title">Kampala Pilot Success</div>
+                <div class="news-text">Over 500,000 residents enrolled in the first month. System processes applications 5x faster than traditional methods.</div>
+                <div class="timestamp"><i class="fas fa-clock"></i> 2 hours ago</div>
+            </div>
+
+            <div class="news-item">
+                <div class="news-title">Advanced Security Features</div>
+                <div class="news-text">Includes biometric data, blockchain verification, and digital wallet for government services including taxes and licensing.</div>
+                <div class="timestamp"><i class="fas fa-clock"></i> 4 hours ago</div>
+            </div>
+
+            <div class="news-item">
+                <div class="news-title">Nationwide Rollout</div>
+                <div class="news-text">All 135 districts to have enrollment centers by Q2 2025. Mobile units will visit rural areas for universal coverage.</div>
+                <div class="timestamp"><i class="fas fa-clock"></i> 6 hours ago</div>
+            </div>
+
+            <div class="news-item">
+                <div class="news-title">Regional Integration</div>
+                <div class="news-text">System compatible with East African Community standards, enabling seamless cross-border verification for trade and travel.</div>
+                <div class="timestamp"><i class="fas fa-clock"></i> 8 hours ago</div>
+            </div>
+
+            <div class="news-item">
+                <div class="news-title">Privacy Protection</div>
+                <div class="news-text">Built with end-to-end encryption and user-controlled data sharing. Citizens can manage permissions through mobile app.</div>
+                <div class="timestamp"><i class="fas fa-clock"></i> 10 hours ago</div>
+            </div>
+        </div>
+
+        <div class="footer-bar">
+            <span><i class="fas fa-newspaper"></i> KandaNews Africa</span>
+            <span>Nov 2024</span>
+        </div>
+    </div></div><span class="thumb-num">2</span></div>
+<div class="swiper-slide"><div class="thumb-page page-2"><div class="page-wrapper">
+        <div class="badge">🔥 NEW</div>
+
+        <div class="product-image">
+            <i class="fas fa-mobile-alt"></i>
+        </div>
+
+        <div class="content">
+            <h1 class="product-name">Tecno Phantom X3</h1>
+            <p class="product-tagline">Premium flagship with African innovation</p>
+
+            <div class="features">
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-camera"></i></div>
+                    <div class="feature-text">
+                        <strong>108MP Camera</strong>
+                        <span>Professional AI photography</span>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-battery-full"></i></div>
+                    <div class="feature-text">
+                        <strong>5000mAh Battery</strong>
+                        <span>All-day power, 65W charging</span>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="feature-text">
+                        <strong>5G Ready</strong>
+                        <span>Future-proof connectivity</span>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-microchip"></i></div>
+                    <div class="feature-text">
+                        <strong>Dimensity 9200</strong>
+                        <span>Flagship gaming performance</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="price-section">
+                <div class="price-label">Starting from</div>
+                <div class="price">UGX 1.2M</div>
+                <button class="cta-button">
+                    <i class="fas fa-shopping-cart"></i> Pre-Order - Save 15%
+                </button>
+            </div>
+        </div>
+    </div></div><span class="thumb-num">3</span></div>
+<div class="swiper-slide"><div class="thumb-page page-3"><div class="page-wrapper">
+        <div class="category">💻 TECH NEWS</div>
+        
+        <h1 class="headline">Makerere University Launches AI Research Lab</h1>
+        
+        <div class="meta">
+            <span class="meta-item">👤 By Sarah Nakato</span>
+            <span class="meta-item">⏱️ 4 min read</span>
+            <span class="meta-item">📅 Oct 30, 2025</span>
+        </div>
+        
+        <div class="featured-image">
+            🤖
+        </div>
+        
+        <div class="content">
+            <p><strong>KAMPALA</strong> - Makerere University has unveiled East Africa's most advanced artificial intelligence research laboratory, positioning Uganda as a regional tech hub.</p>
+            
+            <p>The Shs 2.5 billion facility features cutting-edge computing infrastructure and will focus on AI applications in agriculture, healthcare, and education.</p>
+            
+            <div class="highlight">
+                "This marks a new chapter in Uganda's tech revolution" - Prof. Barnabas Nawangwe
+            </div>
+            
+            <p>The lab will collaborate with international tech giants and train 500 students annually in machine learning and data science.</p>
+        </div>
+        
+        <div class="tags">
+            <span class="tag">#AI</span>
+            <span class="tag">#Makerere</span>
+            <span class="tag">#Technology</span>
+            <span class="tag">#Uganda</span>
+        </div>
+    </div></div><span class="thumb-num">4</span></div>
+<div class="swiper-slide"><div class="thumb-page page-4"><div class="page-wrapper">
+        <div class="badge">🗳️ QUICK POLL</div>
+        
+        <h1 class="headline">Should Uganda Adopt a 4-Day Work Week?</h1>
+        
+        <div class="video-placeholder">
+            🎬
+            <div class="play-button">▶️</div>
+        </div>
+        
+        <p class="intro-text">
+            Several countries are testing shorter work weeks. What do you think about Uganda implementing this change?
+        </p>
+        
+        <div class="poll-container">
+            <div class="poll-title">
+                📊 Cast Your Vote
+            </div>
+            
+            <label class="poll-option">
+                <input type="radio" name="poll" value="yes">
+                <span>Yes! Better work-life balance 🎯</span>
+            </label>
+            
+            <label class="poll-option">
+                <input type="radio" name="poll" value="trial">
+                <span>Trial it in select sectors first 🧪</span>
+            </label>
+            
+            <label class="poll-option">
+                <input type="radio" name="poll" value="no">
+                <span>No, productivity might suffer 📉</span>
+            </label>
+            
+            <label class="poll-option">
+                <input type="radio" name="poll" value="unsure">
+                <span>Need more information 🤔</span>
+            </label>
+            
+            <button class="poll-btn" onclick="alert('Thank you for voting! 🎉\n\nResults will be published in tomorrow\'s edition.')">
+                ✓ Submit Your Vote
+            </button>
+        </div>
+        
+        <div class="social-share">
+            <button class="share-btn share-twitter" onclick="alert('Share on Twitter!')">🐦 Tweet</button>
+            <button class="share-btn share-facebook" onclick="alert('Share on Facebook!')">📘 Share</button>
+            <button class="share-btn share-whatsapp" onclick="alert('Share on WhatsApp!')">💬 WhatsApp</button>
+        </div>
+    </div></div><span class="thumb-num">5</span></div>
+<div class="swiper-slide"><div class="thumb-page page-5"><div class="page-wrapper">
+        <div class="top-section">
+            <div class="badge">LIMITED OFFER</div>
+            <h1 class="headline">Premium Pizza<br>Just UGX 25K!</h1>
+            <p class="subheadline">Delivered hot to your door in 30 minutes</p>
+        </div>
+        
+        <div class="product-image">
+            🍕
+        </div>
+        
+        <div class="content-section">
+            <div class="features">
+                <div class="feature-item">
+                    <div class="feature-icon">🧀</div>
+                    <div class="feature-text">
+                        <strong>Extra Cheese</strong> - Triple cheese blend
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🚚</div>
+                    <div class="feature-text">
+                        <strong>Free Delivery</strong> - Within 5km radius
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-text">
+                        <strong>30 Min Guarantee</strong> - Or it's free!
+                    </div>
+                </div>
+            </div>
+            
+            <div class="price-section">
+                <div class="price-label">Today's Special</div>
+                <div class="price">25,000/=</div>
+                <div class="price-detail">Regular price: 35,000/= | Save 10,000/=</div>
+            </div>
+            
+            <button class="cta-button" onclick="alert('🍕 Order Now!\n\nCall: 0700 123 456\nApp: PizzaUG\nWeb: pizzaug.com')">
+                🛒 Order Now
+            </button>
+            
+            <div class="disclaimer">
+                *Offer valid until Oct 31, 2025. Terms & conditions apply. Kampala area only.
+            </div>
+        </div>
+    </div></div><span class="thumb-num">6</span></div>
+
+</div>
+</div>
+</div>
+
+<div class="viewer">
+<div class="swiper main-swiper">
+<div class="swiper-wrapper">
+<div class="swiper-slide page-0"><div class="page-wrapper">
+        <div class="cover-container">
+            <div class="cover-icon">📰</div>
+            <h1 class="cover-title">KandaNews Africa</h1>
+            <p class="cover-subtitle">Daily Edition</p>
+            <p class="cover-date">📅 November 3, 2024</p>
+            <p class="cover-tagline">🚀 The Future of News</p>
+            <div class="badge">Uganda Edition 🇺🇬</div>
+        </div>
+    </div></div>
+<div class="swiper-slide page-1"><div class="page-wrapper scrollable">
+        <div class="header-section">
+            <div class="category">🌍 BREAKING NEWS</div>
+            <h1 class="headline">Uganda Launches Digital ID System</h1>
+            <p class="subheadline">Blockchain-based identification rolls out nationwide by Q2 2025</p>
+        </div>
+
+        <div class="content-section">
+            <div class="news-item">
+                <div class="news-title">Kampala Pilot Success</div>
+                <div class="news-text">Over 500,000 residents enrolled in the first month. System processes applications 5x faster than traditional methods.</div>
+                <div class="timestamp"><i class="fas fa-clock"></i> 2 hours ago</div>
+            </div>
+
+            <div class="news-item">
+                <div class="news-title">Advanced Security Features</div>
+                <div class="news-text">Includes biometric data, blockchain verification, and digital wallet for government services including taxes and licensing.</div>
+                <div class="timestamp"><i class="fas fa-clock"></i> 4 hours ago</div>
+            </div>
+
+            <div class="news-item">
+                <div class="news-title">Nationwide Rollout</div>
+                <div class="news-text">All 135 districts to have enrollment centers by Q2 2025. Mobile units will visit rural areas for universal coverage.</div>
+                <div class="timestamp"><i class="fas fa-clock"></i> 6 hours ago</div>
+            </div>
+
+            <div class="news-item">
+                <div class="news-title">Regional Integration</div>
+                <div class="news-text">System compatible with East African Community standards, enabling seamless cross-border verification for trade and travel.</div>
+                <div class="timestamp"><i class="fas fa-clock"></i> 8 hours ago</div>
+            </div>
+
+            <div class="news-item">
+                <div class="news-title">Privacy Protection</div>
+                <div class="news-text">Built with end-to-end encryption and user-controlled data sharing. Citizens can manage permissions through mobile app.</div>
+                <div class="timestamp"><i class="fas fa-clock"></i> 10 hours ago</div>
+            </div>
+        </div>
+
+        <div class="footer-bar">
+            <span><i class="fas fa-newspaper"></i> KandaNews Africa</span>
+            <span>Nov 2024</span>
+        </div>
+    </div></div>
+<div class="swiper-slide page-2"><div class="page-wrapper">
+        <div class="badge">🔥 NEW</div>
+
+        <div class="product-image">
+            <i class="fas fa-mobile-alt"></i>
+        </div>
+
+        <div class="content">
+            <h1 class="product-name">Tecno Phantom X3</h1>
+            <p class="product-tagline">Premium flagship with African innovation</p>
+
+            <div class="features">
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-camera"></i></div>
+                    <div class="feature-text">
+                        <strong>108MP Camera</strong>
+                        <span>Professional AI photography</span>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-battery-full"></i></div>
+                    <div class="feature-text">
+                        <strong>5000mAh Battery</strong>
+                        <span>All-day power, 65W charging</span>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="feature-text">
+                        <strong>5G Ready</strong>
+                        <span>Future-proof connectivity</span>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-microchip"></i></div>
+                    <div class="feature-text">
+                        <strong>Dimensity 9200</strong>
+                        <span>Flagship gaming performance</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="price-section">
+                <div class="price-label">Starting from</div>
+                <div class="price">UGX 1.2M</div>
+                <button class="cta-button">
+                    <i class="fas fa-shopping-cart"></i> Pre-Order - Save 15%
+                </button>
+            </div>
+        </div>
+    </div></div>
+<div class="swiper-slide page-3"><div class="page-wrapper">
+        <div class="category">💻 TECH NEWS</div>
+        
+        <h1 class="headline">Makerere University Launches AI Research Lab</h1>
+        
+        <div class="meta">
+            <span class="meta-item">👤 By Sarah Nakato</span>
+            <span class="meta-item">⏱️ 4 min read</span>
+            <span class="meta-item">📅 Oct 30, 2025</span>
+        </div>
+        
+        <div class="featured-image">
+            🤖
+        </div>
+        
+        <div class="content">
+            <p><strong>KAMPALA</strong> - Makerere University has unveiled East Africa's most advanced artificial intelligence research laboratory, positioning Uganda as a regional tech hub.</p>
+            
+            <p>The Shs 2.5 billion facility features cutting-edge computing infrastructure and will focus on AI applications in agriculture, healthcare, and education.</p>
+            
+            <div class="highlight">
+                "This marks a new chapter in Uganda's tech revolution" - Prof. Barnabas Nawangwe
+            </div>
+            
+            <p>The lab will collaborate with international tech giants and train 500 students annually in machine learning and data science.</p>
+        </div>
+        
+        <div class="tags">
+            <span class="tag">#AI</span>
+            <span class="tag">#Makerere</span>
+            <span class="tag">#Technology</span>
+            <span class="tag">#Uganda</span>
+        </div>
+    </div></div>
+<div class="swiper-slide page-4"><div class="page-wrapper">
+        <div class="badge">🗳️ QUICK POLL</div>
+        
+        <h1 class="headline">Should Uganda Adopt a 4-Day Work Week?</h1>
+        
+        <div class="video-placeholder">
+            🎬
+            <div class="play-button">▶️</div>
+        </div>
+        
+        <p class="intro-text">
+            Several countries are testing shorter work weeks. What do you think about Uganda implementing this change?
+        </p>
+        
+        <div class="poll-container">
+            <div class="poll-title">
+                📊 Cast Your Vote
+            </div>
+            
+            <label class="poll-option">
+                <input type="radio" name="poll" value="yes">
+                <span>Yes! Better work-life balance 🎯</span>
+            </label>
+            
+            <label class="poll-option">
+                <input type="radio" name="poll" value="trial">
+                <span>Trial it in select sectors first 🧪</span>
+            </label>
+            
+            <label class="poll-option">
+                <input type="radio" name="poll" value="no">
+                <span>No, productivity might suffer 📉</span>
+            </label>
+            
+            <label class="poll-option">
+                <input type="radio" name="poll" value="unsure">
+                <span>Need more information 🤔</span>
+            </label>
+            
+            <button class="poll-btn" onclick="alert('Thank you for voting! 🎉\n\nResults will be published in tomorrow\'s edition.')">
+                ✓ Submit Your Vote
+            </button>
+        </div>
+        
+        <div class="social-share">
+            <button class="share-btn share-twitter" onclick="alert('Share on Twitter!')">🐦 Tweet</button>
+            <button class="share-btn share-facebook" onclick="alert('Share on Facebook!')">📘 Share</button>
+            <button class="share-btn share-whatsapp" onclick="alert('Share on WhatsApp!')">💬 WhatsApp</button>
+        </div>
+    </div></div>
+<div class="swiper-slide page-5"><div class="page-wrapper">
+        <div class="top-section">
+            <div class="badge">LIMITED OFFER</div>
+            <h1 class="headline">Premium Pizza<br>Just UGX 25K!</h1>
+            <p class="subheadline">Delivered hot to your door in 30 minutes</p>
+        </div>
+        
+        <div class="product-image">
+            🍕
+        </div>
+        
+        <div class="content-section">
+            <div class="features">
+                <div class="feature-item">
+                    <div class="feature-icon">🧀</div>
+                    <div class="feature-text">
+                        <strong>Extra Cheese</strong> - Triple cheese blend
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🚚</div>
+                    <div class="feature-text">
+                        <strong>Free Delivery</strong> - Within 5km radius
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-text">
+                        <strong>30 Min Guarantee</strong> - Or it's free!
+                    </div>
+                </div>
+            </div>
+            
+            <div class="price-section">
+                <div class="price-label">Today's Special</div>
+                <div class="price">25,000/=</div>
+                <div class="price-detail">Regular price: 35,000/= | Save 10,000/=</div>
+            </div>
+            
+            <button class="cta-button" onclick="alert('🍕 Order Now!\n\nCall: 0700 123 456\nApp: PizzaUG\nWeb: pizzaug.com')">
+                🛒 Order Now
+            </button>
+            
+            <div class="disclaimer">
+                *Offer valid until Oct 31, 2025. Terms & conditions apply. Kampala area only.
+            </div>
+        </div>
+    </div></div>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="controls">
+<button class="btn" id="sound"><i class="fas fa-volume-up"></i></button>
+<button class="btn" id="prev"><i class="fas fa-chevron-left"></i></button>
+<span class="page-num" id="num">1 / 6</span>
+<button class="btn" id="next"><i class="fas fa-chevron-right"></i></button>
+<button class="btn" id="full"><i class="fas fa-expand"></i></button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+let soundOn = true;
+const audio = new Audio('turn.mp3');
+audio.volume = 0.3;
+
+const thumbSwiper = new Swiper('.thumbs', {
+    direction: 'vertical',
+    slidesPerView: 'auto',
+    freeMode: true,
+    watchSlidesProgress: true
+});
+
+const mainSwiper = new Swiper('.main-swiper', {
+    effect: 'flip',
+    flipEffect: {
+        slideShadows: true,
+        limitRotation: true
+    },
+    speed: 600,
+    keyboard: { enabled: true },
+    thumbs: { swiper: thumbSwiper },
+    on: {
+        slideChange: function() {
+            const current = this.activeIndex + 1;
+            const total = this.slides.length;
+            document.getElementById('num').textContent = current + ' / ' + total;
+            document.getElementById('prev').disabled = current === 1;
+            document.getElementById('next').disabled = current === total;
+            
+            if (soundOn) {
+                audio.currentTime = 0;
+                audio.play().catch(() => {});
+            }
+            
+            if (navigator.vibrate) navigator.vibrate(10);
+        }
+    }
+});
+
+document.getElementById('prev').onclick = () => mainSwiper.slidePrev();
+document.getElementById('next').onclick = () => mainSwiper.slideNext();
+document.getElementById('sound').onclick = function() {
+    soundOn = !soundOn;
+    this.classList.toggle('muted');
+    this.querySelector('i').classList.toggle('fa-volume-up');
+    this.querySelector('i').classList.toggle('fa-volume-mute');
+};
+
+let isFullscreen = false;
+document.getElementById('full').onclick = function() {
+    if (!isFullscreen) {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        }
+        isFullscreen = true;
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+        isFullscreen = false;
+    }
+};
+
+document.getElementById('prev').disabled = true;
+
+// Handle scrollable page indicators
+function updateScrollIndicators() {
+    document.querySelectorAll('.page-wrapper.scrollable').forEach(page => {
+        page.addEventListener('scroll', function() {
+            const scrollTop = this.scrollTop;
+            const scrollHeight = this.scrollHeight;
+            const clientHeight = this.clientHeight;
+            
+            // Hide indicator when scrolled near bottom (within 50px)
+            if (scrollTop + clientHeight >= scrollHeight - 50) {
+                this.classList.add('scrolled');
+            } else {
+                this.classList.remove('scrolled');
+            }
+        });
+        
+        // Trigger initial check
+        page.dispatchEvent(new Event('scroll'));
+    });
+}
+
+// Check on page change
+mainSwiper.on('slideChange', function() {
+    setTimeout(updateScrollIndicators, 100);
+});
+
+// Initial check
+updateScrollIndicators();
+
+// Fullscreen on first interaction (browsers require user action)
+let hasInteracted = false;
+const fsPrompt = document.getElementById('fs-prompt');
+
+function enterFullscreen() {
+    if (!hasInteracted) {
+        hasInteracted = true;
+        fsPrompt.classList.add('hidden');
+        
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(() => {});
+        } else if (document.documentElement.webkitRequestFullscreen) {
+            document.documentElement.webkitRequestFullscreen().catch(() => {});
+        }
+    }
+}
+
+// Trigger fullscreen on any interaction
+fsPrompt.addEventListener('click', enterFullscreen);
+fsPrompt.addEventListener('touchstart', enterFullscreen);
+
+console.log('KandaNews - 6 pages loaded');
+</script>
+</body>
+</html>

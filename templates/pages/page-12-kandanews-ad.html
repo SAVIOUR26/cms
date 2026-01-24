@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advertise With Us - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: linear-gradient(135deg, #1e2b42 0%, #2a3f5f 100%);
+            color: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: #f05a1a;
+            border-radius: 3px;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #f05a1a 0%, #ff7a3d 100%);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header-icon {
+            font-size: 52px;
+            margin-bottom: 15px;
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .header-subtitle {
+            font-size: 15px;
+            opacity: 0.95;
+        }
+
+        .content-section {
+            padding: 30px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(240, 90, 26, 0.3);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #f05a1a;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .feature-box {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #f05a1a;
+        }
+
+        .feature-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #f05a1a;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-text {
+            font-size: 13px;
+            line-height: 1.7;
+            opacity: 0.9;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 25px 0;
+        }
+
+        .package-card {
+            background: rgba(240, 90, 26, 0.15);
+            border: 2px solid #f05a1a;
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .package-card:hover {
+            background: rgba(240, 90, 26, 0.25);
+            transform: translateY(-3px);
+        }
+
+        .package-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .package-name {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .package-desc {
+            font-size: 11px;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .contact-section {
+            background: linear-gradient(135deg, #f05a1a 0%, #ff7a3d 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 25px;
+        }
+
+        .contact-title {
+            font-size: 18px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-label {
+            font-size: 11px;
+            opacity: 0.8;
+            margin-bottom: 3px;
+        }
+
+        .contact-value {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .cta-box {
+            background: white;
+            color: #1e2b42;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .cta-text {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .cta-subtext {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="header-section">
+            <div class="header-icon">📢</div>
+            <h1 class="header-title">Advertise With Us</h1>
+            <p class="header-subtitle">Reach Africa's most ambitious audience</p>
+        </div>
+
+        <div class="content-section">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-value">50K+</div>
+                    <div class="stat-label">Daily Readers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">85%</div>
+                    <div class="stat-label">Youth 18-35</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">4 Countries</div>
+                    <div class="stat-label">Coverage</div>
+                </div>
+            </div>
+
+            <div class="feature-box">
+                <div class="feature-title">
+                    <i class="fas fa-users"></i>
+                    <span>Who Reads KandaNews?</span>
+                </div>
+                <div class="feature-text">
+                    University students, young entrepreneurs, and professionals across Uganda, Kenya, Tanzania, and Rwanda. People who don't just read—they act.
+                </div>
+            </div>
+
+            <div class="feature-box">
+                <div class="feature-title">
+                    <i class="fas fa-rocket"></i>
+                    <span>Why Advertise With Us?</span>
+                </div>
+                <div class="feature-text">
+                    Direct WhatsApp delivery • High engagement rates • Multimedia support (video, audio, GIFs) • Clickable links • Targeted by interest • Affordable packages
+                </div>
+            </div>
+
+            <div class="packages-grid">
+                <div class="package-card">
+                    <div class="package-icon">📄</div>
+                    <div class="package-name">Full Page</div>
+                    <div class="package-desc">Maximum visibility & impact</div>
+                </div>
+                <div class="package-card">
+                    <div class="package-icon">📋</div>
+                    <div class="package-name">Half Page</div>
+                    <div class="package-desc">Perfect for announcements</div>
+                </div>
+                <div class="package-card">
+                    <div class="package-icon">📝</div>
+                    <div class="package-name">Quarter Page</div>
+                    <div class="package-desc">Affordable & effective</div>
+                </div>
+                <div class="package-card">
+                    <div class="package-icon">🎬</div>
+                    <div class="package-name">Multimedia</div>
+                    <div class="package-desc">Video, audio & interactive</div>
+                </div>
+            </div>
+
+            <div class="contact-section">
+                <div class="contact-title">📞 Get Started Today</div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-label">Email Us</div>
+                        <div class="contact-value">ads@kandanews.africa</div>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-label">WhatsApp</div>
+                        <div class="contact-value">+256 700 000 000</div>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-label">Website</div>
+                        <div class="contact-value">www.kandanews.africa</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-box">
+                <div class="cta-text">Limited Slots Available!</div>
+                <div class="cta-subtext">Book your ad space for next week's edition</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

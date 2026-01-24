@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Daily Edition</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #1e2b42;
+    color: #fff;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.edition-title {
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,.95);
+    background: rgba(255,255,255,.05);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    z-index: 100;
+}
+
+.edition-logo { height: 24px; }
+
+.magazine-container {
+    flex: 1;
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+    overflow: hidden;
+}
+
+/* Desktop Side Thumbnails */
+.thumbs-sidebar {
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+}
+
+.thumbs-swiper {
+    flex: 1;
+    overflow: hidden;
+}
+
+.thumbs-swiper .swiper-slide {
+    height: auto;
+    margin-bottom: 15px;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: all 0.3s;
+    background: rgba(255,255,255,0.05);
+}
+
+.thumbs-swiper .swiper-slide:hover {
+    border-color: rgba(240,90,26,0.5);
+    transform: translateX(5px);
+}
+
+.thumbs-swiper .swiper-slide-thumb-active {
+    border-color: #f05a1a;
+    box-shadow: 0 0 20px rgba(240,90,26,0.4);
+}
+
+.thumb-content {
+    width: 100%;
+    height: 150px;
+    transform: scale(0.28);
+    transform-origin: top left;
+    pointer-events: none;
+}
+
+.thumb-number {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: rgba(240,90,26,0.9);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* Mobile Bottom Thumbnails */
+.thumbs-bottom {
+    display: none;
+}
+
+/* Main Viewer */
+.main-viewer {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-swiper {
+    width: 100%;
+    max-width: 400px;
+    height: 580px;
+}
+
+.page-content {
+    width: 360px;
+    height: 540px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+
+.controls-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background: rgba(255,255,255,.05);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255,255,255,.1);
+    z-index: 100;
+}
+
+.control-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg,#f05a1a 0%,#ff7a3d 100%);
+    color: #fff;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all .3s;
+    box-shadow: 0 4px 12px rgba(240,90,26,.3);
+}
+
+.control-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(240,90,26,.5);
+}
+
+.control-btn:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+.control-btn.muted { background: #666; }
+
+.page-info {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,.9);
+    min-width: 55px;
+    text-align: center;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .magazine-container {
+        flex-direction: column;
+        padding: 10px;
+    }
+    
+    .thumbs-sidebar {
+        display: none;
+    }
+    
+    .thumbs-bottom {
+        display: block;
+        height: 80px;
+        margin-top: 10px;
+    }
+    
+    .thumbs-swiper-mobile .swiper-slide {
+        width: 60px !important;
+        height: 70px;
+        margin-right: 10px;
+        cursor: pointer;
+        border-radius: 6px;
+        overflow: hidden;
+        border: 2px solid transparent;
+        background: rgba(255,255,255,0.05);
+    }
+    
+    .thumbs-swiper-mobile .swiper-slide-thumb-active {
+        border-color: #f05a1a;
+    }
+    
+    .thumbs-swiper-mobile .thumb-content {
+        width: 100%;
+        height: 100%;
+        transform: scale(0.17);
+        transform-origin: top left;
+    }
+    
+    .thumbs-swiper-mobile .thumb-number {
+        font-size: 9px;
+        padding: 1px 5px;
+    }
+    
+    .main-viewer {
+        flex: 1;
+    }
+    
+    .main-swiper {
+        height: 100%;
+        max-width: 360px;
+    }
+}
+
+/* Fullscreen Mode */
+body.fullscreen-mode {
+    .edition-title, .controls-bar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+    }
+    
+    .edition-title { top: 0; }
+    .controls-bar { bottom: 0; }
+    
+    .magazine-container {
+        position: fixed;
+        inset: 0;
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+}
+
+
+/* Page 0: template3.html */
+.page-0 { margin: 0; padding: 0; box-sizing: border-box; }
+
+
+
+/* Page 1: template2.html */
+.page-1 { margin: 0; padding: 0; box-sizing: border-box; }
+
+
+
+/* Page 2: template1.html */
+.page-2 { margin: 0; padding: 0; box-sizing: border-box; }
+
+
+
+    </style>
+</head>
+<body>
+    <div class="edition-title">
+        <img src="appLogoIcon.png" alt="K" class="edition-logo" onerror="this.style.display='none'">
+        <span>November 1, 2025</span>
+    </div>
+    
+    <div class="magazine-container">
+        <!-- Desktop Side Thumbnails -->
+        <div class="thumbs-sidebar">
+            <div class="swiper thumbs-swiper">
+                <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div class="thumb-content page-0">
+                    
+                </div>
+                <div class="thumb-number">1</div>
+            </div>
+            <div class="swiper-slide">
+                <div class="thumb-content page-1">
+                    
+                </div>
+                <div class="thumb-number">2</div>
+            </div>
+            <div class="swiper-slide">
+                <div class="thumb-content page-2">
+                    
+                </div>
+                <div class="thumb-number">3</div>
+            </div>
+
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Viewer -->
+        <div class="main-viewer">
+            <div class="swiper main-swiper">
+                <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div class="page-content page-0">
+                    
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="page-content page-1">
+                    
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="page-content page-2">
+                    
+                </div>
+            </div>
+
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Bottom Thumbnails -->
+        <div class="thumbs-bottom">
+            <div class="swiper thumbs-swiper-mobile">
+                <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div class="thumb-content page-0">
+                    
+                </div>
+                <div class="thumb-number">1</div>
+            </div>
+            <div class="swiper-slide">
+                <div class="thumb-content page-1">
+                    
+                </div>
+                <div class="thumb-number">2</div>
+            </div>
+            <div class="swiper-slide">
+                <div class="thumb-content page-2">
+                    
+                </div>
+                <div class="thumb-number">3</div>
+            </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="controls-bar">
+        <button class="control-btn" id="sound-toggle"><i class="fas fa-volume-up"></i></button>
+        <button class="control-btn" id="prev-btn"><i class="fas fa-chevron-left"></i></button>
+        <span class="page-info" id="page-info">1 / 3</span>
+        <button class="control-btn" id="next-btn"><i class="fas fa-chevron-right"></i></button>
+        <button class="control-btn" id="fullscreen-btn"><i class="fas fa-expand"></i></button>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+// Sound
+let soundEnabled = true;
+const turnSound = new Audio('turn.mp3');
+turnSound.volume = 0.3;
+
+// Initialize Thumbnails (Desktop)
+const thumbsSwiper = new Swiper('.thumbs-swiper', {
+    direction: 'vertical',
+    slidesPerView: 'auto',
+    freeMode: true,
+    watchSlidesProgress: true,
+    spaceBetween: 15
+});
+
+// Initialize Thumbnails (Mobile)
+const thumbsSwiperMobile = new Swiper('.thumbs-swiper-mobile', {
+    slidesPerView: 'auto',
+    freeMode: true,
+    watchSlidesProgress: true,
+    spaceBetween: 10
+});
+
+// Initialize Main Swiper
+const mainSwiper = new Swiper('.main-swiper', {
+    effect: 'flip',
+    flipEffect: {
+        slideShadows: true,
+        limitRotation: true
+    },
+    speed: 600,
+    navigation: false,
+    keyboard: {
+        enabled: true,
+        onlyInViewport: false
+    },
+    thumbs: {
+        swiper: window.innerWidth > 768 ? thumbsSwiper : thumbsSwiperMobile
+    },
+    on: {
+        slideChange: function() {
+            const current = this.activeIndex + 1;
+            const total = this.slides.length;
+            document.getElementById('page-info').textContent = current + ' / ' + total;
+            
+            // Update button states
+            document.getElementById('prev-btn').disabled = current === 1;
+            document.getElementById('next-btn').disabled = current === total;
+            
+            // Play sound
+            if (soundEnabled) {
+                turnSound.currentTime = 0;
+                turnSound.play().catch(() => {});
+            }
+            
+            // Vibration
+            if (navigator.vibrate) {
+                navigator.vibrate(10);
+            }
+        }
+    }
+});
+
+// Controls
+document.getElementById('prev-btn').addEventListener('click', () => mainSwiper.slidePrev());
+document.getElementById('next-btn').addEventListener('click', () => mainSwiper.slideNext());
+
+document.getElementById('sound-toggle').addEventListener('click', function() {
+    soundEnabled = !soundEnabled;
+    this.classList.toggle('muted');
+    this.querySelector('i').classList.toggle('fa-volume-up');
+    this.querySelector('i').classList.toggle('fa-volume-mute');
+});
+
+// Fullscreen
+let isFullscreen = false;
+document.getElementById('fullscreen-btn').addEventListener('click', function() {
+    if (!isFullscreen) {
+        document.body.classList.add('fullscreen-mode');
+        this.querySelector('i').classList.replace('fa-expand', 'fa-compress');
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        }
+        isFullscreen = true;
+    } else {
+        document.body.classList.remove('fullscreen-mode');
+        this.querySelector('i').classList.replace('fa-compress', 'fa-expand');
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+        isFullscreen = false;
+    }
+});
+
+// Initial state
+document.getElementById('prev-btn').disabled = true;
+
+console.log('KandaNews 3 pages loaded with Swiper.js');
+    </script>
+</body>
+</html>

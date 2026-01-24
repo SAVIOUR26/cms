@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" data-category="interactive">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Review - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* CRITICAL: Fixed 461×600px container */
+        .page-wrapper {
+            width: 461px;
+            height: 600px;
+            background: white;
+            padding: 20px;
+            color: #333;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .category {
+            font-size: 11px;
+            font-weight: 700;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .headline {
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        .video-container {
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+        }
+
+        .content {
+            font-size: 12px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .content p {
+            margin-bottom: 8px;
+        }
+
+        .poll-container {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .poll-title {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .poll-option {
+            background: white;
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+        }
+
+        .poll-option:hover {
+            border-color: #667eea;
+            background: #f0f3ff;
+        }
+
+        .poll-option input {
+            accent-color: #667eea;
+        }
+
+        .poll-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 8px;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .poll-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .social-share {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .share-btn {
+            padding: 6px 12px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        .share-twitter {
+            background: #1da1f2;
+            color: white;
+        }
+
+        .share-facebook {
+            background: #4267B2;
+            color: white;
+        }
+
+        .share-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="category">💻 Tech Review</div>
+
+        <h1 class="headline">Uganda's First 5G Network Goes Live in Kampala</h1>
+
+        <div class="video-container">
+            <i class="fas fa-play-circle"></i>
+        </div>
+
+        <div class="content">
+            <p><strong>Breaking:</strong> MTN Uganda has officially launched the country's first commercial 5G network,
+                covering major areas of Kampala including the CBD and Nakasero.</p>
+
+            <p>Download speeds of up to 1Gbps have been recorded in initial tests, making Uganda one of the early 5G
+                adopters in East Africa.</p>
+        </div>
+
+        <div class="poll-container">
+            <div class="poll-title">📊 Quick Poll: Would you upgrade to 5G?</div>
+
+            <label class="poll-option">
+                <input type="radio" name="poll" value="yes">
+                <span>Yes, I'm excited! 🚀</span>
+            </label>
+
+            <label class="poll-option">
+                <input type="radio" name="poll" value="wait">
+                <span>I'll wait for prices to drop 💰</span>
+            </label>
+
+            <label class="poll-option">
+                <input type="radio" name="poll" value="no">
+                <span>4G is enough 📱</span>
+            </label>
+
+            <button class="poll-btn" onclick="alert('Thanks for voting! 🎉')">
+                <i class="fas fa-check"></i> Submit Vote
+            </button>
+        </div>
+
+        <div class="social-share">
+            <button class="share-btn share-twitter">
+                <i class="fab fa-twitter"></i> Tweet
+            </button>
+            <button class="share-btn share-facebook">
+                <i class="fab fa-facebook"></i> Share
+            </button>
+            <button class="share-btn share-whatsapp">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+            </button>
+        </div>
+    </div>
+</body>
+
+</html>

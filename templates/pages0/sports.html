@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Scores - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 390px;
+            height: 650px;
+            background: #0f1419;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-bar {
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+            padding: 25px 25px 20px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .matches-container {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+        }
+
+        .match-card {
+            background: #1a1f2e;
+            border-radius: 14px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .match-card:hover {
+            border-color: #16a34a;
+            transform: translateX(5px);
+        }
+
+        .match-header {
+            font-size: 10px;
+            color: #16a34a;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .match-teams {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .team {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .team-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .team-score {
+            font-size: 24px;
+            font-weight: 800;
+            color: #16a34a;
+        }
+
+        .match-status {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .live-badge {
+            background: #ef4444;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .highlight {
+            background: rgba(22, 163, 74, 0.1);
+            border: 1px solid rgba(22, 163, 74, 0.3);
+        }
+
+        .footer-stats {
+            padding: 18px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            display: flex;
+            justify-content: space-around;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 18px;
+            font-weight: 700;
+            color: #16a34a;
+            margin-bottom: 3px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="header-bar">
+            <div class="section-title">
+                <span>⚽</span>
+                <span>Premier League</span>
+            </div>
+            <div class="section-subtitle">Latest Scores & Live Updates</div>
+        </div>
+
+        <div class="matches-container">
+            <div class="match-card highlight">
+                <div class="match-header">
+                    <span class="live-badge">
+                        <i class="fas fa-circle"></i> LIVE
+                    </span>
+                    <span>67' - 2nd Half</span>
+                </div>
+                <div class="match-teams">
+                    <div class="team">
+                        <span class="team-name">KCCA FC</span>
+                        <span class="team-score">2</span>
+                    </div>
+                    <div class="team">
+                        <span class="team-name">Vipers SC</span>
+                        <span class="team-score">1</span>
+                    </div>
+                </div>
+                <div class="match-status">
+                    <span><i class="fas fa-map-marker-alt"></i> MTN Omondi Stadium</span>
+                    <span><i class="fas fa-tv"></i> Live on NBS Sport</span>
+                </div>
+            </div>
+
+            <div class="match-card">
+                <div class="match-header">
+                    <span>FULL TIME</span>
+                    <span><i class="fas fa-check-circle"></i></span>
+                </div>
+                <div class="match-teams">
+                    <div class="team">
+                        <span class="team-name">Express FC</span>
+                        <span class="team-score">3</span>
+                    </div>
+                    <div class="team">
+                        <span class="team-name">URA FC</span>
+                        <span class="team-score">3</span>
+                    </div>
+                </div>
+                <div class="match-status">
+                    <span><i class="fas fa-map-marker-alt"></i> Namboole Stadium</span>
+                    <span><i class="fas fa-users"></i> 15,420 fans</span>
+                </div>
+            </div>
+
+            <div class="match-card">
+                <div class="match-header">
+                    <span>TODAY - 18:00</span>
+                    <span><i class="far fa-clock"></i></span>
+                </div>
+                <div class="match-teams">
+                    <div class="team">
+                        <span class="team-name">Villa SC</span>
+                        <span class="team-score">-</span>
+                    </div>
+                    <div class="team">
+                        <span class="team-name">Busoga United</span>
+                        <span class="team-score">-</span>
+                    </div>
+                </div>
+                <div class="match-status">
+                    <span><i class="fas fa-map-marker-alt"></i> St. Mary's Stadium</span>
+                    <span><i class="fas fa-ticket-alt"></i> Tickets available</span>
+                </div>
+            </div>
+
+            <div class="match-card">
+                <div class="match-header">
+                    <span>TOMORROW - 16:00</span>
+                    <span><i class="far fa-clock"></i></span>
+                </div>
+                <div class="match-teams">
+                    <div class="team">
+                        <span class="team-name">BUL FC</span>
+                        <span class="team-score">-</span>
+                    </div>
+                    <div class="team">
+                        <span class="team-name">Kitara FC</span>
+                        <span class="team-score">-</span>
+                    </div>
+                </div>
+                <div class="match-status">
+                    <span><i class="fas fa-map-marker-alt"></i> FUFA Technical Center</span>
+                    <span><i class="fas fa-tv"></i> Sanyuka TV</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-stats">
+            <div class="stat-item">
+                <span class="stat-value">24</span>
+                <span>Matches</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">68</span>
+                <span>Goals</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">2.8</span>
+                <span>Avg/Game</span>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

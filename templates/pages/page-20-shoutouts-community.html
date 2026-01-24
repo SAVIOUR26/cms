@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 50%, #fab1a0 100%);
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: #e17055;
+            border-radius: 3px;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            color: white;
+            padding: 35px 25px;
+            text-align: center;
+        }
+
+        .header-icon {
+            font-size: 52px;
+            margin-bottom: 15px;
+            animation: wave 2s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(20deg); }
+            75% { transform: rotate(-20deg); }
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .content-section {
+            padding: 25px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #d63031;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .shoutout-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .shoutout-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(225, 112, 85, 0.2);
+        }
+
+        .shoutout-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .shoutout-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #e17055, #d63031);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .shoutout-info {
+            flex: 1;
+        }
+
+        .shoutout-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e2b42;
+            margin-bottom: 3px;
+        }
+
+        .shoutout-role {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .shoutout-badge {
+            background: linear-gradient(135deg, #e17055, #d63031);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .shoutout-text {
+            font-size: 13px;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .birthday-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .birthday-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #d63031;
+            margin-bottom: 15px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .birthday-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 100%);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .birthday-icon {
+            font-size: 28px;
+        }
+
+        .birthday-info {
+            flex: 1;
+        }
+
+        .birthday-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e2b42;
+        }
+
+        .birthday-date {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .poll-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .poll-question {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e2b42;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .poll-option {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .poll-option:hover {
+            background: #ffe8e0;
+            border-color: #e17055;
+        }
+
+        .poll-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .cta-text {
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            color: #d63031;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #e17055;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="header-section">
+            <div class="header-icon">👋</div>
+            <h1 class="header-title">Shoutouts & Community</h1>
+            <p class="header-subtitle">Celebrating our readers</p>
+        </div>
+
+        <div class="content-section">
+            <div class="section-title">
+                <i class="fas fa-megaphone"></i>
+                <span>This Week's Shoutouts</span>
+            </div>
+
+            <div class="shoutout-card">
+                <div class="shoutout-header">
+                    <div class="shoutout-avatar">🎓</div>
+                    <div class="shoutout-info">
+                        <div class="shoutout-name">Sarah Nakato</div>
+                        <div class="shoutout-role">Makerere University</div>
+                    </div>
+                    <div class="shoutout-badge">NEW SUBSCRIBER</div>
+                </div>
+                <div class="shoutout-text">
+                    Shared KandaNews with 50+ classmates this week! Welcome to the family, Sarah. You're making a difference! 🔥
+                </div>
+            </div>
+
+            <div class="shoutout-card">
+                <div class="shoutout-header">
+                    <div class="shoutout-avatar">💼</div>
+                    <div class="shoutout-info">
+                        <div class="shoutout-name">David Okello</div>
+                        <div class="shoutout-role">Young Entrepreneur</div>
+                    </div>
+                    <div class="shoutout-badge">CHAMPION</div>
+                </div>
+                <div class="shoutout-text">
+                    "Your career tips helped me land my first client!" Keep crushing it, David. Your hustle inspires us all! 💪
+                </div>
+            </div>
+
+            <div class="shoutout-card">
+                <div class="shoutout-header">
+                    <div class="shoutout-avatar">🌟</div>
+                    <div class="shoutout-info">
+                        <div class="shoutout-name">Grace Auma</div>
+                        <div class="shoutout-role">Professional</div>
+                    </div>
+                    <div class="shoutout-badge">SUPERFAN</div>
+                </div>
+                <div class="shoutout-text">
+                    Reading every edition since day 1! Your consistency is contagious, Grace. Thank you for believing in us! ❤️
+                </div>
+            </div>
+
+            <div class="birthday-section">
+                <div class="birthday-title">
+                    🎂 <span>KandaBirthdays This Week</span>
+                </div>
+                <div class="birthday-item">
+                    <div class="birthday-icon">🎉</div>
+                    <div class="birthday-info">
+                        <div class="birthday-name">James Mugisha</div>
+                        <div class="birthday-date">November 5 • Kampala</div>
+                    </div>
+                </div>
+                <div class="birthday-item">
+                    <div class="birthday-icon">🎈</div>
+                    <div class="birthday-info">
+                        <div class="birthday-name">Patricia Namukasa</div>
+                        <div class="birthday-date">November 7 • Entebbe</div>
+                    </div>
+                </div>
+                <div class="birthday-item">
+                    <div class="birthday-icon">🎊</div>
+                    <div class="birthday-info">
+                        <div class="birthday-name">Moses Kiiza</div>
+                        <div class="birthday-date">November 9 • Mbarara</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="poll-section">
+                <div class="section-title">
+                    <i class="fas fa-poll"></i>
+                    <span>Quick Poll</span>
+                </div>
+                <div class="poll-question">What content do you want more of?</div>
+                <div class="poll-option">
+                    <div class="poll-text">📰 More African news & trends</div>
+                </div>
+                <div class="poll-option">
+                    <div class="poll-text">💼 Career tips & job opportunities</div>
+                </div>
+                <div class="poll-option">
+                    <div class="poll-text">🎬 Entertainment reviews</div>
+                </div>
+                <div class="poll-option">
+                    <div class="poll-text">💡 Personal growth & motivation</div>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-value">5.2K</div>
+                    <div class="stat-label">Readers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">240</div>
+                    <div class="stat-label">New This Week</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Countries</div>
+                </div>
+            </div>
+
+            <div class="cta-box">
+                <div class="cta-title">Want a Shoutout?</div>
+                <div class="cta-text">
+                    Share your KandaNews story, tag us on social media, or refer 5+ friends. We celebrate our most engaged readers every week!
+                </div>
+                <a href="#" class="cta-button">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>Share Your Story</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

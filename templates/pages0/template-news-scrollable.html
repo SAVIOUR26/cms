@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" data-category="news">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breaking News - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* STANDARD: 461×600px - Scrollable */
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Mark as scrollable for indicator */
+        .page-wrapper.scrollable {
+            /* Indicator added by generator CSS */
+        }
+
+        /* Custom scrollbar */
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 3px;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 25px;
+        }
+
+        .category {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            opacity: 0.9;
+        }
+
+        .headline {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        .subheadline {
+            font-size: 14px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        .content-section {
+            padding: 25px;
+        }
+
+        .news-item {
+            padding: 18px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .news-item:hover {
+            background: #f0f3ff;
+            transform: translateX(5px);
+        }
+
+        .news-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #667eea;
+        }
+
+        .news-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .timestamp {
+            font-size: 11px;
+            color: #999;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .footer-bar {
+            padding: 18px 25px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper scrollable">
+        <div class="header-section">
+            <div class="category">🌍 BREAKING NEWS</div>
+            <h1 class="headline">Uganda Launches Digital ID System</h1>
+            <p class="subheadline">Blockchain-based identification rolls out nationwide by Q2 2025</p>
+        </div>
+
+        <div class="content-section">
+            <div class="news-item">
+                <div class="news-title">Kampala Pilot Success</div>
+                <div class="news-text">Over 500,000 residents enrolled in the first month. System processes applications 5x faster than traditional methods.</div>
+                <div class="timestamp"><i class="fas fa-clock"></i> 2 hours ago</div>
+            </div>
+
+            <div class="news-item">
+                <div class="news-title">Advanced Security Features</div>
+                <div class="news-text">Includes biometric data, blockchain verification, and digital wallet for government services including taxes and licensing.</div>
+                <div class="timestamp"><i class="fas fa-clock"></i> 4 hours ago</div>
+            </div>
+
+            <div class="news-item">
+                <div class="news-title">Nationwide Rollout</div>
+                <div class="news-text">All 135 districts to have enrollment centers by Q2 2025. Mobile units will visit rural areas for universal coverage.</div>
+                <div class="timestamp"><i class="fas fa-clock"></i> 6 hours ago</div>
+            </div>
+
+            <div class="news-item">
+                <div class="news-title">Regional Integration</div>
+                <div class="news-text">System compatible with East African Community standards, enabling seamless cross-border verification for trade and travel.</div>
+                <div class="timestamp"><i class="fas fa-clock"></i> 8 hours ago</div>
+            </div>
+
+            <div class="news-item">
+                <div class="news-title">Privacy Protection</div>
+                <div class="news-text">Built with end-to-end encryption and user-controlled data sharing. Citizens can manage permissions through mobile app.</div>
+                <div class="timestamp"><i class="fas fa-clock"></i> 10 hours ago</div>
+            </div>
+        </div>
+
+        <div class="footer-bar">
+            <span><i class="fas fa-newspaper"></i> KandaNews Africa</span>
+            <span>Nov 2024</span>
+        </div>
+    </div>
+</body>
+</html>

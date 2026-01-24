@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success Story - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: linear-gradient(135deg, #fff8e1 0%, #ffe082 100%);
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: #f39c12;
+            border-radius: 3px;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            padding: 35px 30px;
+            text-align: center;
+        }
+
+        .header-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .header-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            opacity: 0.95;
+        }
+
+        .content-section {
+            padding: 30px;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1e2b42;
+            margin-bottom: 8px;
+        }
+
+        .profile-title {
+            font-size: 14px;
+            color: #f39c12;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .profile-location {
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .story-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #f39c12;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #f39c12;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-text {
+            font-size: 13px;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .highlight-stat {
+            display: inline-block;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 12px;
+            margin: 0 3px;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .achievement-item {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #ffe082;
+        }
+
+        .achievement-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .achievement-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .achievement-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: #f39c12;
+            margin: 5px 0;
+        }
+
+        .quote-box {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .quote-icon {
+            font-size: 40px;
+            opacity: 0.3;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+        }
+
+        .quote-text {
+            font-size: 15px;
+            font-style: italic;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+            padding-left: 30px;
+        }
+
+        .lesson-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 2px solid #f39c12;
+        }
+
+        .lesson-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e2b42;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .lesson-text {
+            font-size: 13px;
+            line-height: 1.7;
+            color: #555;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="header-section">
+            <div class="header-icon">⭐</div>
+            <h1 class="header-title">Success Story</h1>
+            <p class="header-subtitle">Young Africans making waves</p>
+        </div>
+
+        <div class="content-section">
+            <div class="profile-card">
+                <div class="profile-image">👨‍💻</div>
+                <div class="profile-name">Brian Gitta</div>
+                <div class="profile-title">Founder & CEO, Matibabu</div>
+                <div class="profile-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Kampala, Uganda 🇺🇬</span>
+                </div>
+            </div>
+
+            <div class="story-section">
+                <div class="section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>The Innovation</span>
+                </div>
+                <div class="section-text">
+                    At just 24 years old, Brian Gitta invented <strong>Matibabu</strong>—a bloodless malaria testing device that diagnoses malaria in under 2 minutes without a needle prick. His innovation won the <span class="highlight-stat">Africa Prize for Engineering</span> and is revolutionizing healthcare across the continent.
+                </div>
+            </div>
+
+            <div class="story-section">
+                <div class="section-title">
+                    <i class="fas fa-book"></i>
+                    <span>The Journey</span>
+                </div>
+                <div class="section-text">
+                    As a Makerere University student, Brian saw his friends suffer from repeated needle pricks during malaria tests. Instead of accepting this as normal, he asked: "What if there's a better way?" Four years of prototyping, failed tests, and sleepless nights later—Matibabu was born.
+                </div>
+                <div class="section-text">
+                    Today, Matibabu has tested over <span class="highlight-stat">500,000 patients</span> and expanded to Kenya, Tanzania, and Rwanda. Brian's device costs 80% less than traditional tests and provides results with 90% accuracy.
+                </div>
+            </div>
+
+            <div class="achievement-grid">
+                <div class="achievement-item">
+                    <div class="achievement-icon">🏆</div>
+                    <div class="achievement-value">$35K</div>
+                    <div class="achievement-label">Prize Money Won</div>
+                </div>
+                <div class="achievement-item">
+                    <div class="achievement-icon">🌍</div>
+                    <div class="achievement-value">4</div>
+                    <div class="achievement-label">Countries Served</div>
+                </div>
+                <div class="achievement-item">
+                    <div class="achievement-icon">👥</div>
+                    <div class="achievement-value">500K+</div>
+                    <div class="achievement-label">Lives Impacted</div>
+                </div>
+                <div class="achievement-item">
+                    <div class="achievement-icon">⏱️</div>
+                    <div class="achievement-value">2 Min</div>
+                    <div class="achievement-label">Test Duration</div>
+                </div>
+            </div>
+
+            <div class="quote-box">
+                <div class="quote-icon">"</div>
+                <div class="quote-text">
+                    "Don't wait for someone else to solve the problems you see around you. You have the power to create change right now, right where you are."
+                </div>
+            </div>
+
+            <div class="lesson-box">
+                <div class="lesson-title">💡 What You Can Learn</div>
+                <div class="lesson-text">
+                    Brian didn't have millions of dollars or a PhD. He had curiosity, persistence, and a willingness to fail forward. Your next big idea doesn't need permission—it just needs you to start.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

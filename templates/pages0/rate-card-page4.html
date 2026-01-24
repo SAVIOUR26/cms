@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" data-category="product">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multimedia Ads - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* STANDARD: 461×600px - Fixed */
+        .page-wrapper {
+            width: 461px;
+            height: 600px;
+            background: white;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 25px;
+        }
+
+        .category {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            opacity: 0.9;
+        }
+
+        .headline {
+            font-size: 26px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+
+        .subheadline {
+            font-size: 13px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        .content-section {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        /* Custom scrollbar */
+        .content-section::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .content-section::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .content-section::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 3px;
+        }
+
+        .pricing-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            border: 2px solid #e9ecef;
+        }
+
+        .pricing-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+        }
+
+        .pricing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .ad-type {
+            font-size: 17px;
+            font-weight: 800;
+            color: #1e2b42;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ad-type i {
+            color: #667eea;
+            font-size: 20px;
+        }
+
+        .ad-description {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .price {
+            font-size: 26px;
+            font-weight: 800;
+            color: #667eea;
+            line-height: 1;
+        }
+
+        .price-unit {
+            font-size: 10px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 3px;
+        }
+
+        .specs-tag {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .highlight-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .highlight-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .highlight-text {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .footer-bar {
+            padding: 15px 25px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #667eea, transparent);
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="header-section">
+            <div class="category">🎵 MULTIMEDIA & AUDIO</div>
+            <h1 class="headline">Audio & Interactive Ads</h1>
+            <p class="subheadline">Engage your audience with sound and motion</p>
+        </div>
+
+        <div class="content-section">
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-headphones"></i>
+                            <span>Audio Ad (60 sec)</span>
+                        </div>
+                        <div class="ad-description">Voicenote or podcast-style audio</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">60K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <span class="specs-tag">⏱️ Up to 1 minute</span>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-headphones"></i>
+                            <span>Audio Ad (30 sec)</span>
+                        </div>
+                        <div class="ad-description">Short audio message</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">30K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <span class="specs-tag">⏱️ Up to 30 seconds</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Cart Ad</span>
+                        </div>
+                        <div class="ad-description">Product image with cart button</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">50K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <span class="specs-tag">🛒 Direct Purchase</span>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-store"></i>
+                            <span>Kanda Market</span>
+                        </div>
+                        <div class="ad-description">Classified listing / Hustle link</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">10K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <span class="specs-tag">💼 Budget-Friendly</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-title">
+                        <div class="ad-type">
+                            <i class="fas fa-film"></i>
+                            <span>Sponsored Content</span>
+                        </div>
+                        <div class="ad-description">5-minute documentary/feature</div>
+                    </div>
+                    <div class="pricing-amount">
+                        <div class="price">300K</div>
+                        <div class="price-unit">UGX / Day</div>
+                    </div>
+                </div>
+                <span class="specs-tag">⭐ Premium Feature</span>
+            </div>
+
+            <div class="highlight-card">
+                <div class="highlight-title">💡 All Ads Are Interactive</div>
+                <div class="highlight-text">Every ad includes clickable links, engagement tracking, and direct customer connection</div>
+            </div>
+        </div>
+
+        <div class="footer-bar">
+            <span><i class="fas fa-newspaper"></i> KandaNews Africa</span>
+            <span>Page 4</span>
+        </div>
+    </div>
+</body>
+
+</html>

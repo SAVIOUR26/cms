@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Edition - KandaNews Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            background: linear-gradient(135deg, #1e2b42 0%, #2a3f5f 100%);
+            color: white;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+
+        .page-wrapper::-webkit-scrollbar-thumb {
+            background: #f05a1a;
+            border-radius: 3px;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #f05a1a 0%, #ff7a3d 100%);
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header-icon {
+            font-size: 52px;
+            margin-bottom: 15px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .content-section {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .coming-soon {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(240, 90, 26, 0.3);
+            text-align: center;
+        }
+
+        .coming-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #f05a1a;
+            margin-bottom: 8px;
+        }
+
+        .coming-date {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .coming-time {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .preview-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(240, 90, 26, 0.2);
+            transition: all 0.3s;
+        }
+
+        .preview-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #f05a1a;
+            transform: translateY(-3px);
+        }
+
+        .preview-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .preview-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .preview-desc {
+            font-size: 11px;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .feature-box {
+            background: rgba(240, 90, 26, 0.15);
+            border: 2px solid #f05a1a;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .feature-badge {
+            display: inline-block;
+            background: #f05a1a;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .feature-text {
+            font-size: 13px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .subscribe-box {
+            background: linear-gradient(135deg, #f05a1a 0%, #ff7a3d 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .subscribe-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subscribe-text {
+            font-size: 13px;
+            margin-bottom: 15px;
+            opacity: 0.95;
+        }
+
+        .subscribe-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            color: #f05a1a;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .subscribe-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="header-section">
+            <div class="header-icon">🚀</div>
+            <h1 class="header-title">Coming Tomorrow</h1>
+            <p class="header-subtitle">Mark your calendar</p>
+        </div>
+
+        <div class="content-section">
+            <div class="coming-soon">
+                <div class="coming-title">NEXT EDITION</div>
+                <div class="coming-date">November 4, 2025</div>
+                <div class="coming-time">📅 Tomorrow • 6:00 AM</div>
+            </div>
+
+            <div class="preview-grid">
+                <div class="preview-card">
+                    <div class="preview-icon">🌍</div>
+                    <div class="preview-title">Africa's Tech Boom</div>
+                    <div class="preview-desc">Inside the $10B funding wave hitting African startups</div>
+                </div>
+
+                <div class="preview-card">
+                    <div class="preview-icon">💼</div>
+                    <div class="preview-title">Career Spotlight</div>
+                    <div class="preview-desc">How to negotiate your first salary like a pro</div>
+                </div>
+
+                <div class="preview-card">
+                    <div class="preview-icon">🎬</div>
+                    <div class="preview-title">Movie Review</div>
+                    <div class="preview-desc">The Woman King director's new African epic</div>
+                </div>
+
+                <div class="preview-card">
+                    <div class="preview-icon">💡</div>
+                    <div class="preview-title">Success Story</div>
+                    <div class="preview-desc">From campus to CEO: A Ugandan journey</div>
+                </div>
+            </div>
+
+            <div class="feature-box">
+                <div class="feature-badge">🔥 EXCLUSIVE</div>
+                <div class="feature-title">Special Interview</div>
+                <div class="feature-text">
+                    Sit-down with a leading African entrepreneur on building billion-dollar businesses from scratch
+                </div>
+            </div>
+
+            <div class="subscribe-box">
+                <div class="subscribe-title">Never Miss an Edition</div>
+                <div class="subscribe-text">
+                    Get KandaNews delivered to your WhatsApp every morning at 6 AM
+                </div>
+                <a href="#" class="subscribe-button">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>Subscribe Free</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

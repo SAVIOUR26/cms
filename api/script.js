@@ -1,0 +1,1 @@
+/* Scripts embedded in HTML */

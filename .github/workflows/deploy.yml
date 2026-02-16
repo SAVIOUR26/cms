@@ -1,0 +1,146 @@
+name: Deploy KandaNews
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      cms: ${{ steps.filter.outputs.cms }}
+      landing-main: ${{ steps.filter.outputs.landing-main }}
+      landing-ug: ${{ steps.filter.outputs.landing-ug }}
+      landing-shared: ${{ steps.filter.outputs.landing-shared }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            cms:
+              - 'cms/**'
+              - 'config.php'
+              - 'dashboard.php'
+              - 'api/**'
+              - 'includes/**'
+              - 'templates/**'
+            landing-main:
+              - 'landing/main/**'
+              - 'landing/shared/**'
+            landing-ug:
+              - 'landing/ug/**'
+              - 'landing/shared/**'
+            landing-shared:
+              - 'landing/shared/**'
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: PHP Lint
+        run: |
+          find . -name "*.php" -not -path "./wordpress-ref/*" -not -path "./.git/*" | xargs -I {} php -l {} 2>&1 | grep -v "No syntax errors"
+          echo "PHP lint complete"
+
+  deploy-cms:
+    needs: [detect-changes, lint]
+    if: needs.detect-changes.outputs.cms == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy CMS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: ./
+          server-dir: /domains/cms.kandanews.africa/public_html/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            landing/**
+            backend/**
+            wordpress-ref/**
+            Kanda Africa/**
+            kandanews-ug/**
+            .env
+            .env.example
+            README.md
+
+  deploy-landing-main:
+    needs: [detect-changes, lint]
+    if: needs.detect-changes.outputs.landing-main == 'true' || needs.detect-changes.outputs.landing-shared == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy Main Landing
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: ./landing/
+          server-dir: /domains/kandanews.africa/public_html/
+
+  deploy-landing-ug:
+    needs: [detect-changes, lint]
+    if: needs.detect-changes.outputs.landing-ug == 'true' || needs.detect-changes.outputs.landing-shared == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy UG Landing
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: ./landing/
+          server-dir: /domains/ug.kandanews.africa/public_html/
+
+  deploy-landing-ke:
+    needs: [detect-changes, lint]
+    if: needs.detect-changes.outputs.landing-shared == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy KE Landing
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: ./landing/
+          server-dir: /domains/ke.kandanews.africa/public_html/
+
+  deploy-landing-za:
+    needs: [detect-changes, lint]
+    if: needs.detect-changes.outputs.landing-shared == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy ZA Landing
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: ./landing/
+          server-dir: /domains/za.kandanews.africa/public_html/
+
+  deploy-landing-ng:
+    needs: [detect-changes, lint]
+    if: needs.detect-changes.outputs.landing-shared == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy NG Landing
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: ./landing/
+          server-dir: /domains/ng.kandanews.africa/public_html/

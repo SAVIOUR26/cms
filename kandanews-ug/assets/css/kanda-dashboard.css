@@ -1,0 +1,169 @@
+:root{
+  /* KandaNews palette */
+  --accent: #f05a1a;
+  --primary: #1e2b42;
+  --bg: #f1f2f3;
+  --ink: #0f172a;
+  --muted: #475569;
+  --border: #e6e8eb;
+  --radius: 14px;
+  --ring: 3px;
+  --focus-color: color-mix(in srgb, var(--accent) 60%, transparent);
+  --success: #059669;
+  --warning: #b45309;
+  --danger: #b91c1c;
+  --reduced-motion-time: 50ms;
+}
+
+*{box-sizing:border-box}
+
+html,body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Arial,sans-serif;background:radial-gradient(1200px 500px at 10% -20%, rgba(240,90,26,.08), transparent 60%), radial-gradient(1000px 400px at 120% 0%, rgba(30,43,66,.06), transparent 60%), var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale}
+
+a{color:inherit}
+
+/* Layout container */
+.kanda-dashboard-container{padding-top:24px;padding-bottom:24px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+
+/* Grid layouts */
+.dashboard-content-grid,
+.dashboard-profile-grid{display:grid;gap:16px;margin-top:16px}
+.dashboard-content-grid{grid-template-columns:2fr 1fr}
+.dashboard-profile-grid{grid-template-columns:2fr 1fr}
+
+/* Card */
+.dashboard-section{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:0 8px 30px rgba(0,0,0,.05);
+  padding:16px;
+  margin-bottom:16px;
+}
+
+/* Headings & muted */
+.h{margin:0 0 8px;color:var(--primary)}
+.muted{color:var(--muted)}
+
+/* Tiles / buttons */
+.tiles{display:grid;gap:12px;grid-template-columns:repeat(3,1fr)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.7rem 1rem;border-radius:12px;border:2px solid var(--primary);
+  font-weight:800;text-decoration:none;color:#fff;background:var(--primary);
+  cursor:pointer;transition:transform .06s ease, background .2s ease, border .2s ease, box-shadow .12s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent)}
+.btn.ghost{background:#fff;color:var(--primary);border-color:var(--border)}
+.btn[disabled]{opacity:.6;cursor:not-allowed}
+
+/* Focus-visible (keyboard) */
+:focus{outline:none}
+.btn:focus-visible,
+.row:focus-visible,
+.filter-controls select:focus-visible,
+.filter-controls input:focus-visible{
+  outline-offset:2px;
+  box-shadow:0 0 0 var(--ring) var(--focus-color);
+  border-color:var(--accent);
+}
+
+/* List / rows */
+.list{display:grid;gap:8px}
+.row{
+  display:flex;justify-content:space-between;align-items:center;padding:12px 14px;
+  border:1px solid var(--border);border-radius:10px;background:linear-gradient(0deg,#fff,#fff);
+  cursor:pointer;
+}
+.row:hover{background:linear-gradient(0deg,#fff,#fff), linear-gradient(90deg, rgba(240,90,26,.06), rgba(30,43,66,.04))}
+.row:active{transform:translateY(0)}
+.row[aria-pressed="true"]{outline:2px solid var(--accent)}
+
+/* Pills */
+.pill{display:inline-flex;align-items:center;gap:.4rem;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;border:1px solid var(--border);background:#fff}
+.ok{color:var(--success);background:#ecfdf5;border-color:#d1fae5}
+.warn{color:var(--warning);background:#fffbeb;border-color:#fde68a}
+.err{color:var(--danger);background:#fef2f2;border-color:#fecaca}
+
+/* Key-value profile grid */
+.kv{display:grid;grid-template-columns:160px 1fr;gap:8px;margin-top:8px}
+.kv .k{color:var(--muted)}
+
+/* Ticker (respect reduced-motion) */
+.ticker{position:relative;overflow:hidden;border:1px solid var(--border);border-radius:999px;background:#fff;padding:6px 10px;margin:10px 0}
+.track{display:flex;gap:24px;white-space:nowrap;will-change:transform}
+.track .dot{opacity:.5}
+
+/* Use a CSS animation only when not reduced motion.
+   The markup must include duplicated content for continuous scroll,
+   e.g. the track should contain the items twice if you want seamless looping.
+*/
+@media (prefers-reduced-motion: no-preference){
+  .track{animation:ticker 18s linear infinite}
+}
+@media (prefers-reduced-motion: reduce){
+  .track{animation:none}
+}
+@keyframes ticker{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+
+/* Hero / header */
+.hero{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.header-pills{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-left:auto}
+
+/* Typewriter style */
+.type{font-weight:900;font-size:1.25rem;letter-spacing:.2px;color:var(--primary);min-height:1.6em;position:relative;padding-bottom:2px;border-bottom:3px solid var(--focus-color)}
+.cursor{display:inline-block;width:2px;height:1.15em;background:var(--accent);margin-left:4px;animation:blink .9s steps(1,end) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* Logo reveal */
+.logoReveal{opacity:0;transform:translateY(6px);transition:opacity .5s ease, transform .5s ease}
+.logoReveal.show{opacity:1;transform:none}
+.logo{height:36px;object-fit:contain}
+.logo-text{font-weight:800;color:var(--accent)}
+
+/* Skeleton */
+.skeleton-line{height:44px;background:#f1f5f9;border-radius:10px;margin-top:8px}
+
+/* Archive header & filters */
+.archive-header{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;flex-wrap:wrap}
+.filter-controls{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.filter-controls select,.filter-controls input[type="search"]{padding:10px 12px;border:1px solid var(--border);border-radius:10px}
+
+/* Updates slider */
+.updates-slider-container{width:300px;max-width:100%;height:200px;overflow:hidden;border-radius:var(--radius);margin:10px auto;position:relative}
+.updates-slider-track{display:flex;align-items:stretch;transition:transform .45s ease-in-out;will-change:transform}
+.updates-slider-track .slider-image{flex:0 0 100%;width:100%;height:100%;object-fit:cover;display:block;border-radius:var(--radius)}
+
+/* Profile Card Overlay - use fixed so it stays centered on scroll */
+.profile-card-overlay{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;background:#fff;border:1px solid var(--border);
+  border-radius:var(--radius);box-shadow:0 8px 30px rgba(0,0,0,.15);max-width:500px;width:90%;padding:24px;animation:fadeIn .3s ease-in-out;
+}
+.profile-card-content .modal-close{position:absolute;top:10px;right:10px;background:none;border:none;font-size:2rem;cursor:pointer;color:var(--muted);line-height:1}
+
+/* Brand logo sizing */
+#brandLogo{width:200px;height:auto;transform:none}
+
+/* Fade in */
+@keyframes fadeIn{from{opacity:0;transform:translate(-50%,-60%)}to{opacity:1;transform:translate(-50%,-50%) }}
+
+/* Responsive */
+@media (max-width:980px){
+  .dashboard-content-grid,.dashboard-profile-grid{grid-template-columns:1fr}
+  .tiles{grid-template-columns:1fr 1fr}
+  .updates-slider-container{width:100%;height:160px}
+}
+@media (max-width:640px){
+  .tiles{grid-template-columns:1fr}
+  :root{--radius:12px}
+}
+
+/* Reduced motion: turn off transitions & animations where appropriate */
+@media (prefers-reduced-motion: reduce){
+  *{transition:none!important;animation:none!important}
+  .cursor{display:none}
+}

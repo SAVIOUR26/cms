@@ -4,95 +4,20 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-    inputs:
-      deploy_all:
-        description: 'Deploy all sites (ignore change detection)'
-        required: false
-        default: 'true'
-        type: boolean
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: PHP Lint
-        run: |
-          errors=0
-          while IFS= read -r file; do
-            if ! php -l "$file" 2>&1 | grep -q "No syntax errors"; then
-              echo "FAIL: $file"
-              errors=$((errors + 1))
-            fi
-          done < <(find . -name "*.php" -not -path "./wordpress-ref/*" -not -path "./.git/*")
-          if [ $errors -gt 0 ]; then echo "$errors file(s) with errors"; exit 1; fi
-          echo "All PHP files pass lint check"
-
-  detect-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      cms: ${{ steps.filter.outputs.cms }}
-      landing-main: ${{ steps.filter.outputs.landing-main }}
-      landing-ug: ${{ steps.filter.outputs.landing-ug }}
-      landing-ke: ${{ steps.filter.outputs.landing-ke }}
-      landing-za: ${{ steps.filter.outputs.landing-za }}
-      landing-ng: ${{ steps.filter.outputs.landing-ng }}
-      landing-shared: ${{ steps.filter.outputs.landing-shared }}
-      force: ${{ steps.check-force.outputs.force }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            cms:
-              - 'config.php'
-              - 'dashboard.php'
-              - 'index.php'
-              - 'api/**'
-              - 'includes/**'
-              - 'templates/**'
-              - 'assets/**'
-              - '*.php'
-              - '.htaccess'
-            landing-main:
-              - 'landing/main/**'
-            landing-ug:
-              - 'landing/ug/**'
-            landing-ke:
-              - 'landing/ke/**'
-            landing-za:
-              - 'landing/za/**'
-            landing-ng:
-              - 'landing/ng/**'
-            landing-shared:
-              - 'landing/shared/**'
-      - name: Check if force deploy
-        id: check-force
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "force=true" >> $GITHUB_OUTPUT
-          else
-            echo "force=false" >> $GITHUB_OUTPUT
-          fi
-
-  # ──────────────────────────────────────
-  # CMS: cms.kandanews.africa
-  # ──────────────────────────────────────
   deploy-cms:
-    needs: [detect-changes, lint]
-    if: needs.detect-changes.outputs.cms == 'true' || needs.detect-changes.outputs.force == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy CMS to cms.kandanews.africa
+      - name: Deploy CMS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./
-          server-dir: /cms.kandanews.africa/public_html/
+          server-dir: cms.kandanews.africa/public_html/
           exclude: |
             **/.git*
             **/.git*/**
@@ -105,123 +30,98 @@ jobs:
             .env
             .env.example
 
-  # ──────────────────────────────────────
-  # Main Hub: kandanews.africa
-  # ──────────────────────────────────────
-  deploy-landing-main:
-    needs: [detect-changes, lint]
-    if: needs.detect-changes.outputs.landing-main == 'true' || needs.detect-changes.outputs.landing-shared == 'true' || needs.detect-changes.outputs.force == 'true'
+  deploy-main:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare main landing
+      - name: Prepare
         run: |
-          mkdir -p deploy_main/shared
-          cp -r landing/main/* deploy_main/
-          cp -r landing/shared/* deploy_main/shared/
-      - name: Deploy to kandanews.africa
+          mkdir -p _deploy/shared
+          cp -r landing/main/* _deploy/
+          cp -r landing/shared/* _deploy/shared/
+      - name: Deploy kandanews.africa
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
-          local-dir: ./deploy_main/
-          server-dir: /kandanews.africa/public_html/
+          local-dir: ./_deploy/
+          server-dir: kandanews.africa/public_html/
 
-  # ──────────────────────────────────────
-  # Uganda: ug.kandanews.africa
-  # ──────────────────────────────────────
-  deploy-landing-ug:
-    needs: [detect-changes, lint]
-    if: needs.detect-changes.outputs.landing-ug == 'true' || needs.detect-changes.outputs.landing-shared == 'true' || needs.detect-changes.outputs.force == 'true'
+  deploy-ug:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare UG landing
+      - name: Prepare
         run: |
-          mkdir -p deploy_ug/shared
-          cp -r landing/ug/* deploy_ug/
-          cp -r landing/shared/* deploy_ug/shared/
-      - name: Deploy to ug.kandanews.africa
+          mkdir -p _deploy/shared
+          cp -r landing/ug/* _deploy/
+          cp -r landing/shared/* _deploy/shared/
+      - name: Deploy ug.kandanews.africa
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
-          local-dir: ./deploy_ug/
-          server-dir: /ug.kandanews.africa/public_html/
+          local-dir: ./_deploy/
+          server-dir: ug.kandanews.africa/public_html/
 
-  # ──────────────────────────────────────
-  # Kenya: ke.kandanews.africa
-  # ──────────────────────────────────────
-  deploy-landing-ke:
-    needs: [detect-changes, lint]
-    if: needs.detect-changes.outputs.landing-ke == 'true' || needs.detect-changes.outputs.landing-shared == 'true' || needs.detect-changes.outputs.force == 'true'
+  deploy-ke:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare KE landing
+      - name: Prepare
         run: |
-          mkdir -p deploy_ke/shared
-          cp -r landing/ke/* deploy_ke/
-          cp -r landing/ug/login.php deploy_ke/
-          cp -r landing/ug/dashboard.php deploy_ke/
-          cp -r landing/shared/* deploy_ke/shared/
-      - name: Deploy to ke.kandanews.africa
+          mkdir -p _deploy/shared
+          cp -r landing/ke/* _deploy/
+          cp -r landing/ug/login.php _deploy/
+          cp -r landing/ug/dashboard.php _deploy/
+          cp -r landing/shared/* _deploy/shared/
+      - name: Deploy ke.kandanews.africa
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
-          local-dir: ./deploy_ke/
-          server-dir: /ke.kandanews.africa/public_html/
+          local-dir: ./_deploy/
+          server-dir: ke.kandanews.africa/public_html/
 
-  # ──────────────────────────────────────
-  # South Africa: za.kandanews.africa
-  # ──────────────────────────────────────
-  deploy-landing-za:
-    needs: [detect-changes, lint]
-    if: needs.detect-changes.outputs.landing-za == 'true' || needs.detect-changes.outputs.landing-shared == 'true' || needs.detect-changes.outputs.force == 'true'
+  deploy-za:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare ZA landing
+      - name: Prepare
         run: |
-          mkdir -p deploy_za/shared
-          cp -r landing/za/* deploy_za/
-          cp -r landing/ug/login.php deploy_za/
-          cp -r landing/ug/dashboard.php deploy_za/
-          cp -r landing/shared/* deploy_za/shared/
-      - name: Deploy to za.kandanews.africa
+          mkdir -p _deploy/shared
+          cp -r landing/za/* _deploy/
+          cp -r landing/ug/login.php _deploy/
+          cp -r landing/ug/dashboard.php _deploy/
+          cp -r landing/shared/* _deploy/shared/
+      - name: Deploy za.kandanews.africa
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
-          local-dir: ./deploy_za/
-          server-dir: /za.kandanews.africa/public_html/
+          local-dir: ./_deploy/
+          server-dir: za.kandanews.africa/public_html/
 
-  # ──────────────────────────────────────
-  # Nigeria: ng.kandanews.africa
-  # ──────────────────────────────────────
-  deploy-landing-ng:
-    needs: [detect-changes, lint]
-    if: needs.detect-changes.outputs.landing-ng == 'true' || needs.detect-changes.outputs.landing-shared == 'true' || needs.detect-changes.outputs.force == 'true'
+  deploy-ng:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare NG landing
+      - name: Prepare
         run: |
-          mkdir -p deploy_ng/shared
-          cp -r landing/ng/* deploy_ng/
-          cp -r landing/ug/login.php deploy_ng/
-          cp -r landing/ug/dashboard.php deploy_ng/
-          cp -r landing/shared/* deploy_ng/shared/
-      - name: Deploy to ng.kandanews.africa
+          mkdir -p _deploy/shared
+          cp -r landing/ng/* _deploy/
+          cp -r landing/ug/login.php _deploy/
+          cp -r landing/ug/dashboard.php _deploy/
+          cp -r landing/shared/* _deploy/shared/
+      - name: Deploy ng.kandanews.africa
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
-          local-dir: ./deploy_ng/
-          server-dir: /ng.kandanews.africa/public_html/
+          local-dir: ./_deploy/
+          server-dir: ng.kandanews.africa/public_html/

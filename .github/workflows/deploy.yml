@@ -3,6 +3,13 @@ name: Deploy KandaNews
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy_all:
+        description: 'Deploy all sites (ignore change detection)'
+        required: false
+        default: 'true'
+        type: boolean
 
 jobs:
   lint:
@@ -31,6 +38,7 @@ jobs:
       landing-za: ${{ steps.filter.outputs.landing-za }}
       landing-ng: ${{ steps.filter.outputs.landing-ng }}
       landing-shared: ${{ steps.filter.outputs.landing-shared }}
+      force: ${{ steps.check-force.outputs.force }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -59,13 +67,21 @@ jobs:
               - 'landing/ng/**'
             landing-shared:
               - 'landing/shared/**'
+      - name: Check if force deploy
+        id: check-force
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "force=true" >> $GITHUB_OUTPUT
+          else
+            echo "force=false" >> $GITHUB_OUTPUT
+          fi
 
   # ──────────────────────────────────────
   # CMS: cms.kandanews.africa
   # ──────────────────────────────────────
   deploy-cms:
     needs: [detect-changes, lint]
-    if: needs.detect-changes.outputs.cms == 'true'
+    if: needs.detect-changes.outputs.cms == 'true' || needs.detect-changes.outputs.force == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -94,7 +110,7 @@ jobs:
   # ──────────────────────────────────────
   deploy-landing-main:
     needs: [detect-changes, lint]
-    if: needs.detect-changes.outputs.landing-main == 'true' || needs.detect-changes.outputs.landing-shared == 'true'
+    if: needs.detect-changes.outputs.landing-main == 'true' || needs.detect-changes.outputs.landing-shared == 'true' || needs.detect-changes.outputs.force == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -117,7 +133,7 @@ jobs:
   # ──────────────────────────────────────
   deploy-landing-ug:
     needs: [detect-changes, lint]
-    if: needs.detect-changes.outputs.landing-ug == 'true' || needs.detect-changes.outputs.landing-shared == 'true'
+    if: needs.detect-changes.outputs.landing-ug == 'true' || needs.detect-changes.outputs.landing-shared == 'true' || needs.detect-changes.outputs.force == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -140,7 +156,7 @@ jobs:
   # ──────────────────────────────────────
   deploy-landing-ke:
     needs: [detect-changes, lint]
-    if: needs.detect-changes.outputs.landing-ke == 'true' || needs.detect-changes.outputs.landing-shared == 'true'
+    if: needs.detect-changes.outputs.landing-ke == 'true' || needs.detect-changes.outputs.landing-shared == 'true' || needs.detect-changes.outputs.force == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -165,7 +181,7 @@ jobs:
   # ──────────────────────────────────────
   deploy-landing-za:
     needs: [detect-changes, lint]
-    if: needs.detect-changes.outputs.landing-za == 'true' || needs.detect-changes.outputs.landing-shared == 'true'
+    if: needs.detect-changes.outputs.landing-za == 'true' || needs.detect-changes.outputs.landing-shared == 'true' || needs.detect-changes.outputs.force == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -190,7 +206,7 @@ jobs:
   # ──────────────────────────────────────
   deploy-landing-ng:
     needs: [detect-changes, lint]
-    if: needs.detect-changes.outputs.landing-ng == 'true' || needs.detect-changes.outputs.landing-shared == 'true'
+    if: needs.detect-changes.outputs.landing-ng == 'true' || needs.detect-changes.outputs.landing-shared == 'true' || needs.detect-changes.outputs.force == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

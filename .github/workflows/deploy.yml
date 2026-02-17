@@ -39,6 +39,7 @@ jobs:
           mkdir -p _deploy/shared
           cp -r landing/main/* _deploy/
           cp -r landing/shared/* _deploy/shared/
+          cp landing/shared/.htaccess _deploy/.htaccess
       - name: Deploy kandanews.africa
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -46,7 +47,7 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./_deploy/
-          server-dir: ../public_html/
+          server-dir: kandanews.africa/public_html/
 
   deploy-ug:
     runs-on: ubuntu-latest
@@ -57,6 +58,7 @@ jobs:
           mkdir -p _deploy/shared
           cp -r landing/ug/* _deploy/
           cp -r landing/shared/* _deploy/shared/
+          cp landing/shared/.htaccess _deploy/.htaccess
       - name: Deploy ug.kandanews.africa
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -77,6 +79,7 @@ jobs:
           cp -r landing/ug/login.php _deploy/
           cp -r landing/ug/dashboard.php _deploy/
           cp -r landing/shared/* _deploy/shared/
+          cp landing/shared/.htaccess _deploy/.htaccess
       - name: Deploy ke.kandanews.africa
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -97,6 +100,7 @@ jobs:
           cp -r landing/ug/login.php _deploy/
           cp -r landing/ug/dashboard.php _deploy/
           cp -r landing/shared/* _deploy/shared/
+          cp landing/shared/.htaccess _deploy/.htaccess
       - name: Deploy za.kandanews.africa
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -117,6 +121,7 @@ jobs:
           cp -r landing/ug/login.php _deploy/
           cp -r landing/ug/dashboard.php _deploy/
           cp -r landing/shared/* _deploy/shared/
+          cp landing/shared/.htaccess _deploy/.htaccess
       - name: Deploy ng.kandanews.africa
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:

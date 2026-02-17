@@ -3,11 +3,11 @@
  * KandaNews — User Dashboard
  * Pure PHP, no WordPress.
  */
-require_once __DIR__ . '/../shared/includes/helpers.php';
-require_once __DIR__ . '/../shared/includes/env.php';
-loadEnv(__DIR__ . '/../../.env');
-require_once __DIR__ . '/../shared/includes/country-config.php';
-require_once __DIR__ . '/../shared/includes/auth-guard.php';
+require_once __DIR__ . '/shared/includes/helpers.php';
+require_once __DIR__ . '/shared/includes/env.php';
+loadEnv(__DIR__ . '/.env');
+require_once __DIR__ . '/shared/includes/country-config.php';
+require_once __DIR__ . '/shared/includes/auth-guard.php';
 
 // Require authentication
 requireAuth('/login.php');

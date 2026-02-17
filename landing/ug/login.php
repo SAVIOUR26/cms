@@ -3,9 +3,9 @@
  * KandaNews — Login / Register
  * Pure PHP, no WordPress.
  */
-require_once __DIR__ . '/../shared/includes/helpers.php';
-require_once __DIR__ . '/../shared/includes/country-config.php';
-require_once __DIR__ . '/../shared/includes/auth-guard.php';
+require_once __DIR__ . '/shared/includes/helpers.php';
+require_once __DIR__ . '/shared/includes/country-config.php';
+require_once __DIR__ . '/shared/includes/auth-guard.php';
 
 // If already logged in, redirect to dashboard
 if (isLoggedIn()) {

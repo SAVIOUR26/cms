@@ -73,7 +73,7 @@ jobs:
       - name: Prepare
         run: |
           mkdir -p _deploy/shared
-          cp -r landing/ke/* _deploy/
+          cp -r landing/ug/index.php _deploy/
           cp -r landing/ug/login.php _deploy/
           cp -r landing/ug/dashboard.php _deploy/
           cp -r landing/shared/* _deploy/shared/
@@ -93,7 +93,7 @@ jobs:
       - name: Prepare
         run: |
           mkdir -p _deploy/shared
-          cp -r landing/za/* _deploy/
+          cp -r landing/ug/index.php _deploy/
           cp -r landing/ug/login.php _deploy/
           cp -r landing/ug/dashboard.php _deploy/
           cp -r landing/shared/* _deploy/shared/
@@ -113,7 +113,7 @@ jobs:
       - name: Prepare
         run: |
           mkdir -p _deploy/shared
-          cp -r landing/ng/* _deploy/
+          cp -r landing/ug/index.php _deploy/
           cp -r landing/ug/login.php _deploy/
           cp -r landing/ug/dashboard.php _deploy/
           cp -r landing/shared/* _deploy/shared/

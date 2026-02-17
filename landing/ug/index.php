@@ -3,9 +3,9 @@
  * KandaNews Uganda — Country Landing Page
  * ug.kandanews.africa
  */
-require_once __DIR__ . '/../shared/includes/helpers.php';
-require_once __DIR__ . '/../shared/includes/country-config.php';
-require_once __DIR__ . '/../shared/components/header.php';
+require_once __DIR__ . '/shared/includes/helpers.php';
+require_once __DIR__ . '/shared/includes/country-config.php';
+require_once __DIR__ . '/shared/components/header.php';
 
 $plans = $COUNTRY['plans'];
 $currency = $COUNTRY['currency'];
@@ -140,4 +140,4 @@ $login_url = '/login.php';
   </div>
 </section>
 
-<?php require_once __DIR__ . '/../shared/components/footer.php'; ?>
+<?php require_once __DIR__ . '/shared/components/footer.php'; ?>

@@ -6,14 +6,14 @@
 $COUNTRY_CODE = '';
 $COUNTRY = ['name' => 'Africa', 'flag' => '🌍', 'email' => 'hello@kandanews.africa'];
 $COUNTRIES = [];
-require_once __DIR__ . '/../shared/includes/helpers.php';
-require_once __DIR__ . '/../shared/includes/country-config.php';
+require_once __DIR__ . '/shared/includes/helpers.php';
+require_once __DIR__ . '/shared/includes/country-config.php';
 
 // Override for hub page
 $COUNTRY = ['name' => 'Africa', 'flag' => '🌍', 'email' => 'hello@kandanews.africa'];
 $_country_name = 'Africa';
 
-require_once __DIR__ . '/../shared/components/header.php';
+require_once __DIR__ . '/shared/components/header.php';
 ?>
 
 <!-- HERO: Two column - text left, video right -->
@@ -169,4 +169,4 @@ require_once __DIR__ . '/../shared/components/header.php';
 })();
 </script>
 
-<?php require_once __DIR__ . '/../shared/components/footer.php'; ?>
+<?php require_once __DIR__ . '/shared/components/footer.php'; ?>

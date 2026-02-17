@@ -1,0 +1,25 @@
+# Environment
+.env
+*.env.local
+
+# Logs
+logs/
+*.log
+
+# Uploads (user content)
+uploads/media/*
+!uploads/media/.gitkeep
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dependencies
+vendor/
+node_modules/

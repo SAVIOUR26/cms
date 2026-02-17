@@ -76,7 +76,7 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./
-          server-dir: /home/kandan/domains/cms.kandanews.africa/public_html/
+          server-dir: /cms.kandanews.africa/public_html/
           exclude: |
             **/.git*
             **/.git*/**
@@ -110,7 +110,7 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./deploy_main/
-          server-dir: /home/kandan/domains/kandanews.africa/public_html/
+          server-dir: /kandanews.africa/public_html/
 
   # ──────────────────────────────────────
   # Uganda: ug.kandanews.africa
@@ -133,7 +133,7 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./deploy_ug/
-          server-dir: /home/kandan/domains/ug.kandanews.africa/public_html/
+          server-dir: /ug.kandanews.africa/public_html/
 
   # ──────────────────────────────────────
   # Kenya: ke.kandanews.africa
@@ -158,7 +158,7 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./deploy_ke/
-          server-dir: /home/kandan/domains/ke.kandanews.africa/public_html/
+          server-dir: /ke.kandanews.africa/public_html/
 
   # ──────────────────────────────────────
   # South Africa: za.kandanews.africa
@@ -183,7 +183,7 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./deploy_za/
-          server-dir: /home/kandan/domains/za.kandanews.africa/public_html/
+          server-dir: /za.kandanews.africa/public_html/
 
   # ──────────────────────────────────────
   # Nigeria: ng.kandanews.africa
@@ -208,4 +208,4 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./deploy_ng/
-          server-dir: /home/kandan/domains/ng.kandanews.africa/public_html/
+          server-dir: /ng.kandanews.africa/public_html/

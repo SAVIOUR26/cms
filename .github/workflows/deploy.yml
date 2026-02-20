@@ -75,9 +75,7 @@ jobs:
       - name: Prepare
         run: |
           mkdir -p _deploy/shared
-          cp -r landing/ug/index.php _deploy/
-          cp -r landing/ug/login.php _deploy/
-          cp -r landing/ug/dashboard.php _deploy/
+          cp landing/coming-soon.php _deploy/index.php
           cp -r landing/shared/* _deploy/shared/
           cp landing/shared/.htaccess _deploy/.htaccess
       - name: Deploy ke.kandanews.africa
@@ -96,9 +94,7 @@ jobs:
       - name: Prepare
         run: |
           mkdir -p _deploy/shared
-          cp -r landing/ug/index.php _deploy/
-          cp -r landing/ug/login.php _deploy/
-          cp -r landing/ug/dashboard.php _deploy/
+          cp landing/coming-soon.php _deploy/index.php
           cp -r landing/shared/* _deploy/shared/
           cp landing/shared/.htaccess _deploy/.htaccess
       - name: Deploy za.kandanews.africa
@@ -117,9 +113,7 @@ jobs:
       - name: Prepare
         run: |
           mkdir -p _deploy/shared
-          cp -r landing/ug/index.php _deploy/
-          cp -r landing/ug/login.php _deploy/
-          cp -r landing/ug/dashboard.php _deploy/
+          cp landing/coming-soon.php _deploy/index.php
           cp -r landing/shared/* _deploy/shared/
           cp landing/shared/.htaccess _deploy/.htaccess
       - name: Deploy ng.kandanews.africa

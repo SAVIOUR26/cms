@@ -1,141 +1,360 @@
-/* ============================================
-   KandaNews Africa — Base Design System
-   "The Future of News"
-   Colors: Navy + Orange | Professional + Stunning
-   ============================================ */
+/* ================================================================
+   KandaNews Africa — Design System v2.0
+   "The Future of News in Africa"
+   Brand: Navy (#1e2b42) + Orange (#f05a1a)
+   Professional | Modern | Trustworthy
+   ================================================================ */
 
+/* ================================================================
+   1. CSS VARIABLES — Design Tokens
+   ================================================================ */
 :root {
-    --kn-primary: #1e2b42;
-    --kn-accent: #f05a1a;
-    --kn-accent-hover: #ff7b48;
-    --kn-light: #f9f9f9;
+    /* Brand colors */
+    --kn-navy: #1e2b42;
+    --kn-navy-light: #2a3f5f;
+    --kn-navy-dark: #0f172a;
+    --kn-orange: #f05a1a;
+    --kn-orange-hover: #ff7b48;
+    --kn-orange-light: rgba(240, 90, 26, 0.12);
+    --kn-orange-glow: rgba(240, 90, 26, 0.35);
+
+    /* Semantic aliases */
+    --kn-primary: var(--kn-navy);
+    --kn-accent: var(--kn-orange);
+    --kn-accent-hover: var(--kn-orange-hover);
+
+    /* Neutrals */
+    --kn-white: #ffffff;
+    --kn-light: #f8fafc;
+    --kn-gray-50: #f9fafb;
+    --kn-gray-100: #f1f5f9;
+    --kn-gray-200: #e5e7eb;
+    --kn-gray-300: #d1d5db;
+    --kn-gray-400: #94a3b8;
+    --kn-gray-500: #64748b;
+    --kn-gray-600: #475569;
+    --kn-gray-700: #334155;
+    --kn-gray-800: #1e293b;
+    --kn-gray-900: #0f172a;
     --kn-ink: #0f172a;
     --kn-muted: #64748b;
     --kn-border: #e5e7eb;
     --kn-bg-dark: #061326;
-    --kn-contrast: #ffffff;
+
+    /* Feedback */
     --kn-success: #059669;
-    --kn-warning: #b45309;
-    --kn-danger: #b91c1c;
-    --kn-radius: 14px;
+    --kn-success-light: rgba(5, 150, 105, 0.12);
+    --kn-warning: #d97706;
+    --kn-danger: #dc2626;
+
+    /* Radii */
+    --kn-radius-xs: 6px;
     --kn-radius-sm: 10px;
+    --kn-radius: 14px;
     --kn-radius-lg: 20px;
-    --kn-shadow: 0 8px 30px rgba(0,0,0,0.05);
-    --kn-shadow-lg: 0 20px 60px rgba(3,8,20,0.12);
+    --kn-radius-xl: 28px;
+    --kn-radius-full: 999px;
+
+    /* Shadows */
+    --kn-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --kn-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --kn-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    --kn-shadow-md: 0 12px 40px rgba(0, 0, 0, 0.08);
+    --kn-shadow-lg: 0 20px 60px rgba(3, 8, 20, 0.12);
+    --kn-shadow-xl: 0 32px 80px rgba(3, 8, 20, 0.18);
+    --kn-shadow-orange: 0 8px 24px rgba(240, 90, 26, 0.3);
+    --kn-shadow-orange-lg: 0 14px 36px rgba(240, 90, 26, 0.4);
+
+    /* Layout */
     --kn-container: 1200px;
-    --kn-header-h: 72px;
-    --kn-font: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif;
+    --kn-header-h: 68px;
+
+    /* Typography */
+    --kn-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif;
+    --kn-font-mono: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+    --kn-leading: 1.6;
+    --kn-leading-tight: 1.15;
+
+    /* Transitions */
+    --kn-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --kn-ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --kn-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --kn-duration: 0.2s;
+    --kn-duration-slow: 0.4s;
+
+    /* Z-index scale */
+    --kn-z-header: 1000;
+    --kn-z-overlay: 900;
+    --kn-z-modal: 1100;
 }
 
-/* ── Reset ── */
-*, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
+/* ================================================================
+   2. RESET — Modern CSS Reset
+   ================================================================ */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
     margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
     font-family: var(--kn-font);
+    font-size: 1rem;
+    line-height: var(--kn-leading);
     color: var(--kn-ink);
     background: var(--kn-light);
-    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
 }
-a { color: inherit; text-decoration: none; }
-img { max-width: 100%; height: auto; display: block; }
-button { font: inherit; cursor: pointer; }
 
-/* ── Container ── */
-.container { max-width: var(--kn-container); margin: 0 auto; padding: 0 20px; }
+h1, h2, h3, h4, h5, h6 {
+    line-height: var(--kn-leading-tight);
+    font-weight: 800;
+    overflow-wrap: break-word;
+}
 
-/* ============================================
-   HEADER
-   ============================================ */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img, video, svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+button, input, textarea, select {
+    font: inherit;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+/* ================================================================
+   3. CONTAINER
+   ================================================================ */
+.container {
+    width: 100%;
+    max-width: var(--kn-container);
+    margin-inline: auto;
+    padding-inline: 24px;
+}
+
+/* ================================================================
+   4. HEADER — Sticky Navy Header
+   ================================================================ */
 .kn-header {
     position: sticky;
     top: 0;
-    z-index: 1000;
-    background: var(--kn-primary);
-    color: var(--kn-contrast);
-    box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+    z-index: var(--kn-z-header);
+    background: var(--kn-navy);
+    color: var(--kn-white);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.18);
 }
+
 .kn-header__inner {
     max-width: var(--kn-container);
-    margin: 0 auto;
-    padding: 0 20px;
+    margin-inline: auto;
+    padding-inline: 24px;
     height: var(--kn-header-h);
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 }
+
+.kn-header__logo {
+    flex-shrink: 0;
+}
+
 .kn-header__logo img {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    background: #fff;
+    width: 42px;
+    height: 42px;
+    border-radius: var(--kn-radius-sm);
+    background: var(--kn-white);
     padding: 2px;
+    object-fit: contain;
 }
+
 .kn-header__brand {
     display: flex;
     flex-direction: column;
     line-height: 1.2;
+    gap: 1px;
 }
+
 .kn-header__name {
     font-weight: 900;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     letter-spacing: -0.01em;
+    white-space: nowrap;
 }
+
 .kn-header__country {
-    font-size: 0.8rem;
-    opacity: 0.85;
+    font-size: 0.78rem;
+    opacity: 0.8;
+    font-weight: 500;
 }
-.kn-header__actions {
+
+/* Nav links */
+.kn-header__nav {
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
 }
+
 .kn-header__link {
-    padding: 8px 14px;
+    padding: 8px 16px;
     border-radius: var(--kn-radius-sm);
-    font-weight: 700;
-    font-size: 0.85rem;
-    transition: background 0.15s, transform 0.1s;
+    font-weight: 600;
+    font-size: 0.88rem;
+    transition: background var(--kn-duration) var(--kn-ease),
+                color var(--kn-duration) var(--kn-ease),
+                transform 0.1s var(--kn-ease);
     white-space: nowrap;
+    color: rgba(255, 255, 255, 0.9);
 }
+
 .kn-header__link:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--kn-white);
+}
+
+.kn-header__link--cta {
+    background: var(--kn-orange);
+    color: var(--kn-white);
+    font-weight: 700;
+    padding: 8px 20px;
+    border-radius: var(--kn-radius-sm);
+    box-shadow: 0 2px 10px rgba(240, 90, 26, 0.25);
+    transition: background var(--kn-duration) var(--kn-ease),
+                box-shadow var(--kn-duration) var(--kn-ease),
+                transform 0.1s var(--kn-ease);
+}
+
+.kn-header__link--cta:hover {
+    background: var(--kn-orange-hover);
+    box-shadow: 0 4px 16px rgba(240, 90, 26, 0.35);
     transform: translateY(-1px);
 }
-.kn-header__link--cta {
-    background: var(--kn-accent);
-    color: #fff;
-}
-.kn-header__link--cta:hover {
-    background: var(--kn-accent-hover);
-}
-.kn-header__link--login {
-    border: 1px solid rgba(255,255,255,0.2);
-}
+
+/* Burger */
 .kn-header__burger {
     display: none;
     background: none;
     border: none;
-    color: #fff;
-    font-size: 1.4rem;
+    color: var(--kn-white);
+    font-size: 1.5rem;
     padding: 8px;
     margin-left: auto;
+    cursor: pointer;
+    line-height: 1;
+    transition: opacity var(--kn-duration) var(--kn-ease);
 }
-.kn-subbar {
-    background: var(--kn-accent);
-    color: #fff;
+
+.kn-header__burger:hover {
+    opacity: 0.8;
+}
+
+/* ================================================================
+   5. MOBILE NAV — Slide-down Menu
+   ================================================================ */
+.kn-mobile-nav {
+    display: none;
+    position: absolute;
+    top: var(--kn-header-h);
+    left: 0;
+    right: 0;
+    background: var(--kn-navy);
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s var(--kn-ease),
+                padding 0.35s var(--kn-ease),
+                box-shadow 0.35s var(--kn-ease);
+    z-index: var(--kn-z-header);
+    box-shadow: none;
+}
+
+.kn-mobile-nav--open {
+    max-height: 400px;
+    padding: 16px 24px 24px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+}
+
+.kn-mobile-nav__link {
+    display: block;
+    padding: 12px 16px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: var(--kn-radius-sm);
+    transition: background var(--kn-duration) var(--kn-ease);
+}
+
+.kn-mobile-nav__link:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.kn-mobile-nav__link--cta {
+    background: var(--kn-orange);
+    color: var(--kn-white);
+    font-weight: 700;
     text-align: center;
-    padding: 6px 16px;
+    margin-top: 8px;
+    border-radius: var(--kn-radius-sm);
+}
+
+.kn-mobile-nav__link--cta:hover {
+    background: var(--kn-orange-hover);
+}
+
+/* ================================================================
+   6. SUBBAR — Orange Accent Bar Below Header
+   ================================================================ */
+.kn-subbar {
+    background: var(--kn-orange);
+    color: var(--kn-white);
+    text-align: center;
+    padding: 7px 20px;
     font-weight: 700;
     font-size: 0.82rem;
     letter-spacing: 0.02em;
+    line-height: 1.4;
 }
 
-/* ============================================
-   HERO (Video + Glass)
-   ============================================ */
+.kn-subbar a {
+    color: var(--kn-white);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.kn-subbar a:hover {
+    opacity: 0.85;
+}
+
+/* ================================================================
+   7a. HERO — Full-screen Video Background (UG page)
+   ================================================================ */
 .kn-hero {
     position: relative;
     min-height: 92vh;
@@ -144,486 +363,1304 @@ button { font: inherit; cursor: pointer; }
     justify-content: center;
     overflow: hidden;
     background: var(--kn-bg-dark);
-    color: var(--kn-contrast);
+    color: var(--kn-white);
 }
+
 .kn-hero__media {
     position: absolute;
     inset: 0;
     z-index: 0;
     overflow: hidden;
 }
+
 .kn-hero__video {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
-    filter: brightness(0.55) contrast(0.98) saturate(0.95);
+    filter: brightness(0.5) contrast(1.0) saturate(0.9);
     transform: scale(1.02);
 }
+
 .kn-hero__fallback {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #052038, #0b2c45);
+    background: linear-gradient(135deg, #052038 0%, #0b2c45 50%, var(--kn-navy) 100%);
 }
+
 .kn-hero::before {
     content: "";
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: linear-gradient(180deg, rgba(3,7,18,0.48), rgba(3,7,18,0.62));
+    background: linear-gradient(180deg,
+        rgba(3, 7, 18, 0.45) 0%,
+        rgba(3, 7, 18, 0.35) 40%,
+        rgba(3, 7, 18, 0.65) 100%);
     pointer-events: none;
 }
+
 .kn-hero__overlay {
     position: relative;
     z-index: 3;
     width: 100%;
-    padding: 4rem 1rem;
+    padding: 5rem 1.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
+/* ================================================================
+   7b. HERO HUB — Two-column: Text Left + Video Right
+   ================================================================ */
+.kn-hero--hub {
+    min-height: auto;
+    padding: 5rem 0 4rem;
+    background: linear-gradient(160deg, var(--kn-navy-dark) 0%, var(--kn-navy) 45%, var(--kn-navy-light) 100%);
+}
+
+.kn-hero--hub::before {
+    display: none;
+}
+
+.kn-hero--hub .kn-hero__content {
+    max-width: var(--kn-container);
+    margin-inline: auto;
+    padding-inline: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    width: 100%;
+}
+
+.kn-hero--hub .kn-hero__text {
+    text-align: left;
+}
+
+.kn-hero--hub .kn-hero__eyebrow {
+    display: inline-block;
+    background: var(--kn-orange-light);
+    color: var(--kn-orange);
+    padding: 0.4rem 1rem;
+    border-radius: var(--kn-radius-full);
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 1.2rem;
+    letter-spacing: 0.02em;
+}
+
+.kn-hero--hub .kn-hero__title {
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    margin-bottom: 1rem;
+}
+
+.kn-hero--hub .kn-hero__desc {
+    font-size: 1.15rem;
+    color: var(--kn-gray-400);
+    max-width: 50ch;
+    margin-bottom: 2rem;
+    line-height: 1.65;
+}
+
+.kn-hero--hub .kn-hero__ctas {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.kn-hero--hub .kn-hero__visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.kn-hero--hub .kn-hero__visual video,
+.kn-hero--hub .kn-hero__visual img {
+    width: 100%;
+    max-width: 520px;
+    border-radius: var(--kn-radius-lg);
+    box-shadow: var(--kn-shadow-xl);
+}
+
+/* ================================================================
+   8. GLASS MORPHISM PANEL
+   ================================================================ */
 .kn-glass {
     max-width: 1100px;
     width: 100%;
-    padding: 2.5rem;
+    padding: 3rem;
     border-radius: var(--kn-radius-lg);
-    background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
-    box-shadow: var(--kn-shadow-lg);
-    border: 1px solid rgba(255,255,255,0.08);
-    backdrop-filter: blur(12px) saturate(0.95);
-    -webkit-backdrop-filter: blur(12px);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.03) 100%
+    );
+    box-shadow: var(--kn-shadow-xl),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px) saturate(1.1);
+    -webkit-backdrop-filter: blur(16px) saturate(1.1);
     text-align: center;
 }
+
 .kn-glass__badge {
     display: inline-block;
-    background: rgba(255,255,255,0.09);
-    color: var(--kn-contrast);
-    padding: 0.5rem 1.2rem;
-    border-radius: 999px;
-    font-weight: 800;
-    font-size: 0.9rem;
-    letter-spacing: 0.02em;
-    margin-bottom: 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--kn-white);
+    padding: 0.45rem 1.2rem;
+    border-radius: var(--kn-radius-full);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
+
 .kn-glass__title {
     font-size: 3.2rem;
-    line-height: 1.05;
+    line-height: 1.06;
     margin: 0.4rem 0 0;
     font-weight: 900;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.6rem;
+    gap: 0.5rem;
     flex-wrap: wrap;
 }
-.kn-glass__brand { color: #fff; }
-.kn-glass__country { color: rgba(255,255,255,0.95); font-weight: 800; }
-.kn-glass__flag { font-size: 1.4rem; }
-.kn-glass__tagline {
-    font-size: 1.4rem;
-    margin: 0.8rem auto 0;
-    color: #cbd5e1;
-    max-width: 78ch;
+
+.kn-glass__brand {
+    color: var(--kn-white);
 }
+
+.kn-glass__country {
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 800;
+}
+
+.kn-glass__flag {
+    font-size: 1.4rem;
+}
+
+.kn-glass__tagline {
+    font-size: 1.35rem;
+    margin: 0.8rem auto 0;
+    color: var(--kn-gray-400);
+    max-width: 70ch;
+    font-weight: 400;
+}
+
 .kn-glass__sub {
     margin-top: 0.6rem;
-    color: rgba(255,255,255,0.9);
-    max-width: 64ch;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 60ch;
+    margin-inline: auto;
+    font-size: 1.02rem;
+    line-height: 1.7;
 }
+
 .kn-glass__ctas {
     display: inline-flex;
     gap: 0.85rem;
-    margin-top: 1.5rem;
+    margin-top: 1.8rem;
     justify-content: center;
     flex-wrap: wrap;
 }
 
-/* ============================================
-   BUTTONS
-   ============================================ */
+/* ================================================================
+   9. BUTTONS
+   ================================================================ */
 .kn-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.9rem 1.4rem;
-    border-radius: 12px;
-    font-weight: 800;
-    font-size: 0.95rem;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.5rem;
+    border-radius: var(--kn-radius-sm);
+    font-weight: 700;
+    font-size: 0.92rem;
     text-decoration: none;
-    border: none;
+    border: 2px solid transparent;
     cursor: pointer;
-    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s;
+    white-space: nowrap;
+    transition: transform 0.15s var(--kn-ease-bounce),
+                box-shadow var(--kn-duration) var(--kn-ease),
+                background var(--kn-duration) var(--kn-ease),
+                border-color var(--kn-duration) var(--kn-ease),
+                color var(--kn-duration) var(--kn-ease);
 }
-.kn-btn:hover { transform: translateY(-2px); }
-.kn-btn:focus-visible { outline: 3px solid rgba(240,90,26,0.4); outline-offset: 2px; }
-.kn-btn:active { transform: translateY(0); }
 
+.kn-btn:hover {
+    transform: translateY(-2px);
+}
+
+.kn-btn:active {
+    transform: translateY(0);
+}
+
+.kn-btn:focus-visible {
+    outline: 3px solid var(--kn-orange-glow);
+    outline-offset: 2px;
+}
+
+/* Primary — Orange gradient */
 .kn-btn--primary {
-    background: linear-gradient(135deg, var(--kn-accent), var(--kn-accent-hover));
-    color: #fff;
-    box-shadow: 0 8px 24px rgba(240,90,26,0.3);
+    background: linear-gradient(135deg, var(--kn-orange) 0%, var(--kn-orange-hover) 100%);
+    color: var(--kn-white);
+    border-color: transparent;
+    box-shadow: var(--kn-shadow-orange);
 }
-.kn-btn--primary:hover { box-shadow: 0 12px 32px rgba(240,90,26,0.4); }
 
+.kn-btn--primary:hover {
+    box-shadow: var(--kn-shadow-orange-lg);
+    filter: brightness(1.05);
+}
+
+/* Ghost — Transparent with subtle border */
 .kn-btn--ghost {
-    background: rgba(255,255,255,0.07);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--kn-white);
+    border-color: rgba(255, 255, 255, 0.15);
 }
-.kn-btn--ghost:hover { background: rgba(255,255,255,0.12); }
 
+.kn-btn--ghost:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Outline — White/Light */
 .kn-btn--outline {
-    background: #fff;
-    color: var(--kn-primary);
-    border: 2px solid var(--kn-border);
+    background: var(--kn-white);
+    color: var(--kn-navy);
+    border-color: var(--kn-gray-200);
 }
+
 .kn-btn--outline:hover {
-    border-color: var(--kn-accent);
-    color: var(--kn-accent);
+    border-color: var(--kn-orange);
+    color: var(--kn-orange);
+    box-shadow: var(--kn-shadow-sm);
 }
 
+/* Navy */
 .kn-btn--navy {
-    background: var(--kn-primary);
-    color: #fff;
-    border: 2px solid var(--kn-primary);
+    background: var(--kn-navy);
+    color: var(--kn-white);
+    border-color: var(--kn-navy);
 }
 
-.kn-btn--disabled, .kn-btn[disabled] {
-    opacity: 0.55;
+.kn-btn--navy:hover {
+    background: var(--kn-navy-light);
+    border-color: var(--kn-navy-light);
+    box-shadow: 0 8px 24px rgba(30, 43, 66, 0.3);
+}
+
+/* Disabled */
+.kn-btn--disabled,
+.kn-btn[disabled] {
+    opacity: 0.5;
     cursor: not-allowed;
+    pointer-events: none;
     transform: none !important;
+    box-shadow: none !important;
+    filter: grayscale(0.2);
 }
 
-/* ============================================
-   SECTIONS & PANELS
-   ============================================ */
+/* Small variant */
+.kn-btn--sm {
+    padding: 0.55rem 1rem;
+    font-size: 0.82rem;
+    border-radius: var(--kn-radius-xs);
+}
+
+/* ================================================================
+   10. STATS BAR — Horizontal Stats Section
+   ================================================================ */
+.kn-stats {
+    background: var(--kn-navy-dark);
+    padding: 2.5rem 0;
+    color: var(--kn-white);
+}
+
+.kn-stats__inner {
+    max-width: var(--kn-container);
+    margin-inline: auto;
+    padding-inline: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+
+.kn-stats__item {
+    text-align: center;
+    min-width: 140px;
+}
+
+.kn-stats__number {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--kn-orange);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+.kn-stats__label {
+    font-size: 0.88rem;
+    color: var(--kn-gray-400);
+    font-weight: 500;
+    margin-top: 0.25rem;
+    letter-spacing: 0.01em;
+}
+
+/* ================================================================
+   11. SECTIONS — Layout Blocks
+   ================================================================ */
 .kn-section {
-    padding: 3.5rem 0;
+    padding: 4rem 0;
 }
+
 .kn-section--alt {
-    background: #fff;
+    background: var(--kn-white);
 }
+
+.kn-section--dark {
+    background: var(--kn-navy);
+    color: var(--kn-white);
+}
+
+.kn-section--dark .kn-section__title {
+    color: var(--kn-white);
+}
+
+.kn-section--dark .kn-section__lead {
+    color: var(--kn-gray-400);
+}
+
+.kn-section__header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.kn-section__title {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--kn-navy);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.kn-section__lead {
+    color: var(--kn-muted);
+    font-size: 1.08rem;
+    max-width: 58ch;
+    margin-inline: auto;
+    line-height: 1.65;
+}
+
 .kn-panel {
-    background: #fff;
+    background: var(--kn-white);
     border-radius: var(--kn-radius);
     padding: 2rem;
     margin: 1.5rem 0;
     box-shadow: var(--kn-shadow);
     border: 1px solid var(--kn-border);
 }
-.kn-section__title {
-    font-size: 1.8rem;
-    font-weight: 900;
-    color: var(--kn-primary);
-    margin: 0 0 0.5rem;
-}
-.kn-section__lead {
-    color: var(--kn-muted);
-    font-size: 1.05rem;
-    margin-bottom: 1.5rem;
-    max-width: 60ch;
+
+/* ================================================================
+   12. HOW IT WORKS — 3 Steps
+   ================================================================ */
+.kn-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    position: relative;
+    counter-reset: step-counter;
 }
 
-/* ============================================
-   PRICING CARDS
-   ============================================ */
-.kn-pricing { margin-top: -3.5rem; position: relative; z-index: 4; }
-.kn-pricing-grid {
-    display: flex;
-    gap: 1.2rem;
-    flex-wrap: wrap;
-    justify-content: center;
+/* Connecting line between steps */
+.kn-steps::before {
+    content: "";
+    position: absolute;
+    top: 48px;
+    left: calc(16.67% + 24px);
+    right: calc(16.67% + 24px);
+    height: 2px;
+    background: var(--kn-gray-200);
+    z-index: 0;
 }
-.kn-card {
-    flex: 1 1 260px;
-    max-width: 340px;
-    padding: 1.8rem;
-    border-radius: var(--kn-radius);
+
+.kn-section--dark .kn-steps::before {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.kn-step {
     text-align: center;
-    background: #fff;
-    border: 1px solid var(--kn-border);
-    box-shadow: var(--kn-shadow);
-    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    z-index: 1;
+    counter-increment: step-counter;
 }
-.kn-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.08);
-}
-.kn-card h3 {
-    margin: 0 0 0.5rem;
-    font-size: 1.3rem;
-    color: var(--kn-primary);
-}
-.kn-card .kn-price {
-    font-size: 1.1rem;
-    color: var(--kn-muted);
-    margin-bottom: 1rem;
-}
-.kn-card .kn-price strong {
-    font-size: 1.6rem;
-    color: var(--kn-ink);
-}
-.kn-card.kn-card--popular {
-    border: 2px solid var(--kn-accent);
-    box-shadow: 0 12px 36px rgba(240,90,26,0.1);
+
+.kn-step__circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--kn-orange-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.2rem;
     position: relative;
 }
-.kn-badge-popular {
+
+.kn-step__circle::before {
+    content: counter(step-counter);
     position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--kn-accent);
-    color: #fff;
-    padding: 4px 16px;
-    border-radius: 999px;
+    top: -6px;
+    right: -6px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--kn-orange);
+    color: var(--kn-white);
     font-size: 0.75rem;
     font-weight: 800;
-    letter-spacing: 0.03em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(240, 90, 26, 0.3);
 }
 
-/* ============================================
-   FEATURES LIST
-   ============================================ */
+.kn-step__icon {
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+.kn-step__title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--kn-navy);
+    margin-bottom: 0.4rem;
+}
+
+.kn-section--dark .kn-step__title {
+    color: var(--kn-white);
+}
+
+.kn-step__desc {
+    font-size: 0.92rem;
+    color: var(--kn-muted);
+    max-width: 26ch;
+    margin-inline: auto;
+    line-height: 1.55;
+}
+
+.kn-section--dark .kn-step__desc {
+    color: var(--kn-gray-400);
+}
+
+/* ================================================================
+   13. PRICING CARDS
+   ================================================================ */
+.kn-pricing {
+    margin-top: -3rem;
+    position: relative;
+    z-index: 4;
+}
+
+.kn-pricing-grid {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.kn-card {
+    flex: 1 1 270px;
+    max-width: 360px;
+    padding: 2rem;
+    border-radius: var(--kn-radius);
+    text-align: center;
+    background: var(--kn-white);
+    border: 1px solid var(--kn-border);
+    box-shadow: var(--kn-shadow);
+    transition: transform var(--kn-duration) var(--kn-ease),
+                box-shadow var(--kn-duration) var(--kn-ease);
+}
+
+.kn-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--kn-shadow-md);
+}
+
+.kn-card h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+    color: var(--kn-navy);
+}
+
+.kn-card .kn-price {
+    font-size: 1.05rem;
+    color: var(--kn-muted);
+    margin-bottom: 1.2rem;
+}
+
+.kn-card .kn-price strong {
+    font-size: 2rem;
+    color: var(--kn-ink);
+    font-weight: 900;
+}
+
+.kn-card .kn-price span {
+    font-size: 0.88rem;
+    color: var(--kn-gray-500);
+}
+
+.kn-card ul {
+    text-align: left;
+    margin-bottom: 1.5rem;
+}
+
+.kn-card ul li {
+    padding: 0.4rem 0;
+    font-size: 0.92rem;
+    color: var(--kn-gray-600);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.kn-card ul li::before {
+    content: "\2713";
+    color: var(--kn-success);
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* Popular card */
+.kn-card--popular {
+    border: 2px solid var(--kn-orange);
+    box-shadow: 0 12px 40px rgba(240, 90, 26, 0.12);
+    position: relative;
+    transform: scale(1.03);
+}
+
+.kn-card--popular:hover {
+    transform: scale(1.03) translateY(-6px);
+}
+
+.kn-badge-popular {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--kn-orange), var(--kn-orange-hover));
+    color: var(--kn-white);
+    padding: 5px 18px;
+    border-radius: var(--kn-radius-full);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(240, 90, 26, 0.3);
+}
+
+/* ================================================================
+   14. FEATURES GRID
+   ================================================================ */
 .kn-features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1rem;
-    margin-top: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.25rem;
 }
-.kn-feature {
-    background: #fff;
-    padding: 1.2rem;
-    border-radius: var(--kn-radius-sm);
-    border: 1px solid var(--kn-border);
-    font-weight: 700;
-    color: var(--kn-ink);
-    transition: transform 0.15s, box-shadow 0.15s;
-}
-.kn-feature:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-}
-.kn-feature__icon {
-    font-size: 1.6rem;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-.kn-feature__title { font-weight: 800; }
 
-/* ============================================
-   COUNTRY SELECTOR (Hub page)
-   ============================================ */
+.kn-feature {
+    background: var(--kn-white);
+    padding: 1.5rem;
+    border-radius: var(--kn-radius);
+    border: 1px solid var(--kn-border);
+    transition: transform var(--kn-duration) var(--kn-ease),
+                box-shadow var(--kn-duration) var(--kn-ease),
+                border-color var(--kn-duration) var(--kn-ease);
+}
+
+.kn-feature:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--kn-shadow);
+    border-color: var(--kn-gray-300);
+}
+
+.kn-feature__icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.75rem;
+    display: block;
+    line-height: 1;
+}
+
+.kn-feature__title {
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--kn-navy);
+    margin-bottom: 0.35rem;
+}
+
+.kn-feature__desc {
+    font-size: 0.88rem;
+    color: var(--kn-muted);
+    line-height: 1.55;
+}
+
+/* Dark section features */
+.kn-section--dark .kn-feature {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.kn-section--dark .kn-feature:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.kn-section--dark .kn-feature__title {
+    color: var(--kn-white);
+}
+
+.kn-section--dark .kn-feature__desc {
+    color: var(--kn-gray-400);
+}
+
+/* ================================================================
+   15. COUNTRY SELECTOR — Country Cards Grid
+   ================================================================ */
 .kn-countries-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
 }
+
 .kn-country-card {
-    background: #fff;
+    background: var(--kn-white);
     border: 1px solid var(--kn-border);
     border-radius: var(--kn-radius);
-    padding: 1.5rem;
+    padding: 1.75rem 1.5rem;
     text-align: center;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    transition: transform var(--kn-duration) var(--kn-ease),
+                box-shadow var(--kn-duration) var(--kn-ease),
+                border-color var(--kn-duration) var(--kn-ease);
 }
+
 .kn-country-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-    border-color: var(--kn-accent);
+    box-shadow: var(--kn-shadow-md);
+    border-color: var(--kn-gray-300);
 }
+
 .kn-country-card__flag {
     font-size: 3rem;
+    margin-bottom: 0.6rem;
+    line-height: 1;
+}
+
+.kn-country-card__name {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--kn-navy);
     margin-bottom: 0.5rem;
 }
-.kn-country-card__name {
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: var(--kn-primary);
-    margin-bottom: 0.8rem;
+
+/* Status badges */
+.kn-country-card__status {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: var(--kn-radius-full);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
 }
+
+.kn-country-card--live .kn-country-card__status {
+    background: var(--kn-success-light);
+    color: var(--kn-success);
+}
+
+.kn-country-card--soon .kn-country-card__status {
+    background: var(--kn-orange-light);
+    color: var(--kn-orange);
+}
+
+/* Links row */
 .kn-country-card__links {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     justify-content: center;
     flex-wrap: wrap;
 }
+
 .kn-country-card__link {
     padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 0.8rem;
+    border-radius: var(--kn-radius-xs);
+    font-size: 0.78rem;
     font-weight: 700;
     border: 1px solid var(--kn-border);
-    transition: background 0.15s;
+    color: var(--kn-gray-600);
+    transition: background var(--kn-duration) var(--kn-ease),
+                border-color var(--kn-duration) var(--kn-ease),
+                color var(--kn-duration) var(--kn-ease);
 }
-.kn-country-card__link:hover { background: var(--kn-light); }
-.kn-country-card__link--hot {
-    background: var(--kn-accent);
-    color: #fff;
-    border-color: var(--kn-accent);
-}
-.kn-country-card__link--hot:hover { background: var(--kn-accent-hover); }
 
-/* ============================================
-   REEL / CAROUSEL (Hub page)
-   ============================================ */
-.kn-reel { overflow: hidden; padding: 2rem 0; }
+.kn-country-card__link:hover {
+    background: var(--kn-gray-50);
+    border-color: var(--kn-gray-300);
+    color: var(--kn-navy);
+}
+
+.kn-country-card__link--primary {
+    background: var(--kn-orange);
+    color: var(--kn-white);
+    border-color: var(--kn-orange);
+}
+
+.kn-country-card__link--primary:hover {
+    background: var(--kn-orange-hover);
+    border-color: var(--kn-orange-hover);
+    color: var(--kn-white);
+}
+
+/* ================================================================
+   16. REEL CAROUSEL — Infinite Scroll
+   ================================================================ */
+.kn-reel {
+    overflow: hidden;
+    padding: 2.5rem 0;
+}
+
 .kn-reel__track {
     display: flex;
-    gap: 1.2rem;
+    gap: 1.25rem;
     list-style: none;
-    padding: 0;
-    margin: 0;
-    animation: kn-scroll 30s linear infinite;
+    animation: kn-scroll 35s linear infinite;
     width: max-content;
+    will-change: transform;
 }
+
+.kn-reel:hover .kn-reel__track {
+    animation-play-state: paused;
+}
+
 .kn-reel__item {
-    flex: 0 0 260px;
+    flex: 0 0 270px;
     border-radius: var(--kn-radius);
     overflow: hidden;
-    background: #fff;
+    background: var(--kn-white);
     border: 1px solid var(--kn-border);
-    box-shadow: var(--kn-shadow);
+    box-shadow: var(--kn-shadow-sm);
+    transition: box-shadow var(--kn-duration) var(--kn-ease),
+                transform var(--kn-duration) var(--kn-ease);
 }
+
+.kn-reel__item:hover {
+    box-shadow: var(--kn-shadow);
+    transform: translateY(-2px);
+}
+
 .kn-reel__img {
-    width: 260px;
+    width: 270px;
     height: 180px;
     object-fit: cover;
 }
+
 .kn-reel__meta {
-    padding: 0.8rem 1rem;
+    padding: 0.75rem 1rem;
 }
+
 .kn-reel__eyebrow {
     font-size: 0.7rem;
     font-weight: 800;
     text-transform: uppercase;
-    color: var(--kn-accent);
+    color: var(--kn-orange);
     letter-spacing: 0.06em;
     margin-bottom: 0.2rem;
 }
+
 .kn-reel__title {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 700;
-    margin: 0;
     color: var(--kn-ink);
-    line-height: 1.3;
+    line-height: 1.35;
 }
+
 @keyframes kn-scroll {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
 }
 
-/* ============================================
-   CTA ROW & APP STORES
-   ============================================ */
-.kn-cta-row {
-    display: flex;
-    gap: 0.85rem;
-    justify-content: center;
-    margin-top: 1.2rem;
-    flex-wrap: wrap;
+/* ================================================================
+   17. DOWNLOAD APP SECTION
+   ================================================================ */
+.kn-download {
+    background: linear-gradient(160deg, var(--kn-navy-dark) 0%, var(--kn-navy) 60%, var(--kn-navy-light) 100%);
+    color: var(--kn-white);
+    padding: 4.5rem 0;
+    overflow: hidden;
 }
+
+.kn-download__inner {
+    max-width: var(--kn-container);
+    margin-inline: auto;
+    padding-inline: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+}
+
+.kn-download__text h2 {
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+}
+
+.kn-download__text p {
+    color: var(--kn-gray-400);
+    font-size: 1.05rem;
+    max-width: 48ch;
+    line-height: 1.65;
+    margin-bottom: 2rem;
+}
+
+/* Store badges row */
 .kn-store-row {
     display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 1rem;
+    gap: 0.75rem;
     flex-wrap: wrap;
 }
+
 .kn-store-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.7rem 1.2rem;
+    gap: 0.5rem;
+    padding: 0.65rem 1.1rem;
     border-radius: var(--kn-radius-sm);
-    border: 1px solid var(--kn-border);
-    background: #fff;
-    color: var(--kn-ink);
-    font-weight: 700;
-    transition: border-color 0.15s, transform 0.15s;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--kn-white);
+    font-weight: 600;
+    font-size: 0.82rem;
+    transition: background var(--kn-duration) var(--kn-ease),
+                border-color var(--kn-duration) var(--kn-ease),
+                transform 0.15s var(--kn-ease-bounce);
+    white-space: nowrap;
 }
+
 .kn-store-btn:hover {
-    border-color: var(--kn-accent);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-2px);
 }
 
-/* ============================================
-   FOOTER
-   ============================================ */
-.kn-footer {
-    background: var(--kn-ink);
-    color: rgba(255,255,255,0.7);
-    padding: 1.5rem 0;
-    margin-top: 3rem;
+.kn-store-btn__icon {
+    font-size: 1.2rem;
+    line-height: 1;
 }
-.kn-footer__inner {
+
+.kn-store-btn__label {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    line-height: 1.15;
+}
+
+.kn-store-btn__small {
+    font-size: 0.65rem;
+    font-weight: 400;
+    opacity: 0.7;
+}
+
+.kn-store-btn__name {
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+/* Phone mockup area */
+.kn-download__mockup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.kn-download__mockup-img {
+    max-width: 320px;
+    width: 100%;
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
+}
+
+/* ================================================================
+   18. ADVERTISE SECTION
+   ================================================================ */
+.kn-advertise {
+    background: linear-gradient(135deg, var(--kn-navy) 0%, var(--kn-navy-light) 100%);
+    color: var(--kn-white);
+    border-radius: var(--kn-radius-lg);
+    padding: 3rem;
+    text-align: center;
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.kn-advertise::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: rgba(240, 90, 26, 0.08);
+    pointer-events: none;
+}
+
+.kn-advertise h2 {
+    color: var(--kn-white);
+    font-size: 1.8rem;
+    margin-bottom: 0.6rem;
+    position: relative;
+}
+
+.kn-advertise p {
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 55ch;
+    margin: 0 auto 1.8rem;
+    font-size: 1.02rem;
+    line-height: 1.65;
+    position: relative;
+}
+
+.kn-advertise .kn-btn {
+    position: relative;
+}
+
+/* ================================================================
+   19. COMING SOON PAGE
+   ================================================================ */
+.kn-coming {
+    min-height: 100vh;
+    background: linear-gradient(160deg, var(--kn-navy-dark) 0%, var(--kn-navy) 50%, var(--kn-navy-light) 100%);
+    color: var(--kn-white);
+    display: flex;
+    flex-direction: column;
+}
+
+.kn-coming__hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 1.5rem;
+}
+
+.kn-coming__flag {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.kn-coming__title {
+    font-size: 2.8rem;
+    font-weight: 900;
+    letter-spacing: -0.025em;
+    margin-bottom: 0.5rem;
+}
+
+.kn-coming__subtitle {
+    font-size: 1.2rem;
+    color: var(--kn-gray-400);
+    max-width: 50ch;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+/* Countdown area */
+.kn-coming__countdown {
+    display: flex;
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.kn-coming__count-item {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--kn-radius);
+    padding: 1.2rem 1.5rem;
+    min-width: 90px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.kn-coming__count-num {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--kn-orange);
+    line-height: 1;
+    display: block;
+}
+
+.kn-coming__count-label {
+    font-size: 0.72rem;
+    color: var(--kn-gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    margin-top: 0.3rem;
+    display: block;
+}
+
+/* Email capture */
+.kn-coming__form {
+    display: flex;
+    gap: 0.5rem;
+    max-width: 460px;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.kn-coming__input {
+    flex: 1;
+    padding: 0.85rem 1.2rem;
+    border-radius: var(--kn-radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--kn-white);
+    font-size: 0.92rem;
+    outline: none;
+    transition: border-color var(--kn-duration) var(--kn-ease),
+                background var(--kn-duration) var(--kn-ease);
+}
+
+.kn-coming__input::placeholder {
+    color: var(--kn-gray-500);
+}
+
+.kn-coming__input:focus {
+    border-color: var(--kn-orange);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Feature previews for coming soon */
+.kn-coming__features {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 2rem;
+    max-width: 700px;
+}
+
+.kn-coming__feature {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--kn-radius-sm);
+    padding: 1.2rem 1.5rem;
+    text-align: center;
+    flex: 1 1 180px;
+    max-width: 200px;
+}
+
+.kn-coming__feature-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.kn-coming__feature-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--kn-white);
+}
+
+.kn-coming__feature-desc {
+    font-size: 0.78rem;
+    color: var(--kn-gray-400);
+    margin-top: 0.2rem;
+}
+
+/* ================================================================
+   20. FOOTER — Enhanced 3-Column
+   ================================================================ */
+.kn-footer {
+    background: var(--kn-gray-900);
+    color: rgba(255, 255, 255, 0.65);
+    padding: 3rem 0 1.5rem;
+}
+
+.kn-footer__grid {
     max-width: var(--kn-container);
-    margin: 0 auto;
-    padding: 0 20px;
+    margin-inline: auto;
+    padding-inline: 24px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Footer — Brand column */
+.kn-footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.kn-footer__brand-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.kn-footer__brand-top img {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--kn-radius-xs);
+    opacity: 0.9;
+}
+
+.kn-footer__brand-name {
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--kn-white);
+}
+
+.kn-footer__brand-desc {
+    font-size: 0.88rem;
+    color: var(--kn-gray-500);
+    max-width: 36ch;
+    line-height: 1.55;
+}
+
+/* Footer — Links column */
+.kn-footer__col-title {
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--kn-white);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 1rem;
+}
+
+.kn-footer__links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.kn-footer__links a {
+    color: var(--kn-gray-500);
+    font-size: 0.88rem;
+    transition: color var(--kn-duration) var(--kn-ease);
+}
+
+.kn-footer__links a:hover {
+    color: var(--kn-orange);
+}
+
+/* Footer — Social icons */
+.kn-footer__social {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.kn-footer__social a {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--kn-radius-xs);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--kn-gray-400);
+    font-size: 1rem;
+    transition: background var(--kn-duration) var(--kn-ease),
+                color var(--kn-duration) var(--kn-ease),
+                border-color var(--kn-duration) var(--kn-ease);
+}
+
+.kn-footer__social a:hover {
+    background: var(--kn-orange);
+    color: var(--kn-white);
+    border-color: var(--kn-orange);
+}
+
+/* Footer — Bottom bar */
+.kn-footer__bottom {
+    max-width: var(--kn-container);
+    margin-inline: auto;
+    padding: 1.25rem 24px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 12px;
-}
-.kn-footer__brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.85rem;
-}
-.kn-footer__brand img {
-    border-radius: 6px;
-    opacity: 0.8;
-}
-.kn-footer__links {
-    display: flex;
-    gap: 16px;
-    font-size: 0.85rem;
-}
-.kn-footer__links a {
-    color: rgba(255,255,255,0.6);
-    transition: color 0.15s;
-}
-.kn-footer__links a:hover { color: var(--kn-accent); }
-
-/* ============================================
-   ADVERTISE SECTION
-   ============================================ */
-.kn-advertise {
-    background: linear-gradient(135deg, var(--kn-primary), #2a3f5f);
-    color: #fff;
-    border-radius: var(--kn-radius-lg);
-    padding: 2.5rem;
-    text-align: center;
-    margin: 2rem 0;
-}
-.kn-advertise h2 {
-    color: #fff;
-    margin: 0 0 0.5rem;
-}
-.kn-advertise p {
-    color: rgba(255,255,255,0.85);
-    max-width: 60ch;
-    margin: 0 auto 1.5rem;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--kn-gray-500);
 }
 
-/* ============================================
-   UTILITIES
-   ============================================ */
+.kn-footer__bottom a {
+    color: var(--kn-gray-500);
+    transition: color var(--kn-duration) var(--kn-ease);
+}
+
+.kn-footer__bottom a:hover {
+    color: var(--kn-orange);
+}
+
+/* ================================================================
+   21. UTILITIES
+   ================================================================ */
 .text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
 .mt-0 { margin-top: 0; }
 .mt-1 { margin-top: 0.5rem; }
 .mt-2 { margin-top: 1rem; }
 .mt-3 { margin-top: 1.5rem; }
 .mt-4 { margin-top: 2rem; }
+.mt-5 { margin-top: 3rem; }
 .mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 0.5rem; }
 .mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+
+.mx-auto { margin-inline: auto; }
+.w-full { width: 100%; }
+.max-w-narrow { max-width: 640px; }
+.max-w-medium { max-width: 800px; }
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gap-1 { gap: 0.5rem; }
+.gap-2 { gap: 1rem; }
+.gap-3 { gap: 1.5rem; }
+
 .sr-only {
     position: absolute;
     width: 1px;
@@ -631,69 +1668,449 @@ button { font: inherit; cursor: pointer; }
     padding: 0;
     margin: -1px;
     overflow: hidden;
-    clip: rect(0,0,0,0);
+    clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
 }
 
-/* ============================================
-   SCROLL ANIMATIONS (IntersectionObserver)
-   ============================================ */
+.kn-accent-text {
+    color: var(--kn-orange);
+}
+
+.kn-divider {
+    border: none;
+    height: 1px;
+    background: var(--kn-border);
+    margin: 2rem 0;
+}
+
+/* ================================================================
+   22. SCROLL ANIMATIONS — IntersectionObserver
+   ================================================================ */
 .kn-reveal {
     opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transition: opacity 0.7s var(--kn-ease-out),
+                transform 0.7s var(--kn-ease-out);
 }
+
 .kn-reveal.kn-visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
 }
 
-/* ============================================
-   RESPONSIVE
-   ============================================ */
+/* Fade up (default) */
+.kn-reveal,
+.kn-reveal--fade-up {
+    transform: translateY(30px);
+}
+
+/* Fade left */
+.kn-reveal--fade-left {
+    transform: translateX(-30px);
+}
+
+/* Fade right */
+.kn-reveal--fade-right {
+    transform: translateX(30px);
+}
+
+/* Scale in */
+.kn-reveal--scale-in {
+    transform: scale(0.92);
+}
+
+/* Stagger children */
+.kn-reveal--stagger > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s var(--kn-ease-out),
+                transform 0.5s var(--kn-ease-out);
+}
+
+.kn-reveal--stagger.kn-visible > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: none; }
+.kn-reveal--stagger.kn-visible > *:nth-child(2) { transition-delay: 0.08s; opacity: 1; transform: none; }
+.kn-reveal--stagger.kn-visible > *:nth-child(3) { transition-delay: 0.16s; opacity: 1; transform: none; }
+.kn-reveal--stagger.kn-visible > *:nth-child(4) { transition-delay: 0.24s; opacity: 1; transform: none; }
+.kn-reveal--stagger.kn-visible > *:nth-child(5) { transition-delay: 0.32s; opacity: 1; transform: none; }
+.kn-reveal--stagger.kn-visible > *:nth-child(6) { transition-delay: 0.40s; opacity: 1; transform: none; }
+
+/* Delay utilities for reveals */
+.kn-delay-1 { transition-delay: 0.1s; }
+.kn-delay-2 { transition-delay: 0.2s; }
+.kn-delay-3 { transition-delay: 0.3s; }
+.kn-delay-4 { transition-delay: 0.4s; }
+
+/* ================================================================
+   23. NUMBER COUNTER — Animated Counting
+   ================================================================ */
+.kn-counter {
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+}
+
+.kn-counter--animate {
+    transition: none;
+}
+
+/* ================================================================
+   24. RESPONSIVE — 1100px / 768px / 480px
+   ================================================================ */
+
+/* -- Tablet landscape / Small desktop -- */
 @media (max-width: 1100px) {
-    .kn-glass__title { font-size: 2.6rem; }
-    .kn-glass { padding: 2rem; }
-}
-@media (max-width: 768px) {
-    .kn-header__actions { display: none; }
-    .kn-header__burger { display: block; }
-    .kn-header__actions--open {
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        top: var(--kn-header-h);
-        left: 0;
-        right: 0;
-        background: var(--kn-primary);
-        padding: 16px 20px;
-        gap: 8px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    .kn-glass__title {
+        font-size: 2.6rem;
     }
-    .kn-glass__title { font-size: 2.1rem; }
-    .kn-glass__tagline { font-size: 1.1rem; }
-    .kn-hero { min-height: 82vh; }
-    .kn-pricing { margin-top: -2.5rem; }
-    .kn-glass { border-radius: var(--kn-radius); padding: 1.5rem; }
-    .kn-section { padding: 2.5rem 0; }
-    .kn-footer__inner { flex-direction: column; text-align: center; }
-}
-@media (max-width: 480px) {
-    .kn-glass__title { font-size: 1.7rem; }
-    .kn-glass__sub { font-size: 0.92rem; }
-    .kn-glass__ctas { flex-direction: column; gap: 0.6rem; }
-    .kn-glass__ctas .kn-btn { width: 100%; justify-content: center; }
+
+    .kn-glass {
+        padding: 2.2rem;
+    }
+
+    .kn-hero--hub .kn-hero__title {
+        font-size: 2.5rem;
+    }
+
+    .kn-download__inner {
+        gap: 2rem;
+    }
+
+    .kn-footer__grid {
+        gap: 2rem;
+    }
 }
 
-/* Reduced motion */
+/* -- Tablet / Mobile breakpoint -- */
+@media (max-width: 768px) {
+    :root {
+        --kn-header-h: 60px;
+    }
+
+    /* Header: show burger, hide nav */
+    .kn-header__nav {
+        display: none;
+    }
+
+    .kn-header__burger {
+        display: block;
+    }
+
+    .kn-mobile-nav {
+        display: block;
+    }
+
+    /* Hero default */
+    .kn-hero {
+        min-height: 80vh;
+    }
+
+    .kn-glass__title {
+        font-size: 2.1rem;
+    }
+
+    .kn-glass__tagline {
+        font-size: 1.1rem;
+    }
+
+    .kn-glass {
+        border-radius: var(--kn-radius);
+        padding: 1.8rem 1.5rem;
+    }
+
+    /* Hero hub: single column stack */
+    .kn-hero--hub {
+        padding: 3rem 0;
+    }
+
+    .kn-hero--hub .kn-hero__content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .kn-hero--hub .kn-hero__text {
+        text-align: center;
+    }
+
+    .kn-hero--hub .kn-hero__title {
+        font-size: 2.2rem;
+    }
+
+    .kn-hero--hub .kn-hero__desc {
+        margin-inline: auto;
+    }
+
+    .kn-hero--hub .kn-hero__ctas {
+        justify-content: center;
+    }
+
+    .kn-hero--hub .kn-hero__visual {
+        order: -1;
+    }
+
+    /* Stats: stack */
+    .kn-stats__inner {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    /* Sections */
+    .kn-section {
+        padding: 3rem 0;
+    }
+
+    .kn-section__title {
+        font-size: 1.7rem;
+    }
+
+    /* Steps: stack */
+    .kn-steps {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        max-width: 360px;
+        margin-inline: auto;
+    }
+
+    .kn-steps::before {
+        display: none;
+    }
+
+    /* Pricing: stack */
+    .kn-pricing {
+        margin-top: -2rem;
+    }
+
+    .kn-pricing-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .kn-card {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .kn-card--popular {
+        transform: none;
+    }
+
+    .kn-card--popular:hover {
+        transform: translateY(-6px);
+    }
+
+    /* Features: stack */
+    .kn-features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Download: stack */
+    .kn-download__inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .kn-download__text p {
+        margin-inline: auto;
+    }
+
+    .kn-store-row {
+        justify-content: center;
+    }
+
+    .kn-download__mockup {
+        order: -1;
+    }
+
+    /* Countries: 2 columns */
+    .kn-countries-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Coming soon */
+    .kn-coming__title {
+        font-size: 2.2rem;
+    }
+
+    .kn-coming__form {
+        flex-direction: column;
+    }
+
+    /* Footer: stack */
+    .kn-footer__grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .kn-footer__brand {
+        align-items: center;
+    }
+
+    .kn-footer__brand-desc {
+        max-width: 100%;
+    }
+
+    .kn-footer__social {
+        justify-content: center;
+    }
+
+    .kn-footer__bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    /* Advertise */
+    .kn-advertise {
+        padding: 2.5rem 1.5rem;
+        border-radius: var(--kn-radius);
+    }
+}
+
+/* -- Small mobile -- */
+@media (max-width: 480px) {
+    .container {
+        padding-inline: 16px;
+    }
+
+    .kn-glass__title {
+        font-size: 1.65rem;
+    }
+
+    .kn-glass__sub {
+        font-size: 0.9rem;
+    }
+
+    .kn-glass__tagline {
+        font-size: 1rem;
+    }
+
+    .kn-glass__ctas {
+        flex-direction: column;
+        gap: 0.6rem;
+        width: 100%;
+    }
+
+    .kn-glass__ctas .kn-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .kn-hero--hub .kn-hero__title {
+        font-size: 1.8rem;
+    }
+
+    .kn-hero--hub .kn-hero__ctas {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .kn-hero--hub .kn-hero__ctas .kn-btn {
+        width: 100%;
+    }
+
+    /* Stats */
+    .kn-stats__number {
+        font-size: 2rem;
+    }
+
+    /* Section */
+    .kn-section {
+        padding: 2.5rem 0;
+    }
+
+    .kn-section__title {
+        font-size: 1.5rem;
+    }
+
+    /* Countries: single column */
+    .kn-countries-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Coming soon */
+    .kn-coming__title {
+        font-size: 1.8rem;
+    }
+
+    .kn-coming__countdown {
+        gap: 0.75rem;
+    }
+
+    .kn-coming__count-item {
+        min-width: 72px;
+        padding: 0.8rem 1rem;
+    }
+
+    .kn-coming__count-num {
+        font-size: 1.6rem;
+    }
+
+    .kn-coming__features {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .kn-coming__feature {
+        max-width: 100%;
+    }
+
+    /* Store buttons: full width */
+    .kn-store-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .kn-store-btn {
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
+    }
+
+    /* Footer */
+    .kn-footer__links {
+        align-items: center;
+    }
+
+    /* Advertise */
+    .kn-advertise h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* ================================================================
+   25. REDUCED MOTION — Accessibility
+   ================================================================ */
 @media (prefers-reduced-motion: reduce) {
-    .kn-hero__video,
-    .kn-btn,
-    .kn-card,
-    .kn-feature,
-    .kn-country-card,
-    .kn-reveal { transition: none !important; animation: none !important; }
-    .kn-reel__track { animation: none !important; }
-    html { scroll-behavior: auto; }
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .kn-hero__video {
+        transform: none;
+        filter: brightness(0.5);
+    }
+
+    .kn-reel__track {
+        animation: none !important;
+    }
+
+    .kn-reveal {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .kn-reveal--stagger > * {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
 }

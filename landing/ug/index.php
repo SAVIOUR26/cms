@@ -88,7 +88,7 @@ $currency = $COUNTRY['currency'];
 <section id="subscribe" class="kn-section kn-pricing kn-reveal" aria-labelledby="pricing-title">
   <div class="container">
     <h2 id="pricing-title" class="kn-section__title text-center">Choose Your Plan</h2>
-    <p class="kn-section__lead text-center" style="margin-left:auto;margin-right:auto;">
+    <p class="kn-section__lead text-center">
       Flexible access options &mdash; pick the plan that fits your rhythm.
     </p>
 
@@ -157,7 +157,7 @@ $currency = $COUNTRY['currency'];
 <section class="kn-section kn-section--alt kn-reveal" aria-labelledby="why-title">
   <div class="container">
     <h2 id="why-title" class="kn-section__title text-center">Why Subscribe?</h2>
-    <p class="kn-section__lead text-center" style="margin-left:auto;margin-right:auto;">
+    <p class="kn-section__lead text-center">
       More than headlines &mdash; tools for growth, connection and opportunity across
       <?php echo h($COUNTRY['name']); ?> and the continent.
     </p>
@@ -203,7 +203,7 @@ $currency = $COUNTRY['currency'];
 <section class="kn-section kn-reveal" aria-labelledby="steps-title">
   <div class="container">
     <h2 id="steps-title" class="kn-section__title text-center">How It Works</h2>
-    <p class="kn-section__lead text-center" style="margin-left:auto;margin-right:auto;">
+    <p class="kn-section__lead text-center">
       Get started with KandaNews in three easy steps.
     </p>
 
@@ -242,15 +242,15 @@ $currency = $COUNTRY['currency'];
 <!-- ============================================================
      6. DOWNLOAD APP — Prominent dark section
      ============================================================ -->
-<section id="download" class="kn-download kn-reveal" aria-labelledby="download-title">
-  <div class="kn-download__inner" style="grid-template-columns:1fr;text-align:center;">
+<section id="download" class="kn-download kn-download--centered kn-reveal" aria-labelledby="download-title">
+  <div class="kn-download__inner">
     <div class="kn-download__text">
       <h2 id="download-title">
         Get KandaNews <?php echo h($COUNTRY['name']); ?> on Your Device
       </h2>
       <p>Available soon on every major platform. Download once &mdash; stay informed always.</p>
 
-      <div class="kn-store-row" style="justify-content:center;" role="list" aria-label="App download options">
+      <div class="kn-store-row" role="list" aria-label="App download options">
         <span class="kn-store-btn kn-btn--disabled" role="listitem" aria-label="Google Play coming soon">
           <i class="fa-brands fa-google-play" aria-hidden="true"></i> Google Play
         </span>
@@ -306,7 +306,7 @@ $currency = $COUNTRY['currency'];
 <section class="kn-section kn-section--alt kn-reveal" aria-labelledby="apps-title">
   <div class="container text-center">
     <h2 id="apps-title" class="kn-section__title">Apps Coming Soon</h2>
-    <p class="kn-section__lead" style="margin-left:auto;margin-right:auto;">
+    <p class="kn-section__lead">
       Native apps for Android, iOS, Windows, macOS and Linux are on the way &mdash;
       bringing the full KandaNews <?php echo h($COUNTRY['name']); ?> experience to every device you own.
     </p>
@@ -332,33 +332,5 @@ $currency = $COUNTRY['currency'];
     </p>
   </div>
 </section>
-
-<!-- Page-specific styles for pricing card icons & perks (supplements base.css) -->
-<style>
-.kn-card__icon {
-    font-size: 2rem;
-    color: var(--kn-orange);
-    margin-bottom: 0.6rem;
-}
-.kn-card__perks {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1.2rem;
-    text-align: left;
-    font-size: 0.88rem;
-    color: var(--kn-muted);
-}
-.kn-card__perks li {
-    padding: 0.35rem 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-.kn-card__perks li i {
-    color: var(--kn-success);
-    font-size: 0.75rem;
-    flex-shrink: 0;
-}
-</style>
 
 <?php require_once __DIR__ . '/shared/components/footer.php'; ?>

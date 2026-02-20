@@ -65,7 +65,6 @@ require_once __DIR__ . '/shared/components/header.php';
     <div class="kn-hero__visual">
       <video
         class="kn-hero__video"
-        style="width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:var(--kn-radius-lg);display:block;filter:none;transform:none;"
         autoplay muted playsinline loop preload="auto"
         aria-label="KandaNews digital newspaper preview"
       >
@@ -274,8 +273,8 @@ require_once __DIR__ . '/shared/components/header.php';
 
 
 <!-- ===== DOWNLOAD APP ===== -->
-<section id="download" class="kn-download kn-reveal" aria-labelledby="download-heading">
-  <div class="kn-download__inner" style="grid-template-columns:1fr;text-align:center;">
+<section id="download" class="kn-download kn-download--centered kn-reveal" aria-labelledby="download-heading">
+  <div class="kn-download__inner">
     <div class="kn-download__text">
       <h2 id="download-heading">
         <i class="fa-solid fa-download" style="color:var(--kn-orange);margin-right:0.4rem;"></i>
@@ -283,7 +282,7 @@ require_once __DIR__ . '/shared/components/header.php';
       </h2>
       <p>Whether you read on your phone during your commute, a tablet at lunch, or a laptop at work &mdash; KandaNews goes everywhere you do.</p>
 
-      <div class="kn-store-row" style="justify-content:center;" role="list" aria-label="App download options">
+      <div class="kn-store-row" role="list" aria-label="App download options">
         <span class="kn-store-btn kn-btn--disabled" role="listitem" aria-label="Google Play coming soon">
           <i class="fa-brands fa-google-play"></i> Google Play
         </span>
@@ -319,7 +318,7 @@ require_once __DIR__ . '/shared/components/header.php';
         Promote your brand inside Africa's most relevant news experiences &mdash; full-page spreads, native editorial placements, audio &amp; video sponsorships, and interactive rich-media ads.
         Reach students on campuses, professionals in boardrooms, and entrepreneurs building the future.
       </p>
-      <div style="display:flex;justify-content:center;gap:0.9rem;flex-wrap:wrap;position:relative;">
+      <div class="kn-cta-row">
         <a class="kn-btn kn-btn--primary" href="mailto:hello@kandanews.africa" aria-label="Contact KandaNews sales team">
           <i class="fa-solid fa-envelope"></i> Contact Sales
         </a>

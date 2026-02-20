@@ -50,7 +50,7 @@ $currency = $COUNTRY['currency'];
 <section class="kn-section kn-section--alt kn-reveal" aria-labelledby="expect-title">
   <div class="container">
     <h2 id="expect-title" class="kn-section__title text-center">What to Expect</h2>
-    <p class="kn-section__lead text-center" style="margin-left:auto;margin-right:auto;">KandaNews <?php echo h($COUNTRY['name']); ?> will bring you everything you need — local, pan-Africa, and built for your growth.</p>
+    <p class="kn-section__lead text-center">KandaNews <?php echo h($COUNTRY['name']); ?> will bring you everything you need — local, pan-Africa, and built for your growth.</p>
 
     <div class="kn-features-grid">
       <div class="kn-feature kn-reveal">
@@ -91,7 +91,7 @@ $currency = $COUNTRY['currency'];
 <section class="kn-section kn-reveal" aria-labelledby="pricing-preview-title">
   <div class="container">
     <h2 id="pricing-preview-title" class="kn-section__title text-center">Planned Pricing for <?php echo h($COUNTRY['name']); ?></h2>
-    <p class="kn-section__lead text-center" style="margin-left:auto;margin-right:auto;">Flexible access options when we launch — pick the plan that fits your rhythm.</p>
+    <p class="kn-section__lead text-center">Flexible access options when we launch — pick the plan that fits your rhythm.</p>
 
     <div class="kn-pricing-grid">
       <article class="kn-card kn-reveal" aria-label="Daily plan">
@@ -119,8 +119,8 @@ $currency = $COUNTRY['currency'];
 <!-- GET NOTIFIED -->
 <section id="notify" class="kn-section kn-section--dark kn-reveal" aria-labelledby="notify-title">
   <div class="container text-center">
-    <h2 id="notify-title" class="kn-section__title" style="color:#fff;">Be the First to Know</h2>
-    <p class="kn-section__lead" style="color:rgba(255,255,255,0.8);margin-left:auto;margin-right:auto;">
+    <h2 id="notify-title" class="kn-section__title">Be the First to Know</h2>
+    <p class="kn-section__lead">
       Drop your email and we'll notify you as soon as KandaNews <?php echo h($COUNTRY['name']); ?> launches.
     </p>
     <form class="kn-coming__form" action="mailto:<?php echo h($COUNTRY['email']); ?>" method="GET" enctype="text/plain">
@@ -154,10 +154,10 @@ $currency = $COUNTRY['currency'];
 <!-- DOWNLOAD APP -->
 <section id="download" class="kn-section kn-section--dark kn-reveal" aria-labelledby="download-title">
   <div class="container text-center">
-    <h2 id="download-title" class="kn-section__title" style="color:#fff;">
+    <h2 id="download-title" class="kn-section__title">
       <i class="fa-solid fa-mobile-screen"></i> Get the App
     </h2>
-    <p class="kn-section__lead" style="color:rgba(255,255,255,0.8);margin-left:auto;margin-right:auto;">
+    <p class="kn-section__lead">
       Our apps for Android, iOS, Windows, Mac and Linux are launching soon.
     </p>
     <div class="kn-store-row">

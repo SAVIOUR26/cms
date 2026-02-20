@@ -1684,6 +1684,13 @@ ul, ol {
     margin: 2rem 0;
 }
 
+.kn-cta-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
 /* ================================================================
    22. SCROLL ANIMATIONS — IntersectionObserver
    ================================================================ */

@@ -123,13 +123,11 @@ $currency = $COUNTRY['currency'];
     <p class="kn-section__lead" style="color:rgba(255,255,255,0.8);margin-left:auto;margin-right:auto;">
       Drop your email and we'll notify you as soon as KandaNews <?php echo h($COUNTRY['name']); ?> launches.
     </p>
-    <form class="kn-notify-form" action="mailto:<?php echo h($COUNTRY['email']); ?>" method="GET" enctype="text/plain">
-      <div class="kn-notify-form__row">
-        <input type="email" name="subject" class="kn-notify-form__input" placeholder="Your email address" required aria-label="Email address">
-        <button type="submit" class="kn-btn kn-btn--primary">
-          <i class="fa-solid fa-bell"></i> Notify Me
-        </button>
-      </div>
+    <form class="kn-coming__form" action="mailto:<?php echo h($COUNTRY['email']); ?>" method="GET" enctype="text/plain">
+      <input type="email" name="subject" class="kn-coming__input" placeholder="Your email address" required aria-label="Email address">
+      <button type="submit" class="kn-btn kn-btn--primary">
+        <i class="fa-solid fa-bell"></i> Notify Me
+      </button>
     </form>
     <p style="color:rgba(255,255,255,0.5);font-size:0.85rem;margin-top:1rem;">No spam. Just a launch notification.</p>
   </div>

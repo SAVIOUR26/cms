@@ -1,6 +1,6 @@
 /**
  * KandaNews Africa — Shared JavaScript
- * Handles: mobile menu, scroll reveal animations, video autoplay
+ * Handles: mobile menu, scroll reveal, counter animation, video autoplay, smooth scroll
  */
 (function () {
     'use strict';
@@ -12,16 +12,17 @@
         burger.addEventListener('click', function () {
             var open = nav.classList.toggle('kn-header__actions--open');
             burger.setAttribute('aria-expanded', open);
-            burger.innerHTML = open
-                ? '<i class="fa-solid fa-xmark"></i>'
-                : '<i class="fa-solid fa-bars"></i>';
+            burger.querySelector('i').className = open
+                ? 'fa-solid fa-xmark'
+                : 'fa-solid fa-bars';
+            burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
         });
-        // Close on link click
         nav.querySelectorAll('a').forEach(function (a) {
             a.addEventListener('click', function () {
                 nav.classList.remove('kn-header__actions--open');
                 burger.setAttribute('aria-expanded', 'false');
-                burger.innerHTML = '<i class="fa-solid fa-bars"></i>';
+                burger.querySelector('i').className = 'fa-solid fa-bars';
+                burger.setAttribute('aria-label', 'Open menu');
             });
         });
     }
@@ -29,35 +30,87 @@
     // ── Scroll reveal (IntersectionObserver) ──
     var reveals = document.querySelectorAll('.kn-reveal');
     if (reveals.length && 'IntersectionObserver' in window) {
-        var observer = new IntersectionObserver(function (entries) {
+        var revealObserver = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('kn-visible');
-                    observer.unobserve(entry.target);
+                    revealObserver.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-        reveals.forEach(function (el) { observer.observe(el); });
+        }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+        reveals.forEach(function (el, i) {
+            el.style.transitionDelay = (i % 4) * 0.08 + 's';
+            revealObserver.observe(el);
+        });
     } else {
-        // Fallback: show everything
         reveals.forEach(function (el) { el.classList.add('kn-visible'); });
     }
 
-    // ── Hero video autoplay nudge (iOS) ──
-    var heroVideo = document.querySelector('.kn-hero__video');
-    if (heroVideo && heroVideo.play) {
-        var p = heroVideo.play();
-        if (p && p.catch) p.catch(function () { /* autoplay blocked */ });
+    // ── Animated number counters ──
+    var counters = document.querySelectorAll('.kn-counter');
+    if (counters.length && 'IntersectionObserver' in window) {
+        var counterObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target);
+                    counterObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        counters.forEach(function (el) { counterObserver.observe(el); });
     }
 
-    // ── Smooth scroll for anchor links ──
+    function animateCounter(el) {
+        var target = parseInt(el.getAttribute('data-target'), 10);
+        if (isNaN(target)) return;
+        var duration = 1800;
+        var startTime = null;
+        var prefix = el.getAttribute('data-prefix') || '';
+        var suffix = el.getAttribute('data-suffix') || '';
+
+        function step(timestamp) {
+            if (!startTime) startTime = timestamp;
+            var progress = Math.min((timestamp - startTime) / duration, 1);
+            var eased = 1 - Math.pow(1 - progress, 3);
+            var current = Math.floor(eased * target);
+            el.textContent = prefix + current.toLocaleString() + suffix;
+            if (progress < 1) requestAnimationFrame(step);
+            else el.textContent = prefix + target.toLocaleString() + suffix;
+        }
+        requestAnimationFrame(step);
+    }
+
+    // ── Hero video autoplay nudge (iOS) ──
+    document.querySelectorAll('video[autoplay]').forEach(function (video) {
+        var p = video.play();
+        if (p && p.catch) p.catch(function () { /* autoplay blocked */ });
+    });
+
+    // ── Smooth scroll for anchor links (offset by header height) ──
     document.querySelectorAll('a[href^="#"]').forEach(function (a) {
         a.addEventListener('click', function (e) {
-            var target = document.querySelector(a.getAttribute('href'));
+            var href = a.getAttribute('href');
+            if (href === '#') return;
+            var target = document.querySelector(href);
             if (target) {
                 e.preventDefault();
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                var headerH = document.querySelector('.kn-header');
+                var offset = headerH ? headerH.offsetHeight : 0;
+                var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                window.scrollTo({ top: top, behavior: 'smooth' });
             }
         });
     });
+
+    // ── Header compact on scroll ──
+    var header = document.querySelector('.kn-header');
+    if (header) {
+        window.addEventListener('scroll', function () {
+            if (window.pageYOffset > 80) {
+                header.classList.add('kn-header--scrolled');
+            } else {
+                header.classList.remove('kn-header--scrolled');
+            }
+        }, { passive: true });
+    }
 })();

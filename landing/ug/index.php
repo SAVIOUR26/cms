@@ -61,7 +61,7 @@ $currency = $COUNTRY['currency'];
      ============================================================ -->
 <section class="kn-stats kn-reveal" aria-label="KandaNews <?php echo h($COUNTRY['name']); ?> at a glance">
   <div class="container">
-    <div class="kn-stats__grid">
+    <div class="kn-stats__inner">
       <div class="kn-stats__item">
         <span class="kn-stats__number kn-counter" data-target="4">4</span>
         <span class="kn-stats__label">Country Editions</span>
@@ -88,7 +88,7 @@ $currency = $COUNTRY['currency'];
 <section id="subscribe" class="kn-section kn-pricing kn-reveal" aria-labelledby="pricing-title">
   <div class="container">
     <h2 id="pricing-title" class="kn-section__title text-center">Choose Your Plan</h2>
-    <p class="kn-section__lead text-center" style="margin-left:auto;margin-right:auto;">
+    <p class="kn-section__lead text-center">
       Flexible access options &mdash; pick the plan that fits your rhythm.
     </p>
 
@@ -157,7 +157,7 @@ $currency = $COUNTRY['currency'];
 <section class="kn-section kn-section--alt kn-reveal" aria-labelledby="why-title">
   <div class="container">
     <h2 id="why-title" class="kn-section__title text-center">Why Subscribe?</h2>
-    <p class="kn-section__lead text-center" style="margin-left:auto;margin-right:auto;">
+    <p class="kn-section__lead text-center">
       More than headlines &mdash; tools for growth, connection and opportunity across
       <?php echo h($COUNTRY['name']); ?> and the continent.
     </p>
@@ -200,41 +200,38 @@ $currency = $COUNTRY['currency'];
 <!-- ============================================================
      5. HOW IT WORKS — 3 simple steps
      ============================================================ -->
-<section class="kn-section kn-steps kn-reveal" aria-labelledby="steps-title">
+<section class="kn-section kn-reveal" aria-labelledby="steps-title">
   <div class="container">
     <h2 id="steps-title" class="kn-section__title text-center">How It Works</h2>
-    <p class="kn-section__lead text-center" style="margin-left:auto;margin-right:auto;">
+    <p class="kn-section__lead text-center">
       Get started with KandaNews in three easy steps.
     </p>
 
-    <div class="kn-steps__grid" role="list">
-      <div class="kn-steps__item" role="listitem">
-        <span class="kn-steps__number" aria-hidden="true">1</span>
-        <div class="kn-steps__icon" aria-hidden="true">
-          <i class="fa-solid fa-cloud-arrow-down"></i>
+    <div class="kn-steps" role="list">
+      <div class="kn-step" role="listitem">
+        <div class="kn-step__circle" aria-hidden="true">
+          <span class="kn-step__icon"><i class="fa-solid fa-cloud-arrow-down"></i></span>
         </div>
-        <h3 class="kn-steps__heading">Download the App</h3>
-        <p class="kn-steps__text">
+        <h3 class="kn-step__title">Download the App</h3>
+        <p class="kn-step__desc">
           Get KandaNews on your Android, iOS, or desktop device &mdash; free to install.
         </p>
       </div>
-      <div class="kn-steps__item" role="listitem">
-        <span class="kn-steps__number" aria-hidden="true">2</span>
-        <div class="kn-steps__icon" aria-hidden="true">
-          <i class="fa-solid fa-hand-pointer"></i>
+      <div class="kn-step" role="listitem">
+        <div class="kn-step__circle" aria-hidden="true">
+          <span class="kn-step__icon"><i class="fa-solid fa-hand-pointer"></i></span>
         </div>
-        <h3 class="kn-steps__heading">Choose Your Plan</h3>
-        <p class="kn-steps__text">
+        <h3 class="kn-step__title">Choose Your Plan</h3>
+        <p class="kn-step__desc">
           Select a daily, weekly or monthly plan that suits your budget and reading style.
         </p>
       </div>
-      <div class="kn-steps__item" role="listitem">
-        <span class="kn-steps__number" aria-hidden="true">3</span>
-        <div class="kn-steps__icon" aria-hidden="true">
-          <i class="fa-solid fa-book-open-reader"></i>
+      <div class="kn-step" role="listitem">
+        <div class="kn-step__circle" aria-hidden="true">
+          <span class="kn-step__icon"><i class="fa-solid fa-book-open-reader"></i></span>
         </div>
-        <h3 class="kn-steps__heading">Start Reading</h3>
-        <p class="kn-steps__text">
+        <h3 class="kn-step__title">Start Reading</h3>
+        <p class="kn-step__desc">
           Enjoy daily interactive editions, audio, video and marketplace features &mdash; all in one app.
         </p>
       </div>
@@ -245,37 +242,37 @@ $currency = $COUNTRY['currency'];
 <!-- ============================================================
      6. DOWNLOAD APP — Prominent dark section
      ============================================================ -->
-<section id="download" class="kn-section kn-download kn-reveal" aria-labelledby="download-title">
-  <div class="container text-center">
-    <h2 id="download-title" class="kn-section__title" style="color:#fff;">
-      Get KandaNews <?php echo h($COUNTRY['name']); ?> on Your Device
-    </h2>
-    <p class="kn-download__lead">
-      Available soon on every major platform. Download once &mdash; stay informed always.
-    </p>
+<section id="download" class="kn-download kn-download--centered kn-reveal" aria-labelledby="download-title">
+  <div class="kn-download__inner">
+    <div class="kn-download__text">
+      <h2 id="download-title">
+        Get KandaNews <?php echo h($COUNTRY['name']); ?> on Your Device
+      </h2>
+      <p>Available soon on every major platform. Download once &mdash; stay informed always.</p>
 
-    <div class="kn-download__platforms" role="list" aria-label="App download options">
-      <span class="kn-store-btn kn-btn--disabled" role="listitem" aria-label="Google Play coming soon">
-        <i class="fa-brands fa-google-play" aria-hidden="true"></i> Google Play
-      </span>
-      <span class="kn-store-btn kn-btn--disabled" role="listitem" aria-label="App Store coming soon">
-        <i class="fa-brands fa-apple" aria-hidden="true"></i> App Store
-      </span>
-      <span class="kn-store-btn kn-btn--disabled" role="listitem" aria-label="Windows coming soon">
-        <i class="fa-brands fa-windows" aria-hidden="true"></i> Windows
-      </span>
-      <span class="kn-store-btn kn-btn--disabled" role="listitem" aria-label="macOS coming soon">
-        <i class="fa-brands fa-apple" aria-hidden="true"></i> macOS
-      </span>
-      <span class="kn-store-btn kn-btn--disabled" role="listitem" aria-label="Linux coming soon">
-        <i class="fa-brands fa-linux" aria-hidden="true"></i> Linux
-      </span>
+      <div class="kn-store-row" role="list" aria-label="App download options">
+        <span class="kn-store-btn kn-btn--disabled" role="listitem" aria-label="Google Play coming soon">
+          <i class="fa-brands fa-google-play" aria-hidden="true"></i> Google Play
+        </span>
+        <span class="kn-store-btn kn-btn--disabled" role="listitem" aria-label="App Store coming soon">
+          <i class="fa-brands fa-apple" aria-hidden="true"></i> App Store
+        </span>
+        <span class="kn-store-btn kn-btn--disabled" role="listitem" aria-label="Windows coming soon">
+          <i class="fa-brands fa-windows" aria-hidden="true"></i> Windows
+        </span>
+        <span class="kn-store-btn kn-btn--disabled" role="listitem" aria-label="macOS coming soon">
+          <i class="fa-brands fa-apple" aria-hidden="true"></i> macOS
+        </span>
+        <span class="kn-store-btn kn-btn--disabled" role="listitem" aria-label="Linux coming soon">
+          <i class="fa-brands fa-linux" aria-hidden="true"></i> Linux
+        </span>
+      </div>
+
+      <p style="color:var(--kn-orange);font-weight:700;font-size:0.9rem;margin-top:1rem;">
+        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+        Apps launching soon &mdash; stay tuned!
+      </p>
     </div>
-
-    <p class="kn-download__note">
-      <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-      Apps launching soon &mdash; stay tuned!
-    </p>
   </div>
 </section>
 
@@ -309,7 +306,7 @@ $currency = $COUNTRY['currency'];
 <section class="kn-section kn-section--alt kn-reveal" aria-labelledby="apps-title">
   <div class="container text-center">
     <h2 id="apps-title" class="kn-section__title">Apps Coming Soon</h2>
-    <p class="kn-section__lead" style="margin-left:auto;margin-right:auto;">
+    <p class="kn-section__lead">
       Native apps for Android, iOS, Windows, macOS and Linux are on the way &mdash;
       bringing the full KandaNews <?php echo h($COUNTRY['name']); ?> experience to every device you own.
     </p>
@@ -335,191 +332,5 @@ $currency = $COUNTRY['currency'];
     </p>
   </div>
 </section>
-
-<!-- ============================================================
-     INLINE STYLES for new sections (Stats Bar, Steps, Download)
-     Scoped to this page; extends base.css without modifying it.
-     ============================================================ -->
-<style>
-/* ── Stats Bar ── */
-.kn-stats {
-    background: var(--kn-primary);
-    color: var(--kn-contrast);
-    padding: 2rem 0;
-    position: relative;
-    z-index: 5;
-}
-.kn-stats__grid {
-    display: flex;
-    justify-content: center;
-    gap: 2.5rem;
-    flex-wrap: wrap;
-    text-align: center;
-}
-.kn-stats__item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 120px;
-}
-.kn-stats__number {
-    font-size: 2.2rem;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    color: var(--kn-accent);
-}
-.kn-stats__label {
-    font-size: 0.82rem;
-    font-weight: 700;
-    opacity: 0.8;
-    margin-top: 0.3rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
-
-/* ── How It Works (Steps) ── */
-.kn-steps__grid {
-    display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 1.5rem;
-}
-.kn-steps__item {
-    flex: 1 1 260px;
-    max-width: 340px;
-    background: #fff;
-    border: 1px solid var(--kn-border);
-    border-radius: var(--kn-radius);
-    padding: 2rem 1.5rem;
-    text-align: center;
-    position: relative;
-    box-shadow: var(--kn-shadow);
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.kn-steps__item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.08);
-}
-.kn-steps__number {
-    position: absolute;
-    top: -16px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 36px;
-    height: 36px;
-    line-height: 36px;
-    background: var(--kn-accent);
-    color: #fff;
-    font-weight: 900;
-    font-size: 1rem;
-    border-radius: 50%;
-    text-align: center;
-}
-.kn-steps__icon {
-    font-size: 2rem;
-    color: var(--kn-primary);
-    margin-bottom: 0.8rem;
-    margin-top: 0.5rem;
-}
-.kn-steps__heading {
-    font-size: 1.15rem;
-    font-weight: 900;
-    color: var(--kn-primary);
-    margin: 0 0 0.4rem;
-}
-.kn-steps__text {
-    font-size: 0.92rem;
-    color: var(--kn-muted);
-    margin: 0;
-    line-height: 1.5;
-}
-
-/* ── Download Section ── */
-.kn-download {
-    background: var(--kn-bg-dark);
-    color: var(--kn-contrast);
-    padding: 4rem 0;
-}
-.kn-download__lead {
-    font-size: 1.1rem;
-    color: rgba(255,255,255,0.8);
-    max-width: 52ch;
-    margin: 0.5rem auto 2rem;
-}
-.kn-download__platforms {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 1.5rem;
-}
-.kn-download__platforms .kn-store-btn {
-    background: rgba(255,255,255,0.06);
-    color: rgba(255,255,255,0.6);
-    border-color: rgba(255,255,255,0.12);
-}
-.kn-download__note {
-    font-size: 0.9rem;
-    color: var(--kn-accent);
-    font-weight: 700;
-}
-
-/* ── Pricing card enhancements ── */
-.kn-card__icon {
-    font-size: 2rem;
-    color: var(--kn-accent);
-    margin-bottom: 0.6rem;
-}
-.kn-card__perks {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1.2rem;
-    text-align: left;
-    font-size: 0.88rem;
-    color: var(--kn-muted);
-}
-.kn-card__perks li {
-    padding: 0.35rem 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-.kn-card__perks li i {
-    color: var(--kn-success);
-    font-size: 0.75rem;
-    flex-shrink: 0;
-}
-
-/* ── Feature card description ── */
-.kn-feature__desc {
-    font-size: 0.85rem;
-    color: var(--kn-muted);
-    margin: 0.4rem 0 0;
-    font-weight: 400;
-    line-height: 1.45;
-}
-
-/* ── Responsive adjustments for new sections ── */
-@media (max-width: 768px) {
-    .kn-stats__grid { gap: 1.5rem; }
-    .kn-stats__number { font-size: 1.7rem; }
-    .kn-steps__grid { flex-direction: column; align-items: center; }
-    .kn-steps__item { max-width: 100%; }
-    .kn-download { padding: 3rem 0; }
-    .kn-download__platforms .kn-store-btn { font-size: 0.82rem; padding: 0.6rem 1rem; }
-}
-@media (max-width: 480px) {
-    .kn-stats__grid { gap: 1rem; }
-    .kn-stats__item { min-width: 100px; }
-    .kn-stats__number { font-size: 1.4rem; }
-}
-
-/* ── Reduced motion overrides for new sections ── */
-@media (prefers-reduced-motion: reduce) {
-    .kn-steps__item { transition: none !important; }
-}
-</style>
 
 <?php require_once __DIR__ . '/shared/components/footer.php'; ?>

@@ -66,7 +66,7 @@ $_og_image = isset($og_image) ? $og_image : '/shared/assets/img/kanda-og.png';
                 <span class="kn-header__name"><?php echo h($_brand); ?></span>
                 <span class="kn-header__country"><?php echo $_flag; ?> <?php echo h($_country_name); ?></span>
             </div>
-            <nav class="kn-header__actions" id="main-nav" aria-label="Main navigation">
+            <nav class="kn-header__nav" id="main-nav" aria-label="Main navigation">
                 <?php if (!$_is_hub): ?>
                     <a href="<?php echo h($_hub_url); ?>/#countries" class="kn-header__link">Countries</a>
                 <?php else: ?>
@@ -77,9 +77,20 @@ $_og_image = isset($og_image) ? $og_image : '/shared/assets/img/kanda-og.png';
                     <i class="fa-solid fa-download"></i> Download App
                 </a>
             </nav>
-            <button class="kn-header__burger" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav" type="button">
+            <button class="kn-header__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav" type="button">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
+        <nav class="kn-mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+            <?php if (!$_is_hub): ?>
+                <a href="<?php echo h($_hub_url); ?>/#countries" class="kn-mobile-nav__link">Countries</a>
+            <?php else: ?>
+                <a href="#countries" class="kn-mobile-nav__link">Countries</a>
+            <?php endif; ?>
+            <a href="<?php echo h($_hub_url); ?>/blog/" class="kn-mobile-nav__link">Blog</a>
+            <a href="#download" class="kn-mobile-nav__link kn-mobile-nav__link--cta">
+                <i class="fa-solid fa-download"></i> Download App
+            </a>
+        </nav>
     </header>
     <main>

@@ -275,6 +275,11 @@ ul, ol {
     opacity: 0.8;
 }
 
+/* Compact header on scroll */
+.kn-header--scrolled {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.22);
+}
+
 /* ================================================================
    5. MOBILE NAV — Slide-down Menu
    ================================================================ */
@@ -485,6 +490,9 @@ ul, ol {
     max-width: 520px;
     border-radius: var(--kn-radius-lg);
     box-shadow: var(--kn-shadow-xl);
+    filter: none;
+    transform: none;
+    height: auto;
 }
 
 /* ================================================================
@@ -941,6 +949,36 @@ ul, ol {
     flex-shrink: 0;
 }
 
+/* Card icon */
+.kn-card__icon {
+    font-size: 2rem;
+    color: var(--kn-orange);
+    margin-bottom: 0.6rem;
+}
+
+/* Card perks list (icon-based checkmarks) */
+.kn-card__perks {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.2rem;
+    text-align: left;
+    font-size: 0.88rem;
+    color: var(--kn-muted);
+}
+
+.kn-card__perks li {
+    padding: 0.35rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.kn-card__perks li i {
+    color: var(--kn-success);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+
 /* Popular card */
 .kn-card--popular {
     border: 2px solid var(--kn-orange);
@@ -1219,6 +1257,21 @@ ul, ol {
     grid-template-columns: 1fr 1fr;
     gap: 3rem;
     align-items: center;
+}
+
+/* Centered variant — single column, no mockup */
+.kn-download--centered .kn-download__inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+    max-width: 720px;
+}
+
+.kn-download--centered .kn-download__text p {
+    margin-inline: auto;
+}
+
+.kn-download--centered .kn-store-row {
+    justify-content: center;
 }
 
 .kn-download__text h2 {
@@ -1682,6 +1735,13 @@ ul, ol {
     height: 1px;
     background: var(--kn-border);
     margin: 2rem 0;
+}
+
+.kn-cta-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
 }
 
 /* ================================================================

@@ -7,19 +7,19 @@
 
     // ── Mobile burger menu ──
     var burger = document.querySelector('.kn-header__burger');
-    var nav = document.querySelector('.kn-header__actions');
-    if (burger && nav) {
+    var mobileNav = document.querySelector('.kn-mobile-nav');
+    if (burger && mobileNav) {
         burger.addEventListener('click', function () {
-            var open = nav.classList.toggle('kn-header__actions--open');
+            var open = mobileNav.classList.toggle('kn-mobile-nav--open');
             burger.setAttribute('aria-expanded', open);
             burger.querySelector('i').className = open
                 ? 'fa-solid fa-xmark'
                 : 'fa-solid fa-bars';
             burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
         });
-        nav.querySelectorAll('a').forEach(function (a) {
+        mobileNav.querySelectorAll('a').forEach(function (a) {
             a.addEventListener('click', function () {
-                nav.classList.remove('kn-header__actions--open');
+                mobileNav.classList.remove('kn-mobile-nav--open');
                 burger.setAttribute('aria-expanded', 'false');
                 burger.querySelector('i').className = 'fa-solid fa-bars';
                 burger.setAttribute('aria-label', 'Open menu');

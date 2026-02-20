@@ -17,7 +17,7 @@ $currency = $COUNTRY['currency'];
 <section class="kn-hero kn-reveal" aria-label="KandaNews <?php echo h($COUNTRY['name']); ?> Hero">
   <div class="kn-hero__media" aria-hidden="true">
     <video class="kn-hero__video"
-           poster="/shared/assets/video/hub-hero-poster.gif"
+           poster="/shared/assets/video/launch-hero-poster.gif"
            playsinline muted autoplay loop preload="metadata"
            role="img"
            aria-label="Background visual">

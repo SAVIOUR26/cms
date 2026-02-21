@@ -27,8 +27,29 @@ jobs:
             wordpress-ref/**
             Kanda Africa/**
             kandanews-ug/**
+            api/**
             .env
             .env.example
+
+  deploy-api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare API
+        run: |
+          mkdir -p _deploy
+          cp -r api/v1/* _deploy/
+          cp api/v1/.htaccess _deploy/.htaccess
+      - name: Deploy api.kandanews.africa
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: ./_deploy/
+          server-dir: api.kandanews.africa/public_html/
+          exclude: |
+            schema/**
 
   deploy-main:
     runs-on: ubuntu-latest
@@ -36,9 +57,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Prepare
         run: |
-          mkdir -p _deploy/shared
+          mkdir -p _deploy/shared _deploy/blog
           cp -r landing/main/* _deploy/
           cp -r landing/shared/* _deploy/shared/
+          cp -r landing/blog/* _deploy/blog/
           cp landing/shared/.htaccess _deploy/.htaccess
       - name: Deploy kandanews.africa
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5

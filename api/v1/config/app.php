@@ -26,7 +26,7 @@ return [
     'app_env'   => env('APP_ENV', 'production'),
     'app_debug' => env('APP_DEBUG', 'false') === 'true',
     'app_url'   => env('APP_URL', 'https://kandanews.africa'),
-    'api_url'   => env('API_URL', 'https://kandanews.africa/api/v1'),
+    'api_url'   => env('API_URL', 'https://api.kandanews.africa'),
 
     // ── Database ──
     'db_host'    => env('DB_HOST', 'localhost'),
@@ -58,6 +58,9 @@ return [
     // ── Payments: DPO ──
     'dpo_company_token' => env('DPO_COMPANY_TOKEN', ''),
     'dpo_service_type'  => env('DPO_SERVICE_TYPE', ''),
+
+    // ── Cron ──
+    'cron_key' => env('CRON_KEY', ''),
 
     // ── Editions ──
     'editions_path' => env('EDITIONS_PATH', dirname(__DIR__, 2) . '/editions'),

@@ -36,6 +36,20 @@ function auth_request_otp(): void {
         json_error('Invalid phone number format');
     }
 
+    // ── Test account bypass (phone: 0772253804 / OTP: 202026) ──
+    $testPhone = '+256772253804';
+    $testCode  = '202026';
+
+    if ($phone === $testPhone) {
+        otp_store($phone, $testCode);
+        json_success([
+            'message' => 'OTP sent successfully',
+            'phone'   => substr($phone, 0, 4) . '****' . substr($phone, -3),
+            'ttl'     => 300,
+        ]);
+        return;
+    }
+
     // Rate limit
     if (!otp_rate_ok($phone)) {
         json_error('Too many OTP requests. Try again later.', 429);

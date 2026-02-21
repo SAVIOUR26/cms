@@ -24,6 +24,12 @@
  *
  *   POST /webhooks/flutterwave   Flutterwave callback
  *   POST /webhooks/dpo           DPO callback
+ *
+ *   POST /auth/register          Complete first-time registration
+ *
+ *   GET  /editions/today         Today's edition
+ *
+ *   GET  /misc/quote             Quote of the day
  */
 
 // ── Bootstrap ──
@@ -110,6 +116,11 @@ switch ($resource) {
     case 'webhooks':
         require __DIR__ . '/routes/webhooks.php';
         route_webhooks($action, $method);
+        break;
+
+    case 'misc':
+        require __DIR__ . '/routes/misc.php';
+        route_misc($action, $method);
         break;
 
     case '':

@@ -3,8 +3,9 @@
  * KandaNews API v1 — Editions Routes
  *
  * GET /editions            — List available editions
- * GET /editions/{id}       — Get single edition detail + pages
  * GET /editions/latest     — Get latest edition for user's country
+ * GET /editions/today      — Get today's edition (or most recent)
+ * GET /editions/{id}       — Get single edition detail + pages
  */
 
 function route_editions(string $action, string $method): void {
@@ -17,6 +18,8 @@ function route_editions(string $action, string $method): void {
         editions_list($user);
     } elseif ($action === 'latest') {
         editions_latest($user);
+    } elseif ($action === 'today') {
+        editions_today($user);
     } elseif (is_numeric($action)) {
         editions_detail((int) $action, $user);
     } else {
@@ -43,7 +46,7 @@ function editions_list(?array $user): void {
     // Fetch page
     $stmt = $pdo->prepare("
         SELECT id, title, slug, country, edition_date, cover_image, page_count,
-               is_free, theme, created_at
+               is_free, theme, html_url, zip_url, edition_type, created_at
         FROM editions
         WHERE country = ? AND status = 'published'
         ORDER BY edition_date DESC
@@ -90,7 +93,7 @@ function editions_latest(?array $user): void {
 
     $stmt = db()->prepare("
         SELECT id, title, slug, country, edition_date, cover_image, page_count,
-               is_free, theme, created_at
+               is_free, theme, html_url, zip_url, edition_type, created_at
         FROM editions
         WHERE country = ? AND status = 'published'
         ORDER BY edition_date DESC
@@ -98,6 +101,53 @@ function editions_latest(?array $user): void {
     ");
     $stmt->execute([$country]);
     $edition = $stmt->fetch();
+
+    if (!$edition) json_error('No editions available', 404);
+
+    $edition['id'] = (int) $edition['id'];
+    $edition['page_count'] = (int) $edition['page_count'];
+    $edition['is_free'] = (bool) $edition['is_free'];
+
+    json_success(['edition' => $edition]);
+}
+
+/**
+ * GET /editions/today?country=ug
+ *
+ * Returns today's edition, or the most recent published edition if
+ * no edition matches today's date exactly.
+ */
+function editions_today(?array $user): void {
+    $country = $_GET['country'] ?? ($user['country'] ?? 'ug');
+    $today = date('Y-m-d');
+
+    $pdo = db();
+
+    // Try today's edition first
+    $stmt = $pdo->prepare("
+        SELECT id, title, slug, country, edition_date, cover_image, page_count,
+               is_free, theme, html_url, zip_url, edition_type, created_at
+        FROM editions
+        WHERE country = ? AND status = 'published' AND edition_date = ?
+        ORDER BY created_at DESC
+        LIMIT 1
+    ");
+    $stmt->execute([$country, $today]);
+    $edition = $stmt->fetch();
+
+    // Fall back to most recent published edition
+    if (!$edition) {
+        $stmt = $pdo->prepare("
+            SELECT id, title, slug, country, edition_date, cover_image, page_count,
+                   is_free, theme, html_url, zip_url, edition_type, created_at
+            FROM editions
+            WHERE country = ? AND status = 'published'
+            ORDER BY edition_date DESC
+            LIMIT 1
+        ");
+        $stmt->execute([$country]);
+        $edition = $stmt->fetch();
+    }
 
     if (!$edition) json_error('No editions available', 404);
 
@@ -119,7 +169,7 @@ function editions_detail(int $id, ?array $user): void {
 
     $stmt = $pdo->prepare("
         SELECT id, title, slug, country, edition_date, cover_image, page_count,
-               is_free, theme, description, created_at
+               is_free, theme, description, html_url, zip_url, edition_type, created_at
         FROM editions WHERE id = ? AND status = 'published'
     ");
     $stmt->execute([$id]);

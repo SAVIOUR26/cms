@@ -34,10 +34,16 @@ function user_get_profile(array $user): void {
 
     json_success([
         'user' => [
-            'id'        => (int) $user['id'],
-            'phone'     => $user['phone'],
-            'full_name' => $user['full_name'],
-            'country'   => $user['country'],
+            'id'          => (int) $user['id'],
+            'phone'       => $user['phone'],
+            'full_name'   => $user['full_name'],
+            'first_name'  => $user['first_name'],
+            'surname'     => $user['surname'],
+            'age'         => $user['age'] !== null ? (int) $user['age'] : null,
+            'role'        => $user['role'],
+            'role_detail' => $user['role_detail'],
+            'avatar_url'  => $user['avatar_url'],
+            'country'     => $user['country'],
         ],
         'subscription' => $sub ? [
             'plan'       => $sub['plan'],
@@ -50,7 +56,7 @@ function user_get_profile(array $user): void {
 
 /**
  * PUT /user/profile
- * Body: { "full_name": "John Doe", "email": "john@example.com" }
+ * Body: { "first_name": "John", "surname": "Doe", "email": "john@example.com", ... }
  */
 function user_update_profile(array $user): void {
     $input = json_input();
@@ -58,13 +64,68 @@ function user_update_profile(array $user): void {
     $fields = [];
     $params = [];
 
-    if (isset($input['full_name'])) {
+    if (isset($input['first_name'])) {
+        $firstName = trim($input['first_name']);
+        if (strlen($firstName) < 2 || strlen($firstName) > 50) {
+            json_error('First name must be 2-50 characters');
+        }
+        $fields[] = 'first_name = ?';
+        $params[] = $firstName;
+    }
+
+    if (isset($input['surname'])) {
+        $surname = trim($input['surname']);
+        if (strlen($surname) < 2 || strlen($surname) > 50) {
+            json_error('Surname must be 2-50 characters');
+        }
+        $fields[] = 'surname = ?';
+        $params[] = $surname;
+    }
+
+    // Update full_name when first_name or surname changes
+    if (isset($input['first_name']) || isset($input['surname'])) {
+        $newFirst   = isset($input['first_name']) ? trim($input['first_name']) : ($user['first_name'] ?? '');
+        $newSurname = isset($input['surname'])    ? trim($input['surname'])    : ($user['surname'] ?? '');
+        if ($newFirst && $newSurname) {
+            $fields[] = 'full_name = ?';
+            $params[] = $newFirst . ' ' . $newSurname;
+        }
+    } elseif (isset($input['full_name'])) {
+        // Legacy full_name support (only if first_name/surname not provided)
         $name = trim($input['full_name']);
         if (strlen($name) < 2 || strlen($name) > 100) {
             json_error('Name must be 2-100 characters');
         }
         $fields[] = 'full_name = ?';
         $params[] = $name;
+    }
+
+    if (isset($input['age'])) {
+        $age = (int) $input['age'];
+        if ($age < 13 || $age > 120) {
+            json_error('Age must be between 13 and 120');
+        }
+        $fields[] = 'age = ?';
+        $params[] = $age;
+    }
+
+    if (isset($input['role'])) {
+        $role = trim($input['role']);
+        $validRoles = ['student', 'professional', 'entrepreneur'];
+        if (!in_array($role, $validRoles, true)) {
+            json_error('Role must be one of: ' . implode(', ', $validRoles));
+        }
+        $fields[] = 'role = ?';
+        $params[] = $role;
+    }
+
+    if (isset($input['role_detail'])) {
+        $roleDetail = trim($input['role_detail']);
+        if (strlen($roleDetail) < 2 || strlen($roleDetail) > 200) {
+            json_error('Role detail must be 2-200 characters');
+        }
+        $fields[] = 'role_detail = ?';
+        $params[] = $roleDetail;
     }
 
     if (isset($input['email'])) {
@@ -94,9 +155,16 @@ function user_update_profile(array $user): void {
     db()->prepare($sql)->execute($params);
 
     // Return updated profile
-    $stmt = db()->prepare("SELECT id, phone, full_name, email, country FROM users WHERE id = ?");
+    $stmt = db()->prepare("
+        SELECT id, phone, full_name, first_name, surname, age, role, role_detail,
+               avatar_url, email, country
+        FROM users WHERE id = ?
+    ");
     $stmt->execute([$user['id']]);
     $updated = $stmt->fetch();
+
+    $updated['id']  = (int) $updated['id'];
+    $updated['age'] = $updated['age'] !== null ? (int) $updated['age'] : null;
 
     json_success(['user' => $updated]);
 }

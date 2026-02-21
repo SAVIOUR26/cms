@@ -55,14 +55,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-  assets:
-    - assets/images/
-    - assets/fonts/
-
-  fonts:
-    - family: KandaNews
-      fonts:
-        - asset: assets/fonts/KandaNews-Regular.ttf
-        - asset: assets/fonts/KandaNews-Bold.ttf
-          weight: 700

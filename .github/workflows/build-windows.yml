@@ -1,0 +1,66 @@
+name: Build Windows App
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - '.github/workflows/build-windows.yml'
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    name: Build Windows Desktop
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: app
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: stable
+          cache: true
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Generate Windows platform files
+        run: flutter create --platforms windows --org africa.kandanews .
+
+      - name: Update Windows app title
+        shell: pwsh
+        run: |
+          $mainCpp = Get-Content "windows/runner/main.cpp" -Raw
+          $mainCpp = $mainCpp -replace 'window.Create\(L"[^"]*"', 'window.Create(L"KandaNews Africa"'
+          Set-Content "windows/runner/main.cpp" $mainCpp
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Windows (release)
+        run: flutter build windows --release
+
+      - name: Create ZIP archive
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "build\windows\x64\runner\Release\*" -DestinationPath "kandanews-windows.zip"
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: kandanews-windows
+          path: app/kandanews-windows.zip
+          retention-days: 90
+
+      - name: Build summary
+        shell: pwsh
+        run: |
+          $size = (Get-Item "kandanews-windows.zip").Length / 1MB
+          $sizeFormatted = "{0:N1} MB" -f $size
+          "## Windows Build Complete`n`n| Build | Size |`n|-------|------|`n| Windows Release | $sizeFormatted |" | Out-File -Append $env:GITHUB_STEP_SUMMARY

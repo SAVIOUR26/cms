@@ -19,7 +19,11 @@ function require_auth(): array {
     }
 
     // Fetch user from DB to ensure they still exist and are active
-    $stmt = db()->prepare("SELECT id, phone, full_name, country, status FROM users WHERE id = ? AND status = 'active'");
+    $stmt = db()->prepare("
+        SELECT id, phone, full_name, first_name, surname, age, role, role_detail,
+               avatar_url, country, status
+        FROM users WHERE id = ? AND status = 'active'
+    ");
     $stmt->execute([$payload['sub']]);
     $user = $stmt->fetch();
 
@@ -41,7 +45,11 @@ function optional_auth(): ?array {
     $payload = jwt_decode($m[1]);
     if (!$payload || ($payload['type'] ?? '') !== 'access') return null;
 
-    $stmt = db()->prepare("SELECT id, phone, full_name, country, status FROM users WHERE id = ? AND status = 'active'");
+    $stmt = db()->prepare("
+        SELECT id, phone, full_name, first_name, surname, age, role, role_detail,
+               avatar_url, country, status
+        FROM users WHERE id = ? AND status = 'active'
+    ");
     $stmt->execute([$payload['sub']]);
     $user = $stmt->fetch();
 

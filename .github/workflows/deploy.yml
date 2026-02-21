@@ -69,7 +69,7 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./_deploy/
-          server-dir: kandanews.africa/private_html/
+          server-dir: kandanews.africa/public_html/
 
   deploy-ug:
     runs-on: ubuntu-latest

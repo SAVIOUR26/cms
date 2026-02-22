@@ -119,7 +119,7 @@ class KnTheme {
           ),
           hintStyle: const TextStyle(color: KnColors.textMuted),
         ),
-        cardTheme: CardThemeData(
+        cardTheme: CardTheme(
           elevation: 2,
           shadowColor: KnColors.navy.withAlpha(25),
           shape: RoundedRectangleBorder(

@@ -36,18 +36,50 @@ jobs:
       - name: Generate Android platform files
         run: flutter create --platforms android --org africa.kandanews .
 
-      - name: Set application ID
+      - name: Patch Android build config
         run: |
-          # Update applicationId to africa.kandanews.app
-          sed -i 's/applicationId = .*/applicationId = "africa.kandanews.app"/' android/app/build.gradle.kts 2>/dev/null || \
-          sed -i 's/applicationId .*/applicationId "africa.kandanews.app"/' android/app/build.gradle 2>/dev/null || true
-          # Update namespace too
-          sed -i 's/namespace = .*/namespace = "africa.kandanews.app"/' android/app/build.gradle.kts 2>/dev/null || \
-          sed -i 's/namespace .*/namespace "africa.kandanews.app"/' android/app/build.gradle 2>/dev/null || true
+          # ── Fix Kotlin version (plugins need 1.9.22+) ──
+          # settings.gradle.kts (Flutter 3.24 generates .kts)
+          if [ -f android/settings.gradle.kts ]; then
+            sed -i 's/id "org.jetbrains.kotlin.android" version "[^"]*"/id "org.jetbrains.kotlin.android" version "1.9.22"/' android/settings.gradle.kts
+          fi
+          # settings.gradle (fallback)
+          if [ -f android/settings.gradle ]; then
+            sed -i "s/org.jetbrains.kotlin.android\" version \"[^\"]*\"/org.jetbrains.kotlin.android\" version \"1.9.22\"/" android/settings.gradle
+            sed -i "s/ext.kotlin_version = '[^']*'/ext.kotlin_version = '1.9.22'/" android/settings.gradle
+          fi
 
-      - name: Set app name in AndroidManifest
-        run: |
+          # ── Fix compileSdk / minSdk / targetSdk ──
+          for f in android/app/build.gradle.kts android/app/build.gradle; do
+            [ -f "$f" ] || continue
+            # compileSdk 34
+            sed -i 's/compileSdk\s*=\s*flutter.compileSdkVersion/compileSdk = 34/' "$f"
+            sed -i 's/compileSdkVersion\s*flutter.compileSdkVersion/compileSdkVersion 34/' "$f"
+            # minSdk 23 (flutter_secure_storage needs 23)
+            sed -i 's/minSdk\s*=\s*flutter.minSdkVersion/minSdk = 23/' "$f"
+            sed -i 's/minSdkVersion\s*flutter.minSdkVersion/minSdkVersion 23/' "$f"
+            # targetSdk 34
+            sed -i 's/targetSdk\s*=\s*flutter.targetSdkVersion/targetSdk = 34/' "$f"
+            sed -i 's/targetSdkVersion\s*flutter.targetSdkVersion/targetSdkVersion 34/' "$f"
+            # applicationId
+            sed -i 's/applicationId\s*=\s*"[^"]*"/applicationId = "africa.kandanews.app"/' "$f"
+            sed -i 's/applicationId\s*"[^"]*"/applicationId "africa.kandanews.app"/' "$f"
+            # namespace
+            sed -i 's/namespace\s*=\s*"[^"]*"/namespace = "africa.kandanews.app"/' "$f"
+            sed -i 's/namespace\s*"[^"]*"/namespace "africa.kandanews.app"/' "$f"
+          done
+
+          # ── Fix Java compatibility ──
+          for f in android/app/build.gradle.kts android/app/build.gradle; do
+            [ -f "$f" ] || continue
+            sed -i 's/JavaVersion.VERSION_1_8/JavaVersion.VERSION_17/' "$f"
+          done
+
+          # ── Set app name ──
           sed -i 's/android:label="[^"]*"/android:label="KandaNews Africa"/' android/app/src/main/AndroidManifest.xml
+
+          echo "=== Patched build config ==="
+          cat android/app/build.gradle.kts 2>/dev/null || cat android/app/build.gradle 2>/dev/null || true
 
       - name: Install dependencies
         run: flutter pub get

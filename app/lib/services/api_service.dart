@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import '../config/api.dart';
 import 'storage_service.dart';
 
-/// HTTP client with JWT token injection and auto-refresh
+/// HTTP client with JWT token injection, auto-refresh, and friendly error handling
 class ApiService {
   static final ApiService _instance = ApiService._internal();
   factory ApiService() => _instance;
@@ -68,6 +68,46 @@ class ApiService {
       }
     } catch (_) {}
     return false;
+  }
+
+  /// Converts Dio errors into user-friendly messages
+  static String friendlyError(dynamic error) {
+    if (error is DioException) {
+      switch (error.type) {
+        case DioExceptionType.connectionError:
+        case DioExceptionType.unknown:
+          // DNS failure, socket error, no route to host
+          return 'No internet connection. Please check your network and try again.';
+        case DioExceptionType.connectionTimeout:
+          return 'Connection timed out. Please check your internet and try again.';
+        case DioExceptionType.sendTimeout:
+        case DioExceptionType.receiveTimeout:
+          return 'The server is taking too long to respond. Please try again.';
+        case DioExceptionType.badResponse:
+          final statusCode = error.response?.statusCode;
+          final serverMsg = error.response?.data is Map
+              ? error.response?.data['error']
+              : null;
+          if (serverMsg != null) return serverMsg;
+          if (statusCode == 429) return 'Too many attempts. Please wait a moment and try again.';
+          if (statusCode == 500) return 'Server error. Please try again later.';
+          if (statusCode == 503) return 'Service temporarily unavailable. Please try again later.';
+          return 'Something went wrong (error $statusCode). Please try again.';
+        case DioExceptionType.cancel:
+          return 'Request was cancelled. Please try again.';
+        case DioExceptionType.badCertificate:
+          return 'Secure connection failed. Please check your network.';
+      }
+    }
+    // Catch generic connectivity strings from the OS
+    final msg = error.toString().toLowerCase();
+    if (msg.contains('socketexception') ||
+        msg.contains('failed host lookup') ||
+        msg.contains('network is unreachable') ||
+        msg.contains('connection refused')) {
+      return 'No internet connection. Please check your network and try again.';
+    }
+    return 'Something went wrong. Please try again.';
   }
 
   // ── Generic methods ──

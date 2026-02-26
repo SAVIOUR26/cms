@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user.dart';
+import '../services/api_service.dart';
 import '../services/auth_service.dart';
 import '../services/storage_service.dart';
 
@@ -59,7 +60,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = state.copyWith(loading: false);
       return result['ok'] == true;
     } catch (e) {
-      state = state.copyWith(loading: false, error: e.toString());
+      state = state.copyWith(loading: false, error: ApiService.friendlyError(e));
       return false;
     }
   }
@@ -83,7 +84,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = state.copyWith(loading: false, error: result['error']);
       return null;
     } catch (e) {
-      state = state.copyWith(loading: false, error: e.toString());
+      state = state.copyWith(loading: false, error: ApiService.friendlyError(e));
       return null;
     }
   }
@@ -113,7 +114,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = state.copyWith(loading: false, error: result['error']);
       return false;
     } catch (e) {
-      state = state.copyWith(loading: false, error: e.toString());
+      state = state.copyWith(loading: false, error: ApiService.friendlyError(e));
       return false;
     }
   }

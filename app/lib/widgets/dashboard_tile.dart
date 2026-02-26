@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// A dashboard tile with icon, label, and optional badge
+/// A dashboard tile with centered icon, label, and optional badge.
+/// Elevated 3D look over the grid wallpaper.
 class DashboardTile extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -22,8 +23,8 @@ class DashboardTile extends StatelessWidget {
     return Material(
       color: Colors.white,
       borderRadius: BorderRadius.circular(16),
-      elevation: 2,
-      shadowColor: color.withAlpha(40),
+      elevation: 4,
+      shadowColor: color.withAlpha(50),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
@@ -31,30 +32,33 @@ class DashboardTile extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: color.withAlpha(25),
-                      borderRadius: BorderRadius.circular(14),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: color.withAlpha(25),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Icon(icon, color: color, size: 28),
                     ),
-                    child: Icon(icon, color: color, size: 26),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
-                      color: Colors.grey[800],
-                      height: 1.3,
+                    const SizedBox(height: 12),
+                    Text(
+                      label,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                        color: Colors.grey[800],
+                        height: 1.3,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             if (badge != null)

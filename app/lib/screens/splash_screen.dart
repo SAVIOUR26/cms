@@ -36,7 +36,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 
   void _init() async {
-    await Future.delayed(const Duration(seconds: 2));
+    // Display splash for 3 seconds
+    await Future.delayed(const Duration(seconds: 3));
 
     final onboardingDone = await StorageService.isOnboardingDone();
     if (!onboardingDone && mounted) {
@@ -82,27 +83,42 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // Logo image with 3D shadow
                 Container(
-                  width: 100,
-                  height: 100,
+                  width: 120,
+                  height: 120,
                   decoration: BoxDecoration(
-                    gradient: KnColors.orangeGradient,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(28),
                     boxShadow: [
                       BoxShadow(
-                        color: KnColors.orange.withAlpha(102),
+                        color: KnColors.orange.withAlpha(120),
                         blurRadius: 40,
                         offset: const Offset(0, 12),
                       ),
+                      BoxShadow(
+                        color: Colors.black.withAlpha(60),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
+                      ),
                     ],
                   ),
-                  child: const Icon(Icons.newspaper, size: 48, color: Colors.white),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(28),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 28),
                 const Text(
                   'KandaNews',
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 34,
                     fontWeight: FontWeight.w800,
                     color: Colors.white,
                     letterSpacing: -0.5,

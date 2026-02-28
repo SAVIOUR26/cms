@@ -18,6 +18,18 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
   String? _selectedPlan;
   bool _loading = false;
 
+  static const _planColors = {
+    'daily': Color(0xFF3B82F6),
+    'weekly': Color(0xFFF05A1A),
+    'monthly': Color(0xFF10B981),
+  };
+
+  static const _planIcons = {
+    'daily': Icons.today,
+    'weekly': Icons.date_range,
+    'monthly': Icons.calendar_month,
+  };
+
   @override
   Widget build(BuildContext context) {
     final country = ref.watch(authProvider).user?.country ?? 'ug';
@@ -93,17 +105,23 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
             ),
             const SizedBox(height: 24),
 
-            // Plans
+            // Plans — Daily on top, Weekly middle, Monthly bottom
             plansAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => const Text('Failed to load plans'),
               data: (plans) => Column(
-                children: plans.map((plan) => _PlanCard(
-                  plan: plan,
-                  selected: _selectedPlan == plan.plan,
-                  recommended: plan.plan == 'monthly',
-                  onTap: () => setState(() => _selectedPlan = plan.plan),
-                )).toList(),
+                children: plans.map((plan) {
+                  final color = _planColors[plan.plan] ?? KnColors.orange;
+                  final icon = _planIcons[plan.plan] ?? Icons.payment;
+                  return _PlanCard(
+                    plan: plan,
+                    color: color,
+                    iconData: icon,
+                    selected: _selectedPlan == plan.plan,
+                    recommended: plan.plan == 'monthly',
+                    onTap: () => setState(() => _selectedPlan = plan.plan),
+                  );
+                }).toList(),
               ),
             ),
 
@@ -151,7 +169,6 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
 
       if (result['ok'] == true && mounted) {
         final paymentData = result['data'];
-        // Open payment WebView
         if (paymentData['link'] != null) {
           context.push('/payment', extra: {
             'url': paymentData['link'],
@@ -173,12 +190,16 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
 
 class _PlanCard extends StatelessWidget {
   final SubscriptionPlan plan;
+  final Color color;
+  final IconData iconData;
   final bool selected;
   final bool recommended;
   final VoidCallback onTap;
 
   const _PlanCard({
     required this.plan,
+    required this.color,
+    required this.iconData,
     required this.selected,
     required this.recommended,
     required this.onTap,
@@ -187,12 +208,12 @@ class _PlanCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 14),
       child: Material(
-        color: selected ? KnColors.orange.withAlpha(13) : Colors.white,
+        color: selected ? color.withAlpha(13) : Colors.white,
         borderRadius: BorderRadius.circular(16),
         elevation: selected ? 4 : 1,
-        shadowColor: selected ? KnColors.orange.withAlpha(51) : Colors.black12,
+        shadowColor: selected ? color.withAlpha(60) : Colors.black12,
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(16),
@@ -201,13 +222,31 @@ class _PlanCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: selected ? KnColors.orange : KnColors.border,
-                width: selected ? 2 : 1,
+                color: selected ? color : color.withAlpha(50),
+                width: selected ? 2 : 1.5,
               ),
+              boxShadow: selected
+                  ? [
+                      BoxShadow(
+                        color: color.withAlpha(30),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ]
+                  : null,
             ),
             child: Row(
               children: [
-                Text(plan.icon, style: const TextStyle(fontSize: 32)),
+                // Plan icon with colored background
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: color.withAlpha(25),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Icon(iconData, color: color, size: 26),
+                ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
@@ -220,7 +259,7 @@ class _PlanCard extends StatelessWidget {
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 16,
-                              color: selected ? KnColors.orange : KnColors.navy,
+                              color: selected ? color : KnColors.navy,
                             ),
                           ),
                           if (recommended) ...[
@@ -228,7 +267,7 @@ class _PlanCard extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                               decoration: BoxDecoration(
-                                color: KnColors.orange,
+                                color: color,
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: const Text(
@@ -243,11 +282,11 @@ class _PlanCard extends StatelessWidget {
                           ],
                         ],
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: 4),
                       Text(
                         plan.formattedPrice,
                         style: const TextStyle(
-                          fontSize: 20,
+                          fontSize: 22,
                           fontWeight: FontWeight.w800,
                           color: KnColors.navy,
                         ),
@@ -256,7 +295,7 @@ class _PlanCard extends StatelessWidget {
                   ),
                 ),
                 if (selected)
-                  const Icon(Icons.check_circle, color: KnColors.orange, size: 28),
+                  Icon(Icons.check_circle, color: color, size: 28),
               ],
             ),
           ),

@@ -8,6 +8,7 @@ import 'screens/auth/otp_screen.dart';
 import 'screens/auth/register_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/home/archives_screen.dart';
+import 'screens/home/special_editions_screen.dart';
 import 'screens/reader/reader_screen.dart';
 import 'screens/subscription/plans_screen.dart';
 import 'screens/subscription/payment_screen.dart';
@@ -52,6 +53,7 @@ final _router = GoRouter(
         );
       },
     ),
+    GoRoute(path: '/special-editions', builder: (_, __) => const SpecialEditionsScreen()),
     GoRoute(path: '/subscribe', builder: (_, __) => const PlansScreen()),
     GoRoute(
       path: '/subscribe/pay',

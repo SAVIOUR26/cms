@@ -269,8 +269,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           icon: Icons.auto_awesome,
                           label: 'Special\nEditions',
                           color: const Color(0xFFF59E0B),
-                          onTap: () => context.push('/archives',
-                              extra: {'type': 'special'}),
+                          onTap: () => context.push('/special-editions'),
                         ),
                         DashboardTile(
                           icon: Icons.campaign,

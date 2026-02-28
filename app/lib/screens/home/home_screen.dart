@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -253,10 +252,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           onTap: () => context.push('/archives'),
                         ),
                         DashboardTile(
-                          icon: Icons.format_quote,
-                          label: 'Quote of\nthe Day',
+                          icon: Icons.trending_up,
+                          label: 'Trending in\n${_countryName(country)} ${_countryFlag(country)}',
                           color: const Color(0xFF8B5CF6),
-                          onTap: () => _showQuote(context, quote),
+                          onTap: () => context.push('/archives',
+                              extra: {'type': 'daily'}),
                         ),
                         DashboardTile(
                           icon: Icons.star,
@@ -282,11 +282,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     );
                   },
                 ),
-
-                const SizedBox(height: 28),
-
-                // Native pricing section for Uganda
-                _buildPricingSection(context, country),
 
                 const SizedBox(height: 24),
 
@@ -352,167 +347,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  Widget _buildPricingSection(BuildContext context, String country) {
-    final plans = <Map<String, dynamic>>[
-      {
-        'label': 'Daily',
-        'price': '500',
-        'currency': 'UGX',
-        'color': const Color(0xFF3B82F6),
-        'icon': Icons.today,
-      },
-      {
-        'label': 'Weekly',
-        'price': '2,500',
-        'currency': 'UGX',
-        'color': KnColors.orange,
-        'icon': Icons.date_range,
-      },
-      {
-        'label': 'Monthly',
-        'price': '7,500',
-        'currency': 'UGX',
-        'color': const Color(0xFF10B981),
-        'icon': Icons.calendar_month,
-      },
-    ];
-
-    return Column(
-      children: [
-        const Text(
-          'Subscription Plans',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
-            color: KnColors.navy,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          'Unlock unlimited access to all editions',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 13,
-            color: KnColors.textSecondary,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: plans.map((plan) {
-            final color = plan['color'] as Color;
-            return Expanded(
-              child: GestureDetector(
-                onTap: () => context.push('/subscribe'),
-                child: Container(
-                  margin: EdgeInsets.only(
-                    left: plan == plans.first ? 0 : 6,
-                    right: plan == plans.last ? 0 : 6,
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 16, horizontal: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                        color: color.withAlpha(60), width: 2),
-                    boxShadow: [
-                      BoxShadow(
-                        color: color.withAlpha(30),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: color.withAlpha(25),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(plan['icon'] as IconData,
-                            color: color, size: 22),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        plan['label'] as String,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 13,
-                          color: color,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        plan['price'] as String,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 20,
-                          color: KnColors.navy,
-                        ),
-                      ),
-                      Text(
-                        plan['currency'] as String,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 11,
-                          color: KnColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
+  String _countryName(String code) {
+    const names = {
+      'ug': 'Uganda',
+      'ke': 'Kenya',
+      'ng': 'Nigeria',
+      'za': 'South Africa',
+    };
+    return names[code.toLowerCase()] ?? 'Africa';
   }
 
-  void _showQuote(
-      BuildContext context, AsyncValue<Map<String, dynamic>?> quote) {
-    final q = quote.valueOrNull;
-    if (q == null) return;
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Quote of the Day'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.format_quote, color: KnColors.orange, size: 40),
-            const SizedBox(height: 16),
-            Text(
-              q['quote'] ?? '',
-              style: const TextStyle(
-                fontSize: 16,
-                fontStyle: FontStyle.italic,
-                height: 1.5,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              '— ${q['author'] ?? 'Unknown'}',
-              style: const TextStyle(fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
-    );
+  String _countryFlag(String code) {
+    const flags = {
+      'ug': '\u{1F1FA}\u{1F1EC}',
+      'ke': '\u{1F1F0}\u{1F1EA}',
+      'ng': '\u{1F1F3}\u{1F1EC}',
+      'za': '\u{1F1FF}\u{1F1E6}',
+    };
+    return flags[code.toLowerCase()] ?? '\u{1F30D}';
   }
 
   void _showAdvertise(BuildContext context) {
@@ -538,7 +390,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 }
 
-/// Horizontal scrolling marquee for the target audience tagline
+/// Horizontal scrolling marquee for the target audience tagline.
+/// Uses a continuous translate animation so the text scrolls smoothly
+/// from right to left. The text is duplicated so that the second copy
+/// enters from the right only after the first copy has fully left the
+/// viewport on the left, creating a seamless loop.
 class _MarqueeWidget extends StatefulWidget {
   const _MarqueeWidget();
 
@@ -548,8 +404,9 @@ class _MarqueeWidget extends StatefulWidget {
 
 class _MarqueeWidgetState extends State<_MarqueeWidget>
     with SingleTickerProviderStateMixin {
-  late final ScrollController _scrollController;
   late final AnimationController _animController;
+  final GlobalKey _textKey = GlobalKey();
+  double _textWidth = 0;
 
   static const _text =
       'Designed for Professionals, Entrepreneurs and University Students Across Africa';
@@ -557,31 +414,31 @@ class _MarqueeWidgetState extends State<_MarqueeWidget>
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
     _animController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 12),
+      // Slower speed: 25 seconds for one full cycle
+      duration: const Duration(seconds: 25),
     );
-    _animController.addListener(_onScroll);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _startScroll());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _measureAndStart();
+    });
   }
 
-  void _startScroll() {
+  void _measureAndStart() {
     if (!mounted) return;
+    final renderBox =
+        _textKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox != null) {
+      setState(() {
+        _textWidth = renderBox.size.width;
+      });
+    }
     _animController.repeat();
-  }
-
-  void _onScroll() {
-    if (!_scrollController.hasClients) return;
-    final max = _scrollController.position.maxScrollExtent;
-    _scrollController.jumpTo(max * _animController.value);
   }
 
   @override
   void dispose() {
-    _animController.removeListener(_onScroll);
     _animController.dispose();
-    _scrollController.dispose();
     super.dispose();
   }
 
@@ -601,20 +458,35 @@ class _MarqueeWidgetState extends State<_MarqueeWidget>
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          scrollDirection: Axis.horizontal,
-          physics: const NeverScrollableScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Row(
-              children: [
-                _buildMarqueeText(),
-                const SizedBox(width: 80),
-                _buildMarqueeText(),
-              ],
-            ),
-          ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final viewportWidth = constraints.maxWidth;
+            // Total travel: the text starts fully off-screen right,
+            // scrolls until it fully disappears off-screen left.
+            // Then the second copy (spaced by viewportWidth) does the same.
+            final totalTravel = _textWidth + viewportWidth;
+
+            return AnimatedBuilder(
+              animation: _animController,
+              builder: (context, child) {
+                // Position: starts at +viewportWidth (off-screen right),
+                // ends at -textWidth (fully off-screen left)
+                final offset =
+                    viewportWidth - (_animController.value * totalTravel);
+
+                return Stack(
+                  children: [
+                    Positioned(
+                      left: offset,
+                      top: 0,
+                      bottom: 0,
+                      child: _buildMarqueeText(),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
         ),
       ),
     );
@@ -622,7 +494,10 @@ class _MarqueeWidgetState extends State<_MarqueeWidget>
 
   Widget _buildMarqueeText() {
     return Row(
+      key: _textKey,
+      mainAxisSize: MainAxisSize.min,
       children: [
+        const SizedBox(width: 24),
         Icon(Icons.star, color: KnColors.orange, size: 14),
         const SizedBox(width: 8),
         Text(
@@ -636,6 +511,7 @@ class _MarqueeWidgetState extends State<_MarqueeWidget>
         ),
         const SizedBox(width: 8),
         Icon(Icons.star, color: KnColors.orange, size: 14),
+        const SizedBox(width: 24),
       ],
     );
   }

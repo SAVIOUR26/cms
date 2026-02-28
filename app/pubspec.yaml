@@ -54,6 +54,7 @@ dev_dependencies:
   build_runner: ^2.4.9
   flutter_launcher_icons: ^0.14.3
 
+# App icon configuration — run: dart run flutter_launcher_icons
 flutter_launcher_icons:
   android: true
   ios: true
@@ -62,6 +63,10 @@ flutter_launcher_icons:
   image_path: "assets/images/app_icon.png"
   adaptive_icon_background: "#1E2B42"
   adaptive_icon_foreground: "assets/images/app_icon.png"
+  adaptive_icon_padding: 20
+  min_sdk_android: 21
+  remove_alpha_ios: true
+  background_color: "#1E2B42"
 
 flutter:
   uses-material-design: true

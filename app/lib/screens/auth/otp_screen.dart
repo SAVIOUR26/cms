@@ -50,48 +50,46 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 800;
+
     // Mask phone: +256****789
     final masked = widget.phone.length > 6
         ? '${widget.phone.substring(0, 4)}****${widget.phone.substring(widget.phone.length - 3)}'
         : widget.phone;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: KnColors.navy),
-          onPressed: () => context.pop(),
-        ),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 20),
-              const Text(
-                'Verification Code',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w800,
-                  color: KnColors.navy,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Enter the 6-digit code sent to\n$masked',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: KnColors.textSecondary,
-                  height: 1.5,
-                ),
-              ),
-              const SizedBox(height: 40),
+    final otpForm = SingleChildScrollView(
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SizedBox(height: 20),
+          const Text(
+            'Verification Code',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+              color: KnColors.navy,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Enter the 6-digit code sent to\n$masked',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 16,
+              color: KnColors.textSecondary,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 40),
 
-              // OTP input
-              PinCodeTextField(
+          // OTP input — constrain width so it doesn't stretch on desktop
+          Center(
+            child: SizedBox(
+              width: isDesktop ? 340 : double.infinity,
+              child: PinCodeTextField(
                 appContext: context,
                 length: AppConstants.otpLength,
                 controller: _otpController,
@@ -118,65 +116,130 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                 onCompleted: (_) => _onVerify(),
                 onChanged: (_) {},
               ),
-              const SizedBox(height: 24),
+            ),
+          ),
+          const SizedBox(height: 24),
 
-              // Verify button
-              SizedBox(
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: authState.loading ? null : _onVerify,
-                  child: authState.loading
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Text('Verify'),
+          // Verify button
+          SizedBox(
+            height: 56,
+            child: ElevatedButton(
+              onPressed: authState.loading ? null : _onVerify,
+              child: authState.loading
+                  ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Text('Verify'),
+            ),
+          ),
+
+          if (authState.error != null) ...[
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: KnColors.error.withAlpha(25),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                authState.error!,
+                style: const TextStyle(color: KnColors.error),
+              ),
+            ),
+          ],
+
+          const SizedBox(height: 24),
+
+          // Resend
+          Center(
+            child: _resendSeconds > 0
+                ? Text(
+                    'Resend code in ${_resendSeconds}s',
+                    style: const TextStyle(color: KnColors.textMuted),
+                  )
+                : TextButton(
+                    onPressed: _onResend,
+                    child: const Text(
+                      'Resend Code',
+                      style: TextStyle(
+                        color: KnColors.orange,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
+
+    // Desktop: centered card on navy background
+    if (isDesktop) {
+      return Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(gradient: KnColors.primaryGradient),
+          child: Stack(
+            children: [
+              CustomPaint(
+                size: MediaQuery.of(context).size,
+                painter: _GridPatternPainter(
+                  lineColor: KnColors.orange.withAlpha(15),
                 ),
               ),
-
-              if (authState.error != null) ...[
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: KnColors.error.withAlpha(25),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    authState.error!,
-                    style: const TextStyle(color: KnColors.error),
-                  ),
-                ),
-              ],
-
-              const SizedBox(height: 24),
-
-              // Resend
               Center(
-                child: _resendSeconds > 0
-                    ? Text(
-                        'Resend code in ${_resendSeconds}s',
-                        style: const TextStyle(color: KnColors.textMuted),
-                      )
-                    : TextButton(
-                        onPressed: _onResend,
-                        child: const Text(
-                          'Resend Code',
-                          style: TextStyle(
-                            color: KnColors.orange,
-                            fontWeight: FontWeight.w700,
+                child: Container(
+                  width: 460,
+                  margin: const EdgeInsets.symmetric(vertical: 40),
+                  decoration: BoxDecoration(
+                    color: KnColors.background,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withAlpha(80),
+                        blurRadius: 60,
+                        offset: const Offset(0, 20),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8, top: 8),
+                          child: IconButton(
+                            icon: const Icon(Icons.arrow_back, color: KnColors.navy),
+                            onPressed: () => context.pop(),
                           ),
                         ),
                       ),
+                      otpForm,
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
         ),
+      );
+    }
+
+    // Mobile: standard layout
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: KnColors.navy),
+          onPressed: () => context.pop(),
+        ),
       ),
+      body: SafeArea(child: otpForm),
     );
   }
 
@@ -203,4 +266,28 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
     await ref.read(authProvider.notifier).requestOtp(widget.phone, widget.country);
     _startTimer();
   }
+}
+
+class _GridPatternPainter extends CustomPainter {
+  final Color lineColor;
+
+  _GridPatternPainter({required this.lineColor});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = lineColor
+      ..strokeWidth = 1;
+
+    const spacing = 40.0;
+    for (double x = 0; x < size.width; x += spacing) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    }
+    for (double y = 0; y < size.height; y += spacing) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

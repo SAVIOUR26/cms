@@ -44,7 +44,17 @@ jobs:
         run: flutter pub get
 
       - name: Generate app icons (Windows only)
-        run: dart run flutter_launcher_icons --platforms windows
+        shell: pwsh
+        run: |
+          @"
+          flutter_launcher_icons:
+            android: false
+            ios: false
+            windows:
+              generate: true
+            image_path: "assets/images/app_icon.png"
+          "@ | Set-Content flutter_launcher_icons_ci.yaml
+          dart run flutter_launcher_icons --file flutter_launcher_icons_ci.yaml
 
       - name: Build Windows (release)
         run: flutter build windows --release

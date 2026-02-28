@@ -85,7 +85,18 @@ jobs:
         run: flutter pub get
 
       - name: Generate app icons (Android only)
-        run: dart run flutter_launcher_icons --platforms android
+        run: |
+          cat > flutter_launcher_icons_ci.yaml << 'ICONEOF'
+          flutter_launcher_icons:
+            android: true
+            ios: false
+            image_path: "assets/images/app_icon.png"
+            adaptive_icon_background: "#1E2B42"
+            adaptive_icon_foreground: "assets/images/app_icon.png"
+            adaptive_icon_padding: 20
+            min_sdk_android: 21
+          ICONEOF
+          dart run flutter_launcher_icons --file flutter_launcher_icons_ci.yaml
 
       - name: Build APK (debug)
         run: flutter build apk --debug

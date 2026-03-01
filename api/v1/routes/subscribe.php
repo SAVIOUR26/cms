@@ -6,6 +6,7 @@
  * GET  /subscribe/plans       — Available plans & pricing
  * POST /subscribe/initiate    — Start a payment (Flutterwave / DPO)
  * POST /subscribe/verify      — Verify a payment reference
+ * GET  /subscribe/callback    — Payment provider redirect (Flutterwave / DPO)
  */
 
 function route_subscribe(string $action, string $method): void {
@@ -14,8 +15,51 @@ function route_subscribe(string $action, string $method): void {
         case 'GET plans':    subscribe_plans();     break;
         case 'POST initiate': subscribe_initiate(); break;
         case 'POST verify':  subscribe_verify();    break;
+        case 'GET callback': subscribe_callback();  break;
         default: json_error('Not found', 404);
     }
+}
+
+/**
+ * GET /subscribe/callback?provider=flutterwave&ref=KN-UG-1-...&status=successful&transaction_id=...
+ * GET /subscribe/callback?provider=dpo&ref=KN-UG-1-...&TransactionToken=...
+ *
+ * This endpoint receives the redirect from the payment provider after
+ * the user completes (or cancels) payment. It returns an HTML page that
+ * the InAppWebView can detect, or redirects the user accordingly.
+ */
+function subscribe_callback(): void {
+    $provider = $_GET['provider'] ?? '';
+    $ref      = $_GET['ref'] ?? '';
+    $status   = $_GET['status'] ?? '';
+    $txId     = $_GET['transaction_id'] ?? $_GET['TransactionToken'] ?? '';
+    $cancelled = isset($_GET['cancelled']) && $_GET['cancelled'] === '1';
+
+    // Build a URL the WebView will intercept
+    header('Content-Type: text/html; charset=utf-8');
+
+    if ($cancelled || $status === 'cancelled') {
+        echo '<!DOCTYPE html><html><head><title>Payment Cancelled</title></head><body>';
+        echo '<h2>Payment Cancelled</h2><p>You cancelled the payment. You can close this window.</p>';
+        echo '<script>window.location.href = "https://kandanews.africa/payment/callback?status=cancelled&tx_ref=' . urlencode($ref) . '";</script>';
+        echo '</body></html>';
+        exit;
+    }
+
+    // For successful payments, pass the data back as query params the WebView detects
+    $callbackUrl = 'https://kandanews.africa/payment/callback?'
+        . 'status=successful'
+        . '&tx_ref=' . urlencode($ref)
+        . '&transaction_id=' . urlencode($txId)
+        . '&provider=' . urlencode($provider);
+
+    echo '<!DOCTYPE html><html><head><title>Payment Complete</title>';
+    echo '<meta http-equiv="refresh" content="0;url=' . htmlspecialchars($callbackUrl) . '">';
+    echo '</head><body>';
+    echo '<h2>Payment Processing...</h2><p>Please wait while we verify your payment.</p>';
+    echo '<script>window.location.href = "' . $callbackUrl . '";</script>';
+    echo '</body></html>';
+    exit;
 }
 
 /**

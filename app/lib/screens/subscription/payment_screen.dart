@@ -117,8 +117,14 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       }
     }
 
-    // Generic: any callback URL with our ref
-    if (url.contains('subscribe/callback') && params.containsKey('ref')) {
+    // Generic: any callback URL with our ref (API redirect or final landing)
+    if ((url.contains('subscribe/callback') || url.contains('payment/callback')) &&
+        (params.containsKey('ref') || params.containsKey('tx_ref'))) {
+      final callbackStatus = params['status'] ?? '';
+      if (callbackStatus == 'cancelled') {
+        _handlePaymentCancelled();
+        return NavigationActionPolicy.CANCEL;
+      }
       final txId = params['transaction_id'] ?? params['TransactionToken'] ?? '';
       _handlePaymentSuccess(txId);
       return NavigationActionPolicy.CANCEL;

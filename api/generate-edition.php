@@ -742,9 +742,28 @@ HTML;
     $theme       = $input['theme'] ?? null;
     $description = $input['description'] ?? null;
 
-    $baseUrl  = 'output/' . $dirName . '/';
-    $htmlPath = $baseUrl . 'index.html';
-    $zipPath  = $baseUrl . $zipName;
+    // Build full URLs for the edition files.
+    // The CMS_URL env var should point to the CMS domain (e.g. https://cms.kandanews.africa)
+    // so that the app can load edition HTML/ZIP from the correct origin.
+    $cmsBaseUrl = rtrim(getenv('CMS_URL') ?: ($_ENV['CMS_URL'] ?? ''), '/');
+    if (!$cmsBaseUrl) {
+        // Fallback: detect from env file
+        $envFile = dirname(__DIR__) . '/.env';
+        if (is_file($envFile)) {
+            foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $ln) {
+                if (!$ln || $ln[0] === '#' || strpos($ln, '=') === false) continue;
+                [$ek, $ev] = explode('=', $ln, 2);
+                if (trim($ek) === 'CMS_URL') { $cmsBaseUrl = rtrim(trim($ev), '/'); break; }
+            }
+        }
+    }
+    // If still empty use EDITIONS_URL from env, or construct from APP_URL
+    if (!$cmsBaseUrl) {
+        $cmsBaseUrl = rtrim(getenv('APP_URL') ?: ($_ENV['APP_URL'] ?? 'https://cms.kandanews.africa'), '/');
+    }
+
+    $htmlUrl = $cmsBaseUrl . '/output/' . $dirName . '/index.html';
+    $zipUrl  = $cmsBaseUrl . '/output/' . $dirName . '/' . $zipName;
 
     $editionId = registerEdition([
         'title'        => $title,
@@ -752,8 +771,8 @@ HTML;
         'country'      => $country,
         'edition_type' => $editionType,
         'category'     => $category,
-        'html_url'     => $htmlPath,
-        'zip_url'      => $zipPath,
+        'html_url'     => $htmlUrl,
+        'zip_url'      => $zipUrl,
         'page_count'   => $total,
         'is_free'      => $isFree,
         'theme'        => $theme,

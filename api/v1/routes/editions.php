@@ -28,31 +28,47 @@ function route_editions(string $action, string $method): void {
 }
 
 /**
- * GET /editions?country=ug&page=1&per_page=20
+ * GET /editions?country=ug&page=1&per_page=20&type=special&category=university
  */
 function editions_list(?array $user): void {
     $country  = $_GET['country'] ?? ($user['country'] ?? 'ug');
     $page     = max(1, (int) ($_GET['page'] ?? 1));
     $perPage  = min(50, max(1, (int) ($_GET['per_page'] ?? 20)));
     $offset   = ($page - 1) * $perPage;
+    $type     = $_GET['type'] ?? null;
+    $category = $_GET['category'] ?? null;
 
     $pdo = db();
 
+    // Build WHERE clause dynamically for type/category filters
+    $where  = "country = ? AND status = 'published'";
+    $params = [$country];
+
+    if ($type) {
+        $where .= " AND edition_type = ?";
+        $params[] = $type;
+    }
+    if ($category) {
+        $where .= " AND category = ?";
+        $params[] = $category;
+    }
+
     // Count total
-    $stmt = $pdo->prepare("SELECT COUNT(*) AS total FROM editions WHERE country = ? AND status = 'published'");
-    $stmt->execute([$country]);
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS total FROM editions WHERE $where");
+    $stmt->execute($params);
     $total = (int) $stmt->fetch()['total'];
 
     // Fetch page
+    $fetchParams = array_merge($params, [$perPage, $offset]);
     $stmt = $pdo->prepare("
         SELECT id, title, slug, country, edition_date, cover_image, page_count,
-               is_free, theme, html_url, zip_url, edition_type, created_at
+               is_free, theme, html_url, zip_url, edition_type, category, created_at
         FROM editions
-        WHERE country = ? AND status = 'published'
+        WHERE $where
         ORDER BY edition_date DESC
         LIMIT ? OFFSET ?
     ");
-    $stmt->execute([$country, $perPage, $offset]);
+    $stmt->execute($fetchParams);
     $editions = $stmt->fetchAll();
 
     // Check subscription for access flags

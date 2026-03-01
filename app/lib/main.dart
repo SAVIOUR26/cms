@@ -13,6 +13,7 @@ import 'screens/reader/reader_screen.dart';
 import 'screens/subscription/plans_screen.dart';
 import 'screens/subscription/payment_screen.dart';
 import 'screens/profile/profile_screen.dart';
+import 'screens/support/support_screen.dart';
 import 'theme/kn_theme.dart';
 
 void main() {
@@ -40,7 +41,11 @@ final _router = GoRouter(
       path: '/archives',
       builder: (_, state) {
         final extra = state.extra as Map<String, dynamic>?;
-        return ArchivesScreen(filterType: extra?['type']);
+        return ArchivesScreen(
+          filterType: extra?['type'],
+          category: extra?['category'],
+          title: extra?['title'],
+        );
       },
     ),
     GoRoute(
@@ -66,6 +71,7 @@ final _router = GoRouter(
       },
     ),
     GoRoute(path: '/profile', builder: (_, __) => const ProfileScreen()),
+    GoRoute(path: '/support', builder: (_, __) => const SupportScreen()),
     // Onboarding redirects to login for now
     GoRoute(path: '/onboarding', builder: (_, __) => const PhoneScreen()),
   ],

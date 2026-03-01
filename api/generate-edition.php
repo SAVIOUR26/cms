@@ -2,6 +2,89 @@
 error_reporting(0);
 header('Content-Type: application/json');
 
+/**
+ * Connect to the kandan_api database so generated editions are
+ * automatically registered with draft status for proof-checking.
+ */
+function apiDb(): ?PDO {
+    static $pdo = null;
+    if ($pdo !== null) return $pdo;
+
+    $envFile = dirname(__DIR__) . '/.env';
+    $env = [];
+    if (is_file($envFile)) {
+        foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+            if (!$line || $line[0] === '#' || strpos($line, '=') === false) continue;
+            [$k, $v] = explode('=', $line, 2);
+            $env[trim($k)] = trim($v);
+        }
+    }
+
+    try {
+        $pdo = new PDO(
+            sprintf('mysql:host=%s;dbname=%s;charset=%s',
+                $env['DB_HOST'] ?? 'localhost',
+                $env['DB_NAME'] ?? 'kandan_api',
+                $env['DB_CHARSET'] ?? 'utf8mb4'),
+            $env['DB_USER'] ?? 'kandan_api',
+            $env['DB_PASS'] ?? '',
+            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
+        );
+        return $pdo;
+    } catch (PDOException $e) {
+        error_log("[CMS] Cannot connect to API DB: " . $e->getMessage());
+        return null;
+    }
+}
+
+/**
+ * Register a generated edition in the API database as draft.
+ * Returns the new edition ID or null on failure.
+ */
+function registerEdition(array $meta): ?int {
+    $db = apiDb();
+    if (!$db) return null;
+
+    try {
+        $slug = preg_replace('/[^a-z0-9]+/', '-', strtolower($meta['title']));
+        $slug = trim($slug, '-') . '-' . $meta['date'];
+
+        // Ensure unique slug
+        $stmt = $db->prepare("SELECT id FROM editions WHERE slug = ?");
+        $stmt->execute([$slug]);
+        if ($stmt->fetch()) {
+            $slug .= '-' . substr(bin2hex(random_bytes(3)), 0, 6);
+        }
+
+        $stmt = $db->prepare("
+            INSERT INTO editions
+                (title, slug, country, edition_date, edition_type, category,
+                 html_url, zip_url, page_count, is_free, theme, description, status, created_at)
+            VALUES
+                (:title, :slug, :country, :edition_date, :edition_type, :category,
+                 :html_url, :zip_url, :page_count, :is_free, :theme, :description, 'draft', NOW())
+        ");
+        $stmt->execute([
+            ':title'        => $meta['title'],
+            ':slug'         => $slug,
+            ':country'      => $meta['country'] ?? 'ug',
+            ':edition_date' => $meta['date'],
+            ':edition_type' => $meta['edition_type'] ?? 'daily',
+            ':category'     => $meta['category'] ?? null,
+            ':html_url'     => $meta['html_url'],
+            ':zip_url'      => $meta['zip_url'] ?? null,
+            ':page_count'   => $meta['page_count'] ?? 0,
+            ':is_free'      => $meta['is_free'] ?? 1,
+            ':theme'        => $meta['theme'] ?? null,
+            ':description'  => $meta['description'] ?? null,
+        ]);
+        return (int) $db->lastInsertId();
+    } catch (PDOException $e) {
+        error_log("[CMS] Failed to register edition: " . $e->getMessage());
+        return null;
+    }
+}
+
 function extractParts($html) {
     $css = '';
     $body = '';
@@ -651,13 +734,41 @@ HTML;
         $zip->close();
     }
     
+    // ── Auto-register in API database as draft ──
+    $country     = $input['country'] ?? 'ug';
+    $editionType = $input['edition_type'] ?? 'daily';
+    $category    = $input['category'] ?? null;
+    $isFree      = $input['is_free'] ?? 1;
+    $theme       = $input['theme'] ?? null;
+    $description = $input['description'] ?? null;
+
+    $baseUrl  = 'output/' . $dirName . '/';
+    $htmlPath = $baseUrl . 'index.html';
+    $zipPath  = $baseUrl . $zipName;
+
+    $editionId = registerEdition([
+        'title'        => $title,
+        'date'         => $date ?: date('Y-m-d'),
+        'country'      => $country,
+        'edition_type' => $editionType,
+        'category'     => $category,
+        'html_url'     => $htmlPath,
+        'zip_url'      => $zipPath,
+        'page_count'   => $total,
+        'is_free'      => $isFree,
+        'theme'        => $theme,
+        'description'  => $description,
+    ]);
+
     echo json_encode([
         'success' => true,
-        'message' => 'Generated successfully',
+        'message' => 'Generated successfully' . ($editionId ? ' (registered as draft #' . $editionId . ')' : ''),
         'pages' => $total,
-        'zip' => $zipName
+        'zip' => $zipName,
+        'edition_id' => $editionId,
+        'status' => 'draft',
     ]);
-    
+
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }

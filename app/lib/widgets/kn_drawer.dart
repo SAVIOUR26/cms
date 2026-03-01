@@ -128,6 +128,14 @@ class KnDrawer extends ConsumerWidget {
               ),
               const Divider(indent: 24, endIndent: 24),
               _DrawerItem(
+                icon: Icons.help_outline,
+                label: 'Help & Support',
+                onTap: () {
+                  if (!embedded) Navigator.pop(context);
+                  context.push('/support');
+                },
+              ),
+              _DrawerItem(
                 icon: Icons.settings_outlined,
                 label: 'Settings',
                 onTap: () {

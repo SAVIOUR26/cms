@@ -83,6 +83,8 @@ class SpecialEditionsScreen extends ConsumerWidget {
                   category: cat,
                   onTap: () => context.push('/archives', extra: {
                     'type': 'special',
+                    'category': cat.filter,
+                    'title': cat.label,
                   }),
                 )),
           ],

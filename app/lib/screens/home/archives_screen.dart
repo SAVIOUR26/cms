@@ -9,8 +9,10 @@ import '../../theme/kn_theme.dart';
 
 class ArchivesScreen extends ConsumerStatefulWidget {
   final String? filterType;
+  final String? category;
+  final String? title;
 
-  const ArchivesScreen({super.key, this.filterType});
+  const ArchivesScreen({super.key, this.filterType, this.category, this.title});
 
   @override
   ConsumerState<ArchivesScreen> createState() => _ArchivesScreenState();
@@ -18,59 +20,69 @@ class ArchivesScreen extends ConsumerStatefulWidget {
 
 class _ArchivesScreenState extends ConsumerState<ArchivesScreen> {
   String _typeFilter = 'all';
+  String? _categoryFilter;
 
   @override
   void initState() {
     super.initState();
     if (widget.filterType != null) _typeFilter = widget.filterType!;
+    _categoryFilter = widget.category;
   }
 
   @override
   Widget build(BuildContext context) {
     final country = ref.watch(authProvider).user?.country ?? 'ug';
-    final editionsAsync = ref.watch(editionsProvider({
+    final params = <String, dynamic>{
       'country': country,
       'page': 1,
       'per_page': 50,
-    }));
+    };
+    // Pass server-side filters when available
+    if (_typeFilter != 'all') params['type'] = _typeFilter;
+    if (_categoryFilter != null) params['category'] = _categoryFilter;
+
+    final editionsAsync = ref.watch(editionsProvider(params));
+
+    final appBarTitle = widget.title ?? (_typeFilter == 'special' ? 'Special Editions' : 'Archives');
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_typeFilter == 'special' ? 'Special Editions' : 'Archives'),
+        title: Text(appBarTitle),
       ),
       body: Column(
         children: [
-          // Filter chips
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _FilterChip(
-                    label: 'All',
-                    selected: _typeFilter == 'all',
-                    onTap: () => setState(() => _typeFilter = 'all'),
-                  ),
-                  _FilterChip(
-                    label: 'Daily',
-                    selected: _typeFilter == 'daily',
-                    onTap: () => setState(() => _typeFilter = 'daily'),
-                  ),
-                  _FilterChip(
-                    label: 'Special',
-                    selected: _typeFilter == 'special',
-                    onTap: () => setState(() => _typeFilter = 'special'),
-                  ),
-                  _FilterChip(
-                    label: 'Rate Card',
-                    selected: _typeFilter == 'rate_card',
-                    onTap: () => setState(() => _typeFilter = 'rate_card'),
-                  ),
-                ],
+          // Filter chips (hidden when viewing a specific category)
+          if (_categoryFilter == null)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _FilterChip(
+                      label: 'All',
+                      selected: _typeFilter == 'all',
+                      onTap: () => setState(() => _typeFilter = 'all'),
+                    ),
+                    _FilterChip(
+                      label: 'Daily',
+                      selected: _typeFilter == 'daily',
+                      onTap: () => setState(() => _typeFilter = 'daily'),
+                    ),
+                    _FilterChip(
+                      label: 'Special',
+                      selected: _typeFilter == 'special',
+                      onTap: () => setState(() => _typeFilter = 'special'),
+                    ),
+                    _FilterChip(
+                      label: 'Rate Card',
+                      selected: _typeFilter == 'rate_card',
+                      onTap: () => setState(() => _typeFilter = 'rate_card'),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
 
           // Editions grid
           Expanded(
@@ -78,10 +90,7 @@ class _ArchivesScreenState extends ConsumerState<ArchivesScreen> {
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => Center(child: Text('Error loading editions')),
               data: (data) {
-                final editions = (data['editions'] as List<Edition>).where((e) {
-                  if (_typeFilter == 'all') return true;
-                  return e.editionType == _typeFilter;
-                }).toList();
+                final editions = (data['editions'] as List<Edition>).toList();
 
                 if (editions.isEmpty) {
                   return Center(

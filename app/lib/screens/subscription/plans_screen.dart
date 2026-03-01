@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import '../../models/subscription.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/subscription_provider.dart';
-import '../../services/subscription_service.dart';
 import '../../theme/kn_theme.dart';
 
 class PlansScreen extends ConsumerStatefulWidget {
@@ -16,6 +15,7 @@ class PlansScreen extends ConsumerStatefulWidget {
 
 class _PlansScreenState extends ConsumerState<PlansScreen> {
   String? _selectedPlan;
+  String _provider = 'flutterwave';
   bool _loading = false;
 
   static const _planColors = {
@@ -105,7 +105,7 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
             ),
             const SizedBox(height: 24),
 
-            // Plans — Daily on top, Weekly middle, Monthly bottom
+            // Plans
             plansAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => const Text('Failed to load plans'),
@@ -118,14 +118,49 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
                     color: color,
                     iconData: icon,
                     selected: _selectedPlan == plan.plan,
-                    recommended: plan.plan == 'monthly',
                     onTap: () => setState(() => _selectedPlan = plan.plan),
                   );
                 }).toList(),
               ),
             ),
 
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
+
+            // Payment method selection
+            const Text(
+              'Payment Method',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: KnColors.navy,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: _ProviderChip(
+                    label: 'Flutterwave',
+                    subtitle: 'Mobile Money & Card',
+                    icon: Icons.account_balance_wallet,
+                    selected: _provider == 'flutterwave',
+                    onTap: () => setState(() => _provider = 'flutterwave'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _ProviderChip(
+                    label: 'DPO',
+                    subtitle: 'Card Payment',
+                    icon: Icons.credit_card,
+                    selected: _provider == 'dpo',
+                    onTap: () => setState(() => _provider = 'dpo'),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 28),
 
             // Pay button
             SizedBox(
@@ -141,13 +176,24 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
                           color: Colors.white,
                         ),
                       )
-                    : Text(_selectedPlan != null ? 'Pay Now' : 'Select a plan'),
+                    : Text(
+                        _selectedPlan != null ? 'Pay Now' : 'Select a plan',
+                        style: const TextStyle(fontSize: 16),
+                      ),
               ),
             ),
 
             const SizedBox(height: 16),
+            Text(
+              _provider == 'flutterwave'
+                  ? 'Secure payment via Mobile Money or Card'
+                  : 'Secure card payment via DPO',
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: KnColors.textMuted, fontSize: 13),
+            ),
+            const SizedBox(height: 4),
             const Text(
-              'Payment via Mobile Money or Card\nCancel anytime',
+              'Cancel anytime',
               textAlign: TextAlign.center,
               style: TextStyle(color: KnColors.textMuted, fontSize: 13),
             ),
@@ -163,18 +209,32 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
       final service = ref.read(subscriptionServiceProvider);
       final result = await service.initiate(
         plan: _selectedPlan!,
-        provider: 'flutterwave',
+        provider: _provider,
         phone: ref.read(authProvider).user?.phone,
       );
 
       if (result['ok'] == true && mounted) {
-        final paymentData = result['data'];
-        if (paymentData['link'] != null) {
-          context.push('/payment', extra: {
-            'url': paymentData['link'],
-            'reference': paymentData['reference'],
+        final data = result['data'];
+        final link = data['link'];
+        final paymentRef = data['payment_ref'] ?? '';
+
+        if (link != null) {
+          context.push('/subscribe/pay', extra: {
+            'url': link,
+            'reference': paymentRef,
+            'provider': _provider,
           });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Payment link unavailable. Please try again.'),
+            ),
+          );
         }
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(result['error'] ?? 'Failed to initiate payment')),
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -193,7 +253,6 @@ class _PlanCard extends StatelessWidget {
   final Color color;
   final IconData iconData;
   final bool selected;
-  final bool recommended;
   final VoidCallback onTap;
 
   const _PlanCard({
@@ -201,7 +260,6 @@ class _PlanCard extends StatelessWidget {
     required this.color,
     required this.iconData,
     required this.selected,
-    required this.recommended,
     required this.onTap,
   });
 
@@ -237,7 +295,7 @@ class _PlanCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                // Plan icon with colored background
+                // Plan icon
                 Container(
                   width: 52,
                   height: 52,
@@ -262,7 +320,7 @@ class _PlanCard extends StatelessWidget {
                               color: selected ? color : KnColors.navy,
                             ),
                           ),
-                          if (recommended) ...[
+                          if (plan.popular) ...[
                             const SizedBox(width: 8),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -271,7 +329,7 @@ class _PlanCard extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: const Text(
-                                'BEST VALUE',
+                                'POPULAR',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 9,
@@ -281,6 +339,14 @@ class _PlanCard extends StatelessWidget {
                             ),
                           ],
                         ],
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        plan.duration,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: KnColors.textSecondary,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(
@@ -298,6 +364,63 @@ class _PlanCard extends StatelessWidget {
                   Icon(Icons.check_circle, color: color, size: 28),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ProviderChip extends StatelessWidget {
+  final String label;
+  final String subtitle;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _ProviderChip({
+    required this.label,
+    required this.subtitle,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final color = selected ? KnColors.orange : KnColors.textMuted;
+    return Material(
+      color: selected ? KnColors.orange.withAlpha(13) : Colors.white,
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: selected ? KnColors.orange : KnColors.border,
+              width: selected ? 2 : 1.5,
+            ),
+          ),
+          child: Column(
+            children: [
+              Icon(icon, color: color, size: 28),
+              const SizedBox(height: 6),
+              Text(
+                label,
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                  color: selected ? KnColors.navy : KnColors.textSecondary,
+                ),
+              ),
+              Text(
+                subtitle,
+                style: const TextStyle(fontSize: 11, color: KnColors.textMuted),
+              ),
+            ],
           ),
         ),
       ),

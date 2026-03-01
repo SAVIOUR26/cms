@@ -145,6 +145,7 @@ function subscribe_initiate(): void {
         'amount'          => $amount,
         'currency'        => $currency,
         'provider'        => $provider,
+        'link'            => $paymentData['link'] ?? null,
         'payment'         => $paymentData,
     ]);
 }
@@ -156,8 +157,9 @@ function subscribe_initiate(): void {
 function subscribe_verify(): void {
     $user = require_auth();
     $input = json_input();
-    $ref = $input['payment_ref'] ?? '';
-    $txId = $input['transaction_id'] ?? '';
+    // Accept both naming conventions from clients
+    $ref  = $input['payment_ref'] ?? $input['reference'] ?? '';
+    $txId = $input['transaction_id'] ?? $input['tx_id'] ?? '';
 
     if (!$ref) json_error('Payment reference is required');
 
@@ -200,23 +202,58 @@ function subscribe_verify(): void {
 function flutterwave_init(array $user, string $ref, float $amount, string $currency, string $plan): array {
     global $config;
 
-    // Return data for the Flutter app to initialize Flutterwave payment
-    return [
-        'method'      => 'flutterwave_standard',
-        'public_key'  => $config['fw_public_key'],
-        'tx_ref'      => $ref,
-        'amount'      => $amount,
-        'currency'    => $currency,
-        'customer'    => [
+    $secret = $config['fw_secret_key'];
+    $redirectUrl = $config['api_url'] . '/subscribe/callback?provider=flutterwave&ref=' . urlencode($ref);
+
+    $payload = [
+        'tx_ref'          => $ref,
+        'amount'          => $amount,
+        'currency'        => $currency,
+        'redirect_url'    => $redirectUrl,
+        'payment_options' => 'mobilemoney,card',
+        'customer'        => [
             'phone_number' => $user['phone'],
             'name'         => $user['full_name'] ?? 'KandaNews User',
         ],
-        'customizations' => [
+        'customizations'  => [
             'title'       => 'KandaNews ' . ucfirst($plan) . ' Plan',
             'description' => 'KandaNews subscription — ' . $plan . ' access',
             'logo'        => $config['app_url'] . '/shared/assets/img/kanda-square.png',
         ],
-        'payment_options' => 'mobilemoney,card',
+    ];
+
+    // Call Flutterwave Standard Payment API to get a hosted checkout link
+    $ch = curl_init('https://api.flutterwave.com/v3/payments');
+    curl_setopt_array($ch, [
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => json_encode($payload),
+        CURLOPT_HTTPHEADER     => [
+            "Authorization: Bearer $secret",
+            'Content-Type: application/json',
+        ],
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT        => 15,
+    ]);
+    $resp = json_decode(curl_exec($ch), true);
+    curl_close($ch);
+
+    $link = $resp['data']['link'] ?? null;
+    if (!$link) {
+        // Fallback: return payment data for client-side initialization
+        return [
+            'method'     => 'flutterwave_standard',
+            'public_key' => $config['fw_public_key'],
+            'tx_ref'     => $ref,
+            'amount'     => $amount,
+            'currency'   => $currency,
+            'link'       => null,
+        ];
+    }
+
+    return [
+        'method' => 'redirect',
+        'link'   => $link,
+        'tx_ref' => $ref,
     ];
 }
 
@@ -245,16 +282,66 @@ function flutterwave_verify(string $txId, float $expectedAmount, string $expecte
 function dpo_init(array $user, string $ref, float $amount, string $currency, string $plan): array {
     global $config;
 
-    // Return data for the Flutter app to initialize DPO payment
+    $companyToken = $config['dpo_company_token'];
+    $serviceType  = $config['dpo_service_type'];
+    $redirectUrl  = $config['api_url'] . '/subscribe/callback?provider=dpo&ref=' . urlencode($ref);
+
+    // Build DPO createToken XML request
+    $xml = '<?xml version="1.0" encoding="utf-8"?>
+    <API3G>
+        <CompanyToken>' . htmlspecialchars($companyToken) . '</CompanyToken>
+        <Request>createToken</Request>
+        <Transaction>
+            <PaymentAmount>' . number_format($amount, 2, '.', '') . '</PaymentAmount>
+            <PaymentCurrency>' . htmlspecialchars($currency) . '</PaymentCurrency>
+            <CompanyRef>' . htmlspecialchars($ref) . '</CompanyRef>
+            <RedirectURL>' . htmlspecialchars($redirectUrl) . '</RedirectURL>
+            <BackURL>' . htmlspecialchars($redirectUrl) . '&cancelled=1</BackURL>
+            <CompanyRefUnique>1</CompanyRefUnique>
+            <PTL>30</PTL>
+        </Transaction>
+        <Services>
+            <Service>
+                <ServiceType>' . htmlspecialchars($serviceType) . '</ServiceType>
+                <ServiceDescription>KandaNews ' . htmlspecialchars(ucfirst($plan)) . ' Plan</ServiceDescription>
+                <ServiceDate>' . date('Y/m/d H:i') . '</ServiceDate>
+            </Service>
+        </Services>
+    </API3G>';
+
+    $ch = curl_init('https://secure.3gdirectpay.com/API/v6/');
+    curl_setopt_array($ch, [
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => $xml,
+        CURLOPT_HTTPHEADER     => ['Content-Type: application/xml'],
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT        => 15,
+    ]);
+    $resp = curl_exec($ch);
+    curl_close($ch);
+
+    // Extract TransToken from DPO response
+    $transToken = null;
+    if (preg_match('/<TransToken>(.*?)<\/TransToken>/', $resp, $matches)) {
+        $transToken = $matches[1];
+    }
+
+    if ($transToken) {
+        return [
+            'method'      => 'redirect',
+            'link'        => 'https://secure.3gdirectpay.com/payv3.php?ID=' . $transToken,
+            'tx_ref'      => $ref,
+            'trans_token'  => $transToken,
+        ];
+    }
+
+    // Fallback if token creation failed
     return [
-        'method'        => 'dpo_redirect',
-        'company_token' => $config['dpo_company_token'],
-        'service_type'  => $config['dpo_service_type'],
-        'tx_ref'        => $ref,
-        'amount'        => $amount,
-        'currency'      => $currency,
-        'description'   => 'KandaNews ' . ucfirst($plan) . ' Plan',
-        'customer_phone' => $user['phone'],
+        'method'     => 'dpo_redirect',
+        'tx_ref'     => $ref,
+        'amount'     => $amount,
+        'currency'   => $currency,
+        'link'       => null,
     ];
 }
 

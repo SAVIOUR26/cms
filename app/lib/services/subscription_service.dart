@@ -13,12 +13,12 @@ class SubscriptionService {
         'country': country,
       });
       if (response['ok'] == true) {
-        final pricing = response['data']['pricing'];
-        return [
-          SubscriptionPlan.fromJson('daily', pricing),
-          SubscriptionPlan.fromJson('weekly', pricing),
-          SubscriptionPlan.fromJson('monthly', pricing),
-        ];
+        final data = response['data'];
+        final currency = data['currency'] ?? '';
+        final plans = data['plans'] as List? ?? [];
+        return plans
+            .map((p) => SubscriptionPlan.fromJson(p, currency))
+            .toList();
       }
     } catch (_) {}
     return [];
@@ -35,7 +35,7 @@ class SubscriptionService {
     return null;
   }
 
-  /// Initiate a payment — returns payment URL or data for WebView
+  /// Initiate a payment — returns payment link and reference
   Future<Map<String, dynamic>> initiate({
     required String plan,
     required String provider,
@@ -50,12 +50,12 @@ class SubscriptionService {
 
   /// Verify a completed payment
   Future<Map<String, dynamic>> verify({
-    required String provider,
-    required String reference,
+    required String paymentRef,
+    String? transactionId,
   }) async {
     return await _api.post(ApiConfig.subscribeVerify, data: {
-      'provider': provider,
-      'reference': reference,
+      'payment_ref': paymentRef,
+      if (transactionId != null) 'transaction_id': transactionId,
     });
   }
 }

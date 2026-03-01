@@ -11,12 +11,17 @@ class EditionService {
     String country = 'ug',
     int page = 1,
     int perPage = 20,
+    String? type,
+    String? category,
   }) async {
-    final response = await _api.get(ApiConfig.editions, query: {
+    final query = <String, dynamic>{
       'country': country,
       'page': page,
       'per_page': perPage,
-    });
+    };
+    if (type != null) query['type'] = type;
+    if (category != null) query['category'] = category;
+    final response = await _api.get(ApiConfig.editions, query: query);
 
     if (response['ok'] == true) {
       final data = response['data'];

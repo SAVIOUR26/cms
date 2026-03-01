@@ -10,7 +10,7 @@ final todayEditionProvider = FutureProvider.family<Edition?, String>((ref, count
   return await service.getTodayEdition(country: country);
 });
 
-/// Editions list (paginated)
+/// Editions list (paginated, with optional type/category filters)
 final editionsProvider =
     FutureProvider.family<Map<String, dynamic>, Map<String, dynamic>>((ref, params) async {
   final service = ref.read(editionServiceProvider);
@@ -18,6 +18,8 @@ final editionsProvider =
     country: params['country'] ?? 'ug',
     page: params['page'] ?? 1,
     perPage: params['per_page'] ?? 20,
+    type: params['type'],
+    category: params['category'],
   );
 });
 

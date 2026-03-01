@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $edition_date = trim($_POST['edition_date'] ?? '');
         $country      = strtolower(trim($_POST['country'] ?? 'ug'));
         $edition_type = trim($_POST['edition_type'] ?? 'daily');
+        $category     = trim($_POST['category'] ?? '') ?: null;
         $is_free      = isset($_POST['is_free']) ? 1 : 0;
         $theme        = trim($_POST['theme'] ?? '');
         $description  = trim($_POST['description'] ?? '');
@@ -47,6 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($title === '')        $errors[] = 'Title is required.';
         if ($edition_date === '') $errors[] = 'Edition date is required.';
         if (!in_array($edition_type, ['daily', 'special', 'rate_card'])) $errors[] = 'Invalid edition type.';
+        $valid_cats = [null, 'university', 'corporate', 'entrepreneurship', 'campaigns', 'jobs_careers', 'podcasts', 'episodes'];
+        if ($category !== null && !in_array($category, $valid_cats)) $errors[] = 'Invalid category.';
         if (!in_array($status, ['draft', 'published', 'archived'])) $errors[] = 'Invalid status.';
         if (!array_key_exists(strtoupper($country), $countries)) $errors[] = 'Invalid country.';
 
@@ -156,10 +159,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $stmt = $db->prepare(
                     "INSERT INTO editions
-                        (title, slug, country, edition_date, edition_type, cover_image, html_url, zip_url,
+                        (title, slug, country, edition_date, edition_type, category, cover_image, html_url, zip_url,
                          page_count, is_free, theme, description, status, created_at)
                      VALUES
-                        (:title, :slug, :country, :edition_date, :edition_type, :cover_image, :html_url, :zip_url,
+                        (:title, :slug, :country, :edition_date, :edition_type, :category, :cover_image, :html_url, :zip_url,
                          :page_count, :is_free, :theme, :description, :status, NOW())"
                 );
                 $stmt->execute([
@@ -168,6 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':country'      => $country,
                     ':edition_date' => $edition_date,
                     ':edition_type' => $edition_type,
+                    ':category'     => $category,
                     ':cover_image'  => $cover_path,
                     ':html_url'     => $html_url,
                     ':zip_url'      => $zip_url,
@@ -263,6 +267,21 @@ require_once __DIR__ . '/includes/header.php';
                         <option value="rate_card"  <?php echo ($_POST['edition_type'] ?? '') === 'rate_card' ? 'selected' : ''; ?>>Rate Card</option>
                     </select>
                 </div>
+            </div>
+
+            <div class="form-group" id="categoryGroup" style="display:none;">
+                <label for="category">Category (for Special Editions)</label>
+                <select id="category" name="category" class="form-control">
+                    <option value="">— None —</option>
+                    <option value="university" <?php echo ($_POST['category'] ?? '') === 'university' ? 'selected' : ''; ?>>University</option>
+                    <option value="corporate" <?php echo ($_POST['category'] ?? '') === 'corporate' ? 'selected' : ''; ?>>Corporate</option>
+                    <option value="entrepreneurship" <?php echo ($_POST['category'] ?? '') === 'entrepreneurship' ? 'selected' : ''; ?>>Entrepreneurship</option>
+                    <option value="campaigns" <?php echo ($_POST['category'] ?? '') === 'campaigns' ? 'selected' : ''; ?>>Campaigns</option>
+                    <option value="jobs_careers" <?php echo ($_POST['category'] ?? '') === 'jobs_careers' ? 'selected' : ''; ?>>Jobs &amp; Careers</option>
+                    <option value="podcasts" <?php echo ($_POST['category'] ?? '') === 'podcasts' ? 'selected' : ''; ?>>Podcasts</option>
+                    <option value="episodes" <?php echo ($_POST['category'] ?? '') === 'episodes' ? 'selected' : ''; ?>>Episodes</option>
+                </select>
+                <div class="form-hint">Categorize special editions so they appear in the correct app section.</div>
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
@@ -394,6 +413,16 @@ document.getElementById('uploadForm').addEventListener('submit', function(e) {
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
 });
+
+/* ── Show category dropdown when type is "special" ── */
+var typeSelect = document.getElementById('edition_type');
+var catGroup   = document.getElementById('categoryGroup');
+function toggleCategory() {
+    catGroup.style.display = typeSelect.value === 'special' ? 'block' : 'none';
+    if (typeSelect.value !== 'special') document.getElementById('category').value = '';
+}
+typeSelect.addEventListener('change', toggleCategory);
+toggleCategory(); // run on load
 </script>
 
 <style>

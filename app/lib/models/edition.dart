@@ -6,6 +6,7 @@ class Edition {
   final String country;
   final String editionDate;
   final String editionType;
+  final String? category;
   final String? coverImage;
   final String? htmlUrl;
   final String? zipUrl;
@@ -22,6 +23,7 @@ class Edition {
     required this.country,
     required this.editionDate,
     this.editionType = 'daily',
+    this.category,
     this.coverImage,
     this.htmlUrl,
     this.zipUrl,
@@ -66,6 +68,7 @@ class Edition {
       country: json['country'] ?? 'ug',
       editionDate: json['edition_date'] ?? '',
       editionType: json['edition_type'] ?? 'daily',
+      category: json['category'],
       coverImage: json['cover_image'],
       htmlUrl: json['html_url'],
       zipUrl: json['zip_url'],

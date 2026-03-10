@@ -534,7 +534,7 @@
                             $rootFiles = [];
                             foreach (scandir($pagesDir) as $f) {
                                 if ($f[0] === '.') continue;
-                                if (!is_dir($pagesDir . $f) && pathinfo($f, PATHINFO_EXTENSION) === 'html') {
+                                if (pathinfo($f, PATHINFO_EXTENSION) === 'html') {
                                     $rootFiles[] = ['filename' => $f, 'name' => str_replace(['-', '_', '.html'], [' ', ' ', ''], $f)];
                                 }
                             }
@@ -543,6 +543,8 @@
                             // Subfolders → each folder becomes a group
                             foreach (scandir($pagesDir) as $folder) {
                                 if ($folder[0] === '.') continue;
+                                // Skip files — only enter actual directories
+                                if (pathinfo($folder, PATHINFO_EXTENSION) !== '') continue;
                                 $folderPath = $pagesDir . $folder . '/';
                                 if (!is_dir($folderPath)) continue;
                                 $folderPages = [];

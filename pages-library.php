@@ -42,6 +42,8 @@ if (is_dir($pagesDir)) {
     if ($rootPages) $pageGroups['General'] = $rootPages;
     foreach (scandir($pagesDir) as $folder) {
         if ($folder[0] === '.') continue;
+        // Skip files (HTML pages etc.) — only process actual directories
+        if (pathinfo($folder, PATHINFO_EXTENSION) !== '') continue;
         $folderPath = $pagesDir . $folder . '/';
         if (!is_dir($folderPath)) continue;
         $folderPages = scan_pages_group($folderPath, $folder . '/');

@@ -128,7 +128,7 @@ require_once __DIR__ . '/includes/header.php';
     </div>
     <?php else: ?>
     <div class="table-wrapper">
-        <table class="data-table">
+        <table class="dt">
             <thead>
                 <tr>
                     <th>Title</th>

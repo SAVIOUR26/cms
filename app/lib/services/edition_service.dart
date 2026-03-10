@@ -84,4 +84,43 @@ class EditionService {
     } catch (_) {}
     return null;
   }
+
+  /// Get all dates in a month that have a published daily edition.
+  /// Returns a Set of DateTime (date-only, time = midnight UTC).
+  Future<Set<DateTime>> getAvailableDates({
+    required String country,
+    required String month, // 'YYYY-MM'
+  }) async {
+    try {
+      final response = await _api.get(
+        ApiConfig.editionsAvailableDates,
+        query: {'country': country, 'month': month},
+      );
+      if (response['ok'] == true) {
+        final dates = response['data']['dates'] as List? ?? [];
+        return dates
+            .map((d) => DateTime.parse(d as String))
+            .toSet();
+      }
+    } catch (_) {}
+    return {};
+  }
+
+  /// Get the daily edition for an exact date (YYYY-MM-DD).
+  /// Returns null if no edition exists on that date.
+  Future<Edition?> getEditionByDate({
+    required String country,
+    required String date, // 'YYYY-MM-DD'
+  }) async {
+    try {
+      final response = await _api.get(
+        '${ApiConfig.editions}/$date',
+        query: {'country': country},
+      );
+      if (response['ok'] == true && response['data']['found'] == true) {
+        return Edition.fromJson(response['data']['edition']);
+      }
+    } catch (_) {}
+    return null;
+  }
 }

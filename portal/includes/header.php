@@ -2,11 +2,12 @@
 /**
  * KandaNews Africa — Portal Shared Header
  *
+ * Single unified admin shell for ALL CMS tools.
  * Include at the top of every portal page (after auth.php).
- * Provides HTML <head>, top navigation bar, and responsive sidebar.
  *
  * Expected variables before include:
- *   $page_title  — string (optional, defaults to 'Portal')
+ *   $page_title    — string (optional, defaults to 'Portal')
+ *   $page_section  — string (optional): 'editions'|'content'|'subscribers'|'tools'|'settings'
  */
 
 if (!function_exists('portal_is_logged_in')) {
@@ -18,18 +19,29 @@ $_username   = $_user['full_name'] ?? $_user['username'] ?? 'Admin';
 $_role       = ucfirst($_user['role'] ?? 'editor');
 $_initials   = mb_strtoupper(mb_substr($_username, 0, 1));
 $page_title  = $page_title ?? 'Portal';
+$page_section = $page_section ?? '';
 $_flash      = portal_get_flash();
 
-// Current page for nav highlighting
+// Current page for active-state highlighting
 $_current_page = basename($_SERVER['SCRIPT_NAME']);
+$_current_path = $_SERVER['SCRIPT_NAME'];
+
+function _nav_active(string $page): string {
+    global $_current_page;
+    return $_current_page === $page ? ' active' : '';
+}
+function _section_active(string $section): string {
+    global $page_section;
+    return $page_section === $section ? ' section-active' : '';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($page_title); ?> — KandaNews Portal</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title><?php echo htmlspecialchars($page_title); ?> — KandaNews CMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         /* ── Reset & Base ─────────────────────────── */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -41,257 +53,340 @@ $_current_page = basename($_SERVER['SCRIPT_NAME']);
             min-height: 100vh;
         }
 
-        /* ── Variables (CSS custom props) ─────────── */
+        /* ── CSS Variables ────────────────────────── */
         :root {
-            --navy:    #1e2b42;
-            --navy-light: #2a3f5f;
-            --orange:  #f05a1a;
-            --orange-light: #ff7a3d;
-            --radius:  12px;
-            --shadow:  0 4px 24px rgba(30,43,66,.08);
-            --shadow-lg: 0 10px 40px rgba(30,43,66,.12);
-            --sidebar-w: 260px;
-            --topbar-h: 64px;
+            --navy:        #1e2b42;
+            --navy-l:      #2a3f5f;
+            --navy-xl:     #3d5a80;
+            --orange:      #f05a1a;
+            --orange-l:    #ff7a3d;
+            --green:       #059669;
+            --purple:      #7c3aed;
+            --radius:      12px;
+            --shadow:      0 2px 16px rgba(30,43,66,.07);
+            --shadow-md:   0 6px 24px rgba(30,43,66,.10);
+            --shadow-lg:   0 12px 40px rgba(30,43,66,.13);
+            --sidebar-w:   260px;
+            --topbar-h:    60px;
+            --sidebar-bg:  #111827;
         }
+
+        /* ── Scrollbar ────────────────────────────── */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
 
         a { color: var(--orange); text-decoration: none; }
         a:hover { text-decoration: underline; }
 
-        /* ── Top Navigation Bar ───────────────────── */
-        .portal-topbar {
-            position: fixed; top: 0; left: 0; right: 0;
+        /* ═══════════════════════════════════════════
+           LAYOUT
+        ═══════════════════════════════════════════ */
+
+        /* ── Sidebar ──────────────────────────────── */
+        .sidebar {
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            width: var(--sidebar-w);
+            background: var(--sidebar-bg);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            transition: transform .3s cubic-bezier(.4,0,.2,1);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid rgba(255,255,255,.07);
+            text-decoration: none;
+        }
+        .sidebar-logo img {
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+        .sidebar-logo .logo-icon {
+            width: 36px; height: 36px;
+            background: var(--orange);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: #fff; font-weight: 700;
+            flex-shrink: 0;
+        }
+        .sidebar-logo .logo-text {
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: .2px;
+        }
+        .sidebar-logo .logo-text span { color: var(--orange); }
+        .sidebar-logo:hover { text-decoration: none; }
+
+        /* Nav sections */
+        .nav-section {
+            padding: 20px 0 4px;
+        }
+        .nav-section-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: rgba(255,255,255,.3);
+            padding: 0 20px 8px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 20px;
+            color: rgba(255,255,255,.6);
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all .18s;
+            position: relative;
+            border-left: 3px solid transparent;
+        }
+        .nav-item:hover {
+            color: #fff;
+            background: rgba(255,255,255,.05);
+            text-decoration: none;
+        }
+        .nav-item.active {
+            color: #fff;
+            background: rgba(240,90,26,.12);
+            border-left-color: var(--orange);
+        }
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+        .nav-item .badge-dot {
+            margin-left: auto;
+            width: 8px; height: 8px;
+            background: var(--orange);
+            border-radius: 50%;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255,255,255,.07);
+        }
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .sidebar-user-avatar {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            background: var(--orange);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 700; color: #fff;
+            flex-shrink: 0;
+        }
+        .sidebar-user-info { flex: 1; min-width: 0; }
+        .sidebar-user-info strong {
+            display: block;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .sidebar-user-info small {
+            color: rgba(255,255,255,.4);
+            font-size: 11px;
+        }
+        .sidebar-logout {
+            color: rgba(255,255,255,.4);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 6px;
+            transition: all .15s;
+        }
+        .sidebar-logout:hover {
+            color: #ef4444;
+            background: rgba(239,68,68,.1);
+            text-decoration: none;
+        }
+
+        /* ── Top Bar ──────────────────────────────── */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-w);
+            right: 0;
             height: var(--topbar-h);
-            background: var(--navy);
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 24px;
-            z-index: 1000;
-            box-shadow: 0 2px 12px rgba(0,0,0,.15);
+            padding: 0 28px;
+            z-index: 100;
+            box-shadow: var(--shadow);
         }
         .topbar-left {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
         }
-        .topbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #fff;
-            font-size: 18px;
-            font-weight: 700;
-            text-decoration: none;
-        }
-        .topbar-brand:hover { text-decoration: none; }
-        .topbar-brand span.accent { color: var(--orange); }
-        .topbar-brand img { height: 36px; }
         .hamburger {
             display: none;
             background: none;
             border: none;
-            color: #fff;
-            font-size: 22px;
+            color: var(--navy);
+            font-size: 20px;
             cursor: pointer;
-            padding: 4px 8px;
+            padding: 6px;
             border-radius: 6px;
         }
-        .hamburger:hover { background: rgba(255,255,255,.1); }
+        .hamburger:hover { background: #f3f4f6; }
+        .page-breadcrumb {
+            font-size: 14px;
+            color: #9ca3af;
+        }
+        .page-breadcrumb strong {
+            color: var(--navy);
+            font-weight: 600;
+        }
 
         .topbar-right {
             display: flex;
             align-items: center;
             gap: 16px;
         }
-        .topbar-nav {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .topbar-nav a {
-            color: rgba(255,255,255,.7);
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all .2s;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .topbar-nav a:hover,
-        .topbar-nav a.active {
-            color: #fff;
-            background: rgba(255,255,255,.1);
-        }
-        .topbar-nav a.active { background: rgba(240,90,26,.25); color: var(--orange); }
 
-        /* User dropdown */
-        .user-menu {
-            position: relative;
-        }
-        .user-menu-trigger {
+        /* Quick action buttons in topbar */
+        .topbar-actions {
             display: flex;
             align-items: center;
             gap: 8px;
-            cursor: pointer;
-            padding: 6px 12px;
+        }
+        .topbar-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
             border-radius: 8px;
-            background: rgba(255,255,255,.08);
-            border: none;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1.5px solid #e5e7eb;
+            background: #fff;
+            color: var(--navy);
+            cursor: pointer;
+            text-decoration: none;
             transition: all .2s;
         }
-        .user-menu-trigger:hover { background: rgba(255,255,255,.15); }
-        .user-avatar {
-            width: 32px; height: 32px;
-            border-radius: 50%;
+        .topbar-action-btn:hover {
+            border-color: var(--orange);
+            color: var(--orange);
+            background: rgba(240,90,26,.04);
+            text-decoration: none;
+        }
+        .topbar-action-btn.primary {
             background: var(--orange);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 14px;
+            color: #fff;
+            border-color: var(--orange);
+        }
+        .topbar-action-btn.primary:hover {
+            background: var(--orange-l);
+            border-color: var(--orange-l);
             color: #fff;
         }
-        .user-dropdown {
-            display: none;
-            position: absolute;
-            right: 0; top: calc(100% + 8px);
-            background: #fff;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
-            min-width: 200px;
-            overflow: hidden;
-            z-index: 1001;
-            border: 1px solid #e5e7eb;
-        }
-        .user-dropdown.open { display: block; }
-        .user-dropdown-header {
-            padding: 16px;
-            border-bottom: 1px solid #f0f0f0;
-            background: #fafafa;
-        }
-        .user-dropdown-header strong { display: block; color: var(--navy); font-size: 14px; }
-        .user-dropdown-header small  { color: #888; font-size: 12px; }
-        .user-dropdown a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 16px;
-            color: #333;
-            font-size: 14px;
-            transition: background .15s;
-        }
-        .user-dropdown a:hover { background: #f5f5f5; text-decoration: none; }
-        .user-dropdown a i { width: 16px; text-align: center; color: #888; }
-        .user-dropdown a.logout-link { color: #dc3545; }
-        .user-dropdown a.logout-link i { color: #dc3545; }
 
-        /* ── Sidebar (mobile overlay) ─────────────── */
-        .portal-sidebar-overlay {
+        /* ── Main Area ────────────────────────────── */
+        .main-area {
+            margin-left: var(--sidebar-w);
+            padding-top: var(--topbar-h);
+            min-height: 100vh;
+        }
+        .portal-body {
+            padding: 28px 28px 48px;
+            max-width: 1400px;
+        }
+
+        /* ── Mobile overlay ───────────────────────── */
+        .sidebar-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,.4);
-            z-index: 1100;
+            background: rgba(0,0,0,.5);
+            z-index: 199;
         }
-        .portal-sidebar-overlay.open { display: block; }
-        .portal-sidebar {
-            position: fixed;
-            top: 0; left: -280px; bottom: 0;
-            width: 280px;
-            background: var(--navy);
-            z-index: 1101;
-            transition: left .3s ease;
-            padding-top: 20px;
-            overflow-y: auto;
+        .sidebar-overlay.open { display: block; }
+
+        /* ── Responsive ───────────────────────────── */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 300;
+            }
+            .sidebar.open { transform: translateX(0); }
+            .topbar { left: 0; }
+            .main-area { margin-left: 0; }
+            .hamburger { display: flex; }
         }
-        .portal-sidebar.open { left: 0; }
-        .sidebar-close {
-            position: absolute;
-            top: 16px; right: 16px;
-            background: none;
-            border: none;
-            color: rgba(255,255,255,.6);
-            font-size: 20px;
-            cursor: pointer;
-        }
-        .sidebar-brand {
-            padding: 12px 24px 24px;
-            color: #fff;
-            font-size: 18px;
-            font-weight: 700;
-            border-bottom: 1px solid rgba(255,255,255,.1);
-            margin-bottom: 12px;
-        }
-        .sidebar-brand span.accent { color: var(--orange); }
-        .sidebar-nav a {
+
+        /* ═══════════════════════════════════════════
+           FLASH MESSAGES
+        ═══════════════════════════════════════════ */
+        .flash {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 14px 24px;
-            color: rgba(255,255,255,.7);
-            font-size: 15px;
-            font-weight: 500;
-            transition: all .2s;
-            text-decoration: none;
-        }
-        .sidebar-nav a:hover,
-        .sidebar-nav a.active {
-            color: #fff;
-            background: rgba(255,255,255,.08);
-        }
-        .sidebar-nav a.active { border-left: 3px solid var(--orange); }
-        .sidebar-nav a i { width: 20px; text-align: center; }
-
-        /* ── Main content area ────────────────────── */
-        .portal-body {
-            padding-top: calc(var(--topbar-h) + 24px);
-            padding-left: 24px;
-            padding-right: 24px;
-            padding-bottom: 40px;
-            max-width: 1360px;
-            margin: 0 auto;
-        }
-
-        /* ── Flash messages ───────────────────────── */
-        .flash-message {
             padding: 14px 20px;
             border-radius: var(--radius);
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             font-size: 14px;
             font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: flashIn .3s ease;
+            animation: slideDown .3s ease;
         }
-        @keyframes flashIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
-        .flash-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
-        .flash-error   { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
-        .flash-warning { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
-        .flash-info    { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+        @keyframes slideDown {
+            from { opacity:0; transform:translateY(-10px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+        .flash-success { background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; }
+        .flash-error   { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; }
+        .flash-warning { background:#fffbeb; color:#92400e; border:1px solid #fde68a; }
+        .flash-info    { background:#eff6ff; color:#1e40af; border:1px solid #bfdbfe; }
 
-        /* ── Cards ────────────────────────────────── */
+        /* ═══════════════════════════════════════════
+           COMPONENTS
+        ═══════════════════════════════════════════ */
+
+        /* Cards */
         .card {
             background: #fff;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             padding: 24px;
             margin-bottom: 24px;
+            border: 1px solid #f0f0f0;
         }
         .card-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
         }
         .card-header h2 {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
             color: var(--navy);
             display: flex;
@@ -300,11 +395,95 @@ $_current_page = basename($_SERVER['SCRIPT_NAME']);
         }
         .card-header h2 i { color: var(--orange); }
 
-        /* ── Buttons ──────────────────────────────── */
+        /* Stat cards */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 22px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid #f0f0f0;
+            transition: box-shadow .2s, transform .2s;
+            text-decoration: none;
+            color: inherit;
+        }
+        .stat-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+        .stat-icon {
+            width: 50px; height: 50px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: #fff; flex-shrink: 0;
+        }
+        .si-orange { background: linear-gradient(135deg, var(--orange), var(--orange-l)); }
+        .si-navy   { background: linear-gradient(135deg, var(--navy), var(--navy-xl)); }
+        .si-green  { background: linear-gradient(135deg, #059669, #10b981); }
+        .si-purple { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+        .si-blue   { background: linear-gradient(135deg, #2563eb, #60a5fa); }
+        .si-pink   { background: linear-gradient(135deg, #db2777, #f472b6); }
+        .stat-info { flex: 1; }
+        .stat-value { font-size: 26px; font-weight: 800; color: var(--navy); line-height: 1.1; }
+        .stat-label { font-size: 12px; color: #888; font-weight: 500; margin-top: 3px; }
+        .stat-trend {
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+        .stat-trend.up { color: var(--green); }
+        .stat-trend.neutral { color: #9ca3af; }
+
+        /* Quick actions grid */
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .action-tile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 22px 16px;
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-decoration: none;
+            color: var(--navy);
+            font-weight: 600;
+            font-size: 13px;
+            text-align: center;
+            border: 1.5px solid #f0f0f0;
+            transition: all .2s;
+        }
+        .action-tile:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--orange);
+            color: var(--orange);
+            text-decoration: none;
+        }
+        .action-tile i {
+            font-size: 26px;
+            color: var(--orange);
+        }
+
+        /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 7px;
             padding: 10px 20px;
             border-radius: 8px;
             font-size: 14px;
@@ -315,34 +494,47 @@ $_current_page = basename($_SERVER['SCRIPT_NAME']);
             text-decoration: none;
             font-family: inherit;
             line-height: 1.4;
+            white-space: nowrap;
         }
         .btn:hover { text-decoration: none; transform: translateY(-1px); }
-        .btn-primary   { background: var(--orange); color: #fff; box-shadow: 0 4px 12px rgba(240,90,26,.25); }
-        .btn-primary:hover { background: var(--orange-light); box-shadow: 0 6px 18px rgba(240,90,26,.35); }
-        .btn-secondary { background: var(--navy); color: #fff; box-shadow: 0 4px 12px rgba(30,43,66,.2); }
-        .btn-secondary:hover { background: var(--navy-light); }
-        .btn-outline   { background: transparent; color: var(--navy); border: 2px solid #e0e0e0; }
-        .btn-outline:hover { border-color: var(--navy); background: #f9fafb; }
+        .btn:active { transform: translateY(0); }
+        .btn-primary   { background: var(--orange); color: #fff; box-shadow: 0 3px 12px rgba(240,90,26,.25); }
+        .btn-primary:hover { background: var(--orange-l); }
+        .btn-secondary { background: var(--navy); color: #fff; }
+        .btn-secondary:hover { background: var(--navy-l); }
+        .btn-outline   { background: transparent; color: var(--navy); border: 1.5px solid #e0e0e0; }
+        .btn-outline:hover { border-color: var(--navy); background: #f9fafb; color: var(--navy); }
         .btn-success   { background: #059669; color: #fff; }
         .btn-success:hover { background: #047857; }
         .btn-danger    { background: #dc2626; color: #fff; }
         .btn-danger:hover { background: #b91c1c; }
-        .btn-sm { padding: 6px 12px; font-size: 13px; }
-        .btn-lg { padding: 14px 28px; font-size: 16px; }
+        .btn-warning   { background: #d97706; color: #fff; }
+        .btn-warning:hover { background: #b45309; }
+        .btn-ghost     { background: transparent; color: var(--navy); border: none; box-shadow: none; }
+        .btn-ghost:hover { background: #f3f4f6; }
+        .btn-sm  { padding: 6px 12px; font-size: 12px; }
+        .btn-lg  { padding: 14px 28px; font-size: 16px; }
 
-        /* ── Forms ────────────────────────────────── */
+        /* Forms */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
         .form-group { margin-bottom: 20px; }
-        .form-group label {
+        .form-label {
             display: block;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             color: var(--navy);
             margin-bottom: 6px;
         }
+        .form-label .req { color: var(--orange); margin-left: 3px; }
         .form-control {
             width: 100%;
-            padding: 12px 14px;
-            border: 2px solid #e0e0e0;
+            padding: 11px 14px;
+            border: 1.5px solid #e0e0e0;
             border-radius: 8px;
             font-size: 14px;
             font-family: inherit;
@@ -360,35 +552,14 @@ $_current_page = basename($_SERVER['SCRIPT_NAME']);
         textarea.form-control { resize: vertical; min-height: 100px; }
         .form-hint { font-size: 12px; color: #888; margin-top: 4px; }
 
-        .form-check {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px;
-            background: #f9fafb;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        .form-check input[type="checkbox"] {
-            width: 20px; height: 20px;
-            accent-color: var(--orange);
-            cursor: pointer;
-        }
-        .form-check label {
-            margin: 0;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--navy);
-        }
-
-        /* ── Tables ───────────────────────────────── */
-        .table-wrapper { overflow-x: auto; }
-        table.data-table {
+        /* Tables */
+        .table-wrapper { overflow-x: auto; border-radius: 8px; }
+        table.dt {
             width: 100%;
             border-collapse: collapse;
             font-size: 14px;
         }
-        table.data-table th {
+        table.dt th {
             background: #f9fafb;
             padding: 12px 16px;
             text-align: left;
@@ -396,231 +567,306 @@ $_current_page = basename($_SERVER['SCRIPT_NAME']);
             color: var(--navy);
             border-bottom: 2px solid #e5e7eb;
             white-space: nowrap;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
         }
-        table.data-table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid #f0f0f0;
+        table.dt td {
+            padding: 13px 16px;
+            border-bottom: 1px solid #f3f4f6;
             vertical-align: middle;
         }
-        table.data-table tbody tr:hover { background: #fafbfc; }
+        table.dt tbody tr:last-child td { border-bottom: none; }
+        table.dt tbody tr:hover { background: #fafbfd; }
 
-        /* ── Badges ───────────────────────────────── */
+        /* Badges */
         .badge {
             display: inline-block;
-            padding: 4px 10px;
+            padding: 3px 10px;
             border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: 700;
             text-transform: capitalize;
+            letter-spacing: .3px;
         }
-        .badge-published { background: #ecfdf5; color: #065f46; }
-        .badge-draft     { background: #fef3c7; color: #92400e; }
-        .badge-archived  { background: #f3f4f6; color: #6b7280; }
-        .badge-daily     { background: #eff6ff; color: #1e40af; }
-        .badge-special   { background: #fef2f2; color: #991b1b; }
-        .badge-rate_card { background: #f5f3ff; color: #5b21b6; }
+        .badge-published { background:#dcfce7; color:#15803d; }
+        .badge-draft     { background:#fef9c3; color:#92400e; }
+        .badge-archived  { background:#f3f4f6; color:#6b7280; }
+        .badge-daily     { background:#eff6ff; color:#1d4ed8; }
+        .badge-special   { background:#fce7f3; color:#be185d; }
+        .badge-rate_card { background:#f5f3ff; color:#6d28d9; }
+        .badge-university    { background:#e0f2fe; color:#0369a1; }
+        .badge-corporate     { background:#f0fdf4; color:#15803d; }
+        .badge-entrepreneurship { background:#fff7ed; color:#c2410c; }
+        .badge-active    { background:#dcfce7; color:#15803d; }
+        .badge-expired   { background:#fef2f2; color:#b91c1c; }
+        .badge-pending   { background:#fef9c3; color:#92400e; }
+        .badge-cancelled { background:#f3f4f6; color:#6b7280; }
 
-        /* ── Pagination ───────────────────────────── */
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+        }
+        .empty-state i {
+            font-size: 56px;
+            margin-bottom: 16px;
+            display: block;
+            opacity: .4;
+        }
+        .empty-state h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+        .empty-state p { font-size: 14px; margin-bottom: 20px; }
+
+        /* Cover thumbnail */
+        .cover-thumb {
+            width: 42px; height: 54px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+        .cover-placeholder {
+            width: 42px; height: 54px;
+            background: linear-gradient(135deg, var(--navy), var(--navy-xl));
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,.5);
+            font-size: 14px;
+        }
+
+        /* Section header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .section-header h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 3px;
+        }
+        .section-header p {
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* Pagination */
         .pagination {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 4px;
             margin-top: 24px;
+            flex-wrap: wrap;
         }
         .pagination a, .pagination span {
             padding: 8px 14px;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
             color: var(--navy);
             text-decoration: none;
             border: 1px solid #e5e7eb;
             transition: all .15s;
         }
-        .pagination a:hover { background: #f3f4f6; border-color: #d1d5db; text-decoration: none; }
-        .pagination span.current {
-            background: var(--orange);
-            color: #fff;
-            border-color: var(--orange);
-        }
-        .pagination span.disabled {
-            color: #ccc;
-            pointer-events: none;
-        }
+        .pagination a:hover { background: #f3f4f6; text-decoration: none; }
+        .pagination span.current { background: var(--orange); color: #fff; border-color: var(--orange); }
+        .pagination span.disabled { color: #d1d5db; pointer-events: none; }
 
-        /* ── Stat cards ───────────────────────────── */
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 28px;
-        }
-        .stat-card {
-            background: #fff;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 24px;
+        /* Filter bar */
+        .filter-bar {
             display: flex;
             align-items: center;
-            gap: 16px;
-            transition: transform .2s;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
-        .stat-card:hover { transform: translateY(-2px); }
-        .stat-icon {
-            width: 52px; height: 52px;
-            border-radius: 12px;
-            display: flex;
+        .filter-chip {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            color: #fff;
-        }
-        .stat-icon.orange  { background: linear-gradient(135deg, var(--orange), var(--orange-light)); }
-        .stat-icon.navy    { background: linear-gradient(135deg, var(--navy), var(--navy-light)); }
-        .stat-icon.green   { background: linear-gradient(135deg, #059669, #10b981); }
-        .stat-icon.purple  { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
-        .stat-info { flex: 1; }
-        .stat-value { font-size: 28px; font-weight: 700; color: var(--navy); line-height: 1.2; }
-        .stat-label { font-size: 13px; color: #888; font-weight: 500; margin-top: 2px; }
-
-        /* ── Quick Actions ────────────────────────── */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-        .quick-action {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            padding: 24px 16px;
-            background: #fff;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            text-decoration: none;
-            color: var(--navy);
+            gap: 5px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
             font-weight: 600;
-            font-size: 14px;
-            transition: all .2s;
-        }
-        .quick-action:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
+            border: 1.5px solid #e0e0e0;
+            background: #fff;
+            color: #666;
+            cursor: pointer;
             text-decoration: none;
+            transition: all .15s;
         }
-        .quick-action i {
-            font-size: 28px;
-            color: var(--orange);
-        }
+        .filter-chip:hover { border-color: var(--orange); color: var(--orange); text-decoration: none; }
+        .filter-chip.active { background: var(--orange); color: #fff; border-color: var(--orange); }
 
-        /* ── Responsive ───────────────────────────── */
         @media (max-width: 768px) {
-            .topbar-nav { display: none; }
-            .hamburger  { display: block; }
-            .portal-body { padding-left: 16px; padding-right: 16px; }
+            .portal-body { padding: 20px 16px 40px; }
             .stat-grid { grid-template-columns: 1fr 1fr; }
-            .quick-actions { grid-template-columns: 1fr 1fr; }
-            table.data-table { font-size: 13px; }
-            table.data-table th, table.data-table td { padding: 8px 10px; }
+            .actions-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 480px) {
             .stat-grid { grid-template-columns: 1fr; }
-            .quick-actions { grid-template-columns: 1fr; }
-            .user-menu-trigger span.user-name-text { display: none; }
+            .actions-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
 
-<!-- ── Top Bar ───────────────────────────────── -->
-<header class="portal-topbar">
+<!-- ══════════════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════════════ -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<nav class="sidebar" id="sidebar">
+    <!-- Logo -->
+    <a href="<?php echo portal_url('index.php'); ?>" class="sidebar-logo">
+        <div class="logo-icon">K</div>
+        <span class="logo-text">Kanda<span>News</span> CMS</span>
+    </a>
+
+    <!-- Overview -->
+    <div class="nav-section">
+        <div class="nav-section-label">Overview</div>
+        <a href="<?php echo portal_url('index.php'); ?>"
+           class="nav-item<?php echo _nav_active('index.php'); ?>">
+            <i class="fas fa-th-large"></i> Dashboard
+        </a>
+        <a href="<?php echo portal_url('analytics.php'); ?>"
+           class="nav-item<?php echo _nav_active('analytics.php'); ?>">
+            <i class="fas fa-chart-line"></i> Analytics
+        </a>
+    </div>
+
+    <!-- Content -->
+    <div class="nav-section">
+        <div class="nav-section-label">Content</div>
+        <a href="<?php echo portal_url('editions.php'); ?>"
+           class="nav-item<?php echo _nav_active('editions.php'); ?>">
+            <i class="fas fa-newspaper"></i> All Editions
+        </a>
+        <a href="<?php echo portal_url('special-editions.php'); ?>"
+           class="nav-item<?php echo _nav_active('special-editions.php'); ?>">
+            <i class="fas fa-star"></i> Special Editions
+        </a>
+        <a href="<?php echo portal_url('upload.php'); ?>"
+           class="nav-item<?php echo _nav_active('upload.php'); ?>">
+            <i class="fas fa-cloud-upload-alt"></i> Upload Edition
+        </a>
+    </div>
+
+    <!-- Tools -->
+    <div class="nav-section">
+        <div class="nav-section-label">Production Tools</div>
+        <a href="<?php echo portal_cms_url('build-edition.php'); ?>"
+           class="nav-item<?php echo _nav_active('build-edition.php'); ?>">
+            <i class="fas fa-hammer"></i> Build Edition
+        </a>
+        <a href="<?php echo portal_cms_url('page-editor.php'); ?>"
+           class="nav-item<?php echo _nav_active('page-editor.php'); ?>">
+            <i class="fas fa-file-alt"></i> Page Editor
+        </a>
+        <a href="<?php echo portal_cms_url('visual-page-builder.php'); ?>"
+           class="nav-item<?php echo _nav_active('visual-page-builder.php'); ?>">
+            <i class="fas fa-paint-brush"></i> Visual Builder
+        </a>
+        <a href="<?php echo portal_cms_url('pages-library.php'); ?>"
+           class="nav-item<?php echo _nav_active('pages-library.php'); ?>">
+            <i class="fas fa-layer-group"></i> Pages Library
+        </a>
+    </div>
+
+    <!-- Audience -->
+    <div class="nav-section">
+        <div class="nav-section-label">Audience</div>
+        <a href="<?php echo portal_url('subscribers.php'); ?>"
+           class="nav-item<?php echo _nav_active('subscribers.php'); ?>">
+            <i class="fas fa-users"></i> Subscribers
+        </a>
+        <a href="<?php echo portal_url('subscribers.php?tab=revenue'); ?>"
+           class="nav-item">
+            <i class="fas fa-coins"></i> Revenue
+        </a>
+    </div>
+
+    <!-- System -->
+    <div class="nav-section">
+        <div class="nav-section-label">System</div>
+        <a href="<?php echo portal_url('settings.php'); ?>"
+           class="nav-item<?php echo _nav_active('settings.php'); ?>">
+            <i class="fas fa-cog"></i> Settings
+        </a>
+        <a href="<?php echo portal_url('settings.php?section=integrations'); ?>"
+           class="nav-item">
+            <i class="fas fa-plug"></i> Integrations
+        </a>
+    </div>
+
+    <!-- User footer -->
+    <div class="sidebar-footer">
+        <div class="sidebar-user">
+            <div class="sidebar-user-avatar"><?php echo $_initials; ?></div>
+            <div class="sidebar-user-info">
+                <strong><?php echo htmlspecialchars($_username); ?></strong>
+                <small><?php echo $_role; ?></small>
+            </div>
+            <a href="<?php echo portal_url('login.php?action=logout'); ?>"
+               class="sidebar-logout" title="Logout">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     TOP BAR
+══════════════════════════════════════════════ -->
+<div class="main-area">
+<header class="topbar">
     <div class="topbar-left">
         <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
             <i class="fas fa-bars"></i>
         </button>
-        <a href="<?php echo portal_url('index.php'); ?>" class="topbar-brand">
-            <img src="<?php echo portal_cms_url('assets/appLogoIcon.png'); ?>" alt="KandaNews" onerror="this.style.display='none'">
-            Kanda<span class="accent">News</span>
-        </a>
+        <div class="page-breadcrumb">
+            <span>KandaNews CMS</span>
+            <?php if ($page_title !== 'Dashboard'): ?>
+            <span style="margin:0 6px;color:#d1d5db;">/</span>
+            <strong><?php echo htmlspecialchars($page_title); ?></strong>
+            <?php endif; ?>
+        </div>
     </div>
 
     <div class="topbar-right">
-        <nav class="topbar-nav">
-            <a href="<?php echo portal_url('index.php'); ?>" class="<?php echo $_current_page === 'index.php' ? 'active' : ''; ?>">
-                <i class="fas fa-th-large"></i> Dashboard
+        <div class="topbar-actions">
+            <a href="<?php echo portal_url('upload.php'); ?>" class="topbar-action-btn">
+                <i class="fas fa-plus"></i> Upload
             </a>
-            <a href="<?php echo portal_url('editions.php'); ?>" class="<?php echo $_current_page === 'editions.php' ? 'active' : ''; ?>">
-                <i class="fas fa-newspaper"></i> Editions
-            </a>
-            <a href="<?php echo portal_url('upload.php'); ?>" class="<?php echo $_current_page === 'upload.php' ? 'active' : ''; ?>">
-                <i class="fas fa-cloud-upload-alt"></i> Upload
-            </a>
-            <a href="<?php echo portal_cms_url('build-edition.php'); ?>">
+            <a href="<?php echo portal_cms_url('build-edition.php'); ?>" class="topbar-action-btn primary">
                 <i class="fas fa-hammer"></i> Build Edition
             </a>
-        </nav>
-
-        <div class="user-menu">
-            <button class="user-menu-trigger" onclick="toggleUserMenu()">
-                <div class="user-avatar"><?php echo $_initials; ?></div>
-                <span class="user-name-text"><?php echo htmlspecialchars($_username); ?></span>
-                <i class="fas fa-chevron-down" style="font-size:10px;opacity:.6;"></i>
-            </button>
-            <div class="user-dropdown" id="userDropdown">
-                <div class="user-dropdown-header">
-                    <strong><?php echo htmlspecialchars($_username); ?></strong>
-                    <small><?php echo $_role; ?></small>
-                </div>
-                <a href="<?php echo portal_url('index.php'); ?>"><i class="fas fa-th-large"></i> Dashboard</a>
-                <a href="<?php echo portal_url('upload.php'); ?>"><i class="fas fa-cloud-upload-alt"></i> Upload Edition</a>
-                <a href="<?php echo portal_url('login.php?action=logout'); ?>" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
-            </div>
         </div>
     </div>
 </header>
-
-<!-- ── Mobile Sidebar ────────────────────────── -->
-<div class="portal-sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-<nav class="portal-sidebar" id="sidebar">
-    <button class="sidebar-close" onclick="toggleSidebar()">&times;</button>
-    <div class="sidebar-brand">
-        Kanda<span class="accent">News</span> Portal
-    </div>
-    <div class="sidebar-nav">
-        <a href="<?php echo portal_url('index.php'); ?>" class="<?php echo $_current_page === 'index.php' ? 'active' : ''; ?>">
-            <i class="fas fa-th-large"></i> Dashboard
-        </a>
-        <a href="<?php echo portal_url('editions.php'); ?>" class="<?php echo $_current_page === 'editions.php' ? 'active' : ''; ?>">
-            <i class="fas fa-newspaper"></i> Editions
-        </a>
-        <a href="<?php echo portal_url('upload.php'); ?>" class="<?php echo $_current_page === 'upload.php' ? 'active' : ''; ?>">
-            <i class="fas fa-cloud-upload-alt"></i> Upload Edition
-        </a>
-        <a href="<?php echo portal_cms_url('build-edition.php'); ?>">
-            <i class="fas fa-hammer"></i> Build Edition
-        </a>
-        <a href="<?php echo portal_url('login.php?action=logout'); ?>">
-            <i class="fas fa-sign-out-alt"></i> Logout
-        </a>
-    </div>
-</nav>
 
 <!-- ── Main Body ─────────────────────────────── -->
 <main class="portal-body">
 
 <?php if ($_flash): ?>
-<div class="flash-message flash-<?php echo htmlspecialchars($_flash['type']); ?>">
-    <i class="fas fa-<?php
-        echo match($_flash['type']) {
-            'success' => 'check-circle',
-            'error'   => 'exclamation-circle',
-            'warning' => 'exclamation-triangle',
-            default   => 'info-circle',
-        };
-    ?>"></i>
+<div class="flash flash-<?php echo htmlspecialchars($_flash['type']); ?>">
+    <i class="fas fa-<?php echo match($_flash['type']) {
+        'success' => 'check-circle',
+        'error'   => 'times-circle',
+        'warning' => 'exclamation-triangle',
+        default   => 'info-circle',
+    }; ?>"></i>
     <?php echo htmlspecialchars($_flash['message']); ?>
 </div>
 <?php endif; ?>

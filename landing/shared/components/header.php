@@ -13,7 +13,7 @@ $_is_hub = ($_is_hub ?? false) || ($COUNTRY_CODE ?? '') === '' || !isset($COUNTR
 $_hub_url = 'https://kandanews.africa';
 $_page_title = isset($page_title) ? $page_title : h($_brand . ' ' . $_country_name) . ' — The Future of News';
 $_page_desc = isset($page_description) ? $page_description : 'Africa\'s first digital flipping newspaper. Daily interactive editions for students, professionals and entrepreneurs — mobile-first, fast, and built to help you grow.';
-$_og_image = isset($og_image) ? $og_image : '/shared/assets/img/kanda-og.png';
+$_og_image = isset($og_image) ? $og_image : '/shared/assets/img/kanda-icon.png';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,12 +43,16 @@ $_og_image = isset($og_image) ? $og_image : '/shared/assets/img/kanda-og.png';
         "@type": "NewsMediaOrganization",
         "name": "KandaNews Africa",
         "url": "https://kandanews.africa",
-        "logo": "/shared/assets/img/kanda-square.png",
+        "logo": "https://kandanews.africa/shared/assets/img/kanda-icon.png",
         "description": "Africa's first digital flipping newspaper"
     }
     </script>
 
-    <link rel="icon" type="image/png" href="/shared/assets/img/kanda-square.png">
+    <!-- Favicon — KandaNews icon -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/shared/assets/img/kanda-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32"  href="/shared/assets/img/kanda-icon.png">
+    <link rel="apple-touch-icon"                      href="/shared/assets/img/kanda-icon.png">
+
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="/shared/assets/css/base.css">
@@ -59,8 +63,8 @@ $_og_image = isset($og_image) ? $og_image : '/shared/assets/img/kanda-og.png';
 <body>
     <header class="kn-header" role="banner">
         <div class="kn-header__inner">
-            <a href="/" class="kn-header__logo" aria-label="<?php echo h($_brand); ?> home">
-                <img src="/shared/assets/img/kanda-square.png" alt="<?php echo h($_brand); ?>" width="44" height="44">
+            <a href="<?php echo $_is_hub ? '/' : h($_hub_url); ?>" class="kn-header__logo" aria-label="<?php echo h($_brand); ?> home">
+                <img src="/shared/assets/img/kanda-icon.png" alt="<?php echo h($_brand); ?>" width="44" height="44" style="border-radius:10px;">
             </a>
             <div class="kn-header__brand">
                 <span class="kn-header__name"><?php echo h($_brand); ?></span>
@@ -72,6 +76,7 @@ $_og_image = isset($og_image) ? $og_image : '/shared/assets/img/kanda-og.png';
                 <?php else: ?>
                     <a href="#countries" class="kn-header__link">Countries</a>
                 <?php endif; ?>
+                <a href="<?php echo h($_hub_url); ?>/about.php" class="kn-header__link">About Us</a>
                 <a href="<?php echo h($_hub_url); ?>/blog/" class="kn-header__link">Blog</a>
                 <a href="#download" class="kn-header__link kn-header__link--cta">
                     <i class="fa-solid fa-download"></i> Download App
@@ -87,6 +92,7 @@ $_og_image = isset($og_image) ? $og_image : '/shared/assets/img/kanda-og.png';
             <?php else: ?>
                 <a href="#countries" class="kn-mobile-nav__link">Countries</a>
             <?php endif; ?>
+            <a href="<?php echo h($_hub_url); ?>/about.php" class="kn-mobile-nav__link">About Us</a>
             <a href="<?php echo h($_hub_url); ?>/blog/" class="kn-mobile-nav__link">Blog</a>
             <a href="#download" class="kn-mobile-nav__link kn-mobile-nav__link--cta">
                 <i class="fa-solid fa-download"></i> Download App
@@ -94,3 +100,4 @@ $_og_image = isset($og_image) ? $og_image : '/shared/assets/img/kanda-og.png';
         </nav>
     </header>
     <main>
+

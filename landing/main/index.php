@@ -87,7 +87,7 @@ require_once __DIR__ . '/shared/components/header.php';
     </div>
 
     <div class="kn-stats__item">
-      <span class="kn-stats__number kn-counter" data-target="4">4</span>
+      <span class="kn-stats__number kn-counter" data-target="6">6</span>
       <span class="kn-stats__label">Countries</span>
     </div>
 
@@ -118,7 +118,7 @@ require_once __DIR__ . '/shared/components/header.php';
       </p>
     </div>
 
-    <div class="kn-countries-grid" style="max-width:1000px;margin:0 auto;" role="list">
+    <div class="kn-countries-grid" style="max-width:1100px;margin:0 auto;" role="list">
 
       <!-- Uganda — LIVE -->
       <article class="kn-country-card kn-country-card--live kn-reveal" role="listitem" style="cursor:pointer;" onclick="location.href='https://ug.kandanews.africa'">
@@ -138,47 +138,80 @@ require_once __DIR__ . '/shared/components/header.php';
         </div>
       </article>
 
-      <!-- Kenya — COMING SOON -->
-      <article class="kn-country-card kn-country-card--soon kn-reveal" role="listitem">
-        <span class="kn-country-card__status">COMING SOON</span>
+      <!-- Kenya — LIVE -->
+      <article class="kn-country-card kn-country-card--live kn-reveal" role="listitem" style="cursor:pointer;" onclick="location.href='https://ke.kandanews.africa'">
+        <span class="kn-country-card__status">LIVE</span>
         <div class="kn-country-card__flag" aria-hidden="true">🇰🇪</div>
         <h3 class="kn-country-card__name">Kenya</h3>
         <div class="kn-country-card__links">
-          <a class="kn-country-card__link kn-country-card__link--primary" href="https://ke.kandanews.africa/#notify" aria-label="Get notified when KandaNews Kenya launches">
-            <i class="fa-solid fa-bell"></i> Notify Me
+          <a class="kn-country-card__link kn-country-card__link--primary" href="https://ke.kandanews.africa" aria-label="Enter KandaNews Kenya">
+            <i class="fa-solid fa-arrow-right"></i> Enter
           </a>
-          <a class="kn-country-card__link" href="https://ke.kandanews.africa" aria-label="Learn more about KandaNews Kenya">
-            Learn More
+          <a class="kn-country-card__link" href="https://ke.kandanews.africa/#subscribe" aria-label="Subscribe to KandaNews Kenya">
+            Subscribe
+          </a>
+          <a class="kn-country-card__link" href="https://ke.kandanews.africa/#advertisers" aria-label="View KandaNews Kenya rate card">
+            Rate Card
           </a>
         </div>
       </article>
 
-      <!-- Nigeria — COMING SOON -->
-      <article class="kn-country-card kn-country-card--soon kn-reveal" role="listitem">
-        <span class="kn-country-card__status">COMING SOON</span>
+      <!-- Nigeria — LIVE -->
+      <article class="kn-country-card kn-country-card--live kn-reveal" role="listitem" style="cursor:pointer;" onclick="location.href='https://ng.kandanews.africa'">
+        <span class="kn-country-card__status">LIVE</span>
         <div class="kn-country-card__flag" aria-hidden="true">🇳🇬</div>
         <h3 class="kn-country-card__name">Nigeria</h3>
         <div class="kn-country-card__links">
-          <a class="kn-country-card__link kn-country-card__link--primary" href="https://ng.kandanews.africa/#notify" aria-label="Get notified when KandaNews Nigeria launches">
-            <i class="fa-solid fa-bell"></i> Notify Me
+          <a class="kn-country-card__link kn-country-card__link--primary" href="https://ng.kandanews.africa" aria-label="Enter KandaNews Nigeria">
+            <i class="fa-solid fa-arrow-right"></i> Enter
           </a>
-          <a class="kn-country-card__link" href="https://ng.kandanews.africa" aria-label="Learn more about KandaNews Nigeria">
-            Learn More
+          <a class="kn-country-card__link" href="https://ng.kandanews.africa/#subscribe" aria-label="Subscribe to KandaNews Nigeria">
+            Subscribe
+          </a>
+          <a class="kn-country-card__link" href="https://ng.kandanews.africa/#advertisers" aria-label="View KandaNews Nigeria rate card">
+            Rate Card
           </a>
         </div>
       </article>
 
-      <!-- South Africa — COMING SOON -->
-      <article class="kn-country-card kn-country-card--soon kn-reveal" role="listitem">
-        <span class="kn-country-card__status">COMING SOON</span>
+      <!-- South Africa — LIVE -->
+      <article class="kn-country-card kn-country-card--live kn-reveal" role="listitem" style="cursor:pointer;" onclick="location.href='https://za.kandanews.africa'">
+        <span class="kn-country-card__status">LIVE</span>
         <div class="kn-country-card__flag" aria-hidden="true">🇿🇦</div>
         <h3 class="kn-country-card__name">South Africa</h3>
         <div class="kn-country-card__links">
-          <a class="kn-country-card__link kn-country-card__link--primary" href="https://za.kandanews.africa/#notify" aria-label="Get notified when KandaNews South Africa launches">
+          <a class="kn-country-card__link kn-country-card__link--primary" href="https://za.kandanews.africa" aria-label="Enter KandaNews South Africa">
+            <i class="fa-solid fa-arrow-right"></i> Enter
+          </a>
+          <a class="kn-country-card__link" href="https://za.kandanews.africa/#subscribe" aria-label="Subscribe to KandaNews South Africa">
+            Subscribe
+          </a>
+          <a class="kn-country-card__link" href="https://za.kandanews.africa/#advertisers" aria-label="View KandaNews South Africa rate card">
+            Rate Card
+          </a>
+        </div>
+      </article>
+
+      <!-- Ghana — COMING SOON -->
+      <article class="kn-country-card kn-country-card--soon kn-reveal" role="listitem">
+        <span class="kn-country-card__status">COMING SOON</span>
+        <div class="kn-country-card__flag" aria-hidden="true">🇬🇭</div>
+        <h3 class="kn-country-card__name">Ghana</h3>
+        <div class="kn-country-card__links">
+          <a class="kn-country-card__link kn-country-card__link--primary" href="mailto:hello@kandanews.africa?subject=Notify%20me%20-%20Ghana" aria-label="Get notified when KandaNews Ghana launches">
             <i class="fa-solid fa-bell"></i> Notify Me
           </a>
-          <a class="kn-country-card__link" href="https://za.kandanews.africa" aria-label="Learn more about KandaNews South Africa">
-            Learn More
+        </div>
+      </article>
+
+      <!-- Rwanda — COMING SOON -->
+      <article class="kn-country-card kn-country-card--soon kn-reveal" role="listitem">
+        <span class="kn-country-card__status">COMING SOON</span>
+        <div class="kn-country-card__flag" aria-hidden="true">🇷🇼</div>
+        <h3 class="kn-country-card__name">Rwanda</h3>
+        <div class="kn-country-card__links">
+          <a class="kn-country-card__link kn-country-card__link--primary" href="mailto:hello@kandanews.africa?subject=Notify%20me%20-%20Rwanda" aria-label="Get notified when KandaNews Rwanda launches">
+            <i class="fa-solid fa-bell"></i> Notify Me
           </a>
         </div>
       </article>
@@ -186,7 +219,8 @@ require_once __DIR__ . '/shared/components/header.php';
     </div>
 
     <p class="text-center mt-3" style="color:var(--kn-muted);font-size:0.92rem;">
-      <i class="fa-solid fa-globe" style="margin-right:0.3rem;"></i> More countries launching soon.
+      <i class="fa-solid fa-globe" style="margin-right:0.3rem;"></i>
+      4 editions live now &mdash; Ghana &amp; Rwanda coming soon.
     </p>
   </div>
 </section>

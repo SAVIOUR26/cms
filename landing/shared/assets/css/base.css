@@ -89,6 +89,39 @@
 }
 
 /* ================================================================
+   1b. TWEMOJI — Emoji image sizing
+   ================================================================ */
+/* Twemoji converts emoji to inline SVG/PNG images; keep them inline */
+img.emoji {
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+    vertical-align: -0.125em;
+    pointer-events: none;
+}
+
+/* Larger flag in header brand name */
+.kn-header__flag img.emoji {
+    height: 1.35rem;
+    width: 1.35rem;
+    vertical-align: middle;
+}
+
+/* Hero flag in country pages */
+.kn-glass__flag img.emoji {
+    height: 1.5em;
+    width: 1.5em;
+    vertical-align: middle;
+}
+
+/* Country card flag */
+.kn-country-card__flag img.emoji {
+    height: 3rem;
+    width: 3rem;
+    vertical-align: middle;
+}
+
+/* ================================================================
    2. RESET — Modern CSS Reset
    ================================================================ */
 *,
@@ -887,7 +920,6 @@ ul, ol {
    13. PRICING CARDS
    ================================================================ */
 .kn-pricing {
-    margin-top: -3rem;
     position: relative;
     z-index: 4;
 }
@@ -897,6 +929,8 @@ ul, ol {
     gap: 1.5rem;
     flex-wrap: wrap;
     justify-content: center;
+    /* Extra top padding so the popular badge has room without overlapping the section title */
+    padding-top: 1.5rem;
 }
 
 .kn-card {
@@ -930,9 +964,11 @@ ul, ol {
 }
 
 .kn-card .kn-price strong {
-    font-size: 2rem;
+    font-size: clamp(1.3rem, 2.2vw, 1.85rem);
     color: var(--kn-ink);
     font-weight: 900;
+    white-space: nowrap;
+    display: block;
 }
 
 .kn-card .kn-price span {
@@ -2367,10 +2403,6 @@ ul, ol {
     }
 
     /* Pricing: stack */
-    .kn-pricing {
-        margin-top: -2rem;
-    }
-
     .kn-pricing-grid {
         flex-direction: column;
         align-items: center;

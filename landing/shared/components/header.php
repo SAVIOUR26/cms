@@ -59,6 +59,8 @@ $_og_image = isset($og_image) ? $og_image : '/shared/assets/img/kanda-icon.png';
     <?php if (isset($extra_css)): ?>
         <link rel="stylesheet" href="<?php echo h($extra_css); ?>">
     <?php endif; ?>
+    <!-- Twemoji — renders emoji (including country flags) on all OS/browsers -->
+    <script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <header class="kn-header" role="banner">

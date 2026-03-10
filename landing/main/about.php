@@ -12,7 +12,7 @@ require_once __DIR__ . '/shared/includes/country-config.php';
 $COUNTRY = ['name' => 'Africa', 'flag' => '🌍', 'email' => 'hello@kandanews.africa'];
 $_is_hub = true;
 $page_title  = 'About Us — KandaNews Africa';
-$page_description = 'Learn how KandaNews is building Africa's first digital flipping newspaper — our mission, story, team, and vision for the future of news on the continent.';
+$page_description = "Learn how KandaNews is building Africa's first digital flipping newspaper — our mission, story, team, and vision for the future of news on the continent.";
 
 require_once __DIR__ . '/shared/components/header.php';
 ?>

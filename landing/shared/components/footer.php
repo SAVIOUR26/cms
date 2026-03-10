@@ -56,5 +56,15 @@
     <?php if (isset($extra_js)): ?>
         <script src="<?php echo h($extra_js); ?>"></script>
     <?php endif; ?>
+    <script>
+        // Render all emoji (incl. country flags) as Twemoji SVG images
+        if (typeof twemoji !== 'undefined') {
+            twemoji.parse(document.body, {
+                folder: 'svg',
+                ext: '.svg',
+                base: 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/'
+            });
+        }
+    </script>
 </body>
 </html>

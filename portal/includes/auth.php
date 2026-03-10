@@ -57,7 +57,33 @@ function portal_db(): PDO {
         PDO::ATTR_EMULATE_PREPARES   => false,
     ]);
 
+    portal_ensure_schema($pdo);
+
     return $pdo;
+}
+
+/**
+ * Ensure the database schema is up to date.
+ * Adds missing columns introduced after initial deployment.
+ * Safe to run on every request — uses IF NOT EXISTS / column check.
+ */
+function portal_ensure_schema(PDO $db): void {
+    static $ran = false;
+    if ($ran) return;
+    $ran = true;
+
+    try {
+        // migration_002: add `category` column to editions
+        $cols = $db->query("SHOW COLUMNS FROM editions LIKE 'category'")->fetchAll();
+        if (empty($cols)) {
+            $db->exec("ALTER TABLE editions
+                ADD COLUMN category VARCHAR(50) DEFAULT NULL AFTER edition_type,
+                ADD INDEX idx_category (category)");
+        }
+    } catch (PDOException $e) {
+        // Non-fatal — log and continue; page may still partially work
+        error_log('portal_ensure_schema error: ' . $e->getMessage());
+    }
 }
 
 // ──────────────────────────────────────────────

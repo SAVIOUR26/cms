@@ -10,40 +10,48 @@ require_once 'config.php';
 requireLogin();
 $user = getCurrentUser();
 
-// Get all template pages from the templates/pages/ directory
-$pagesDir = __DIR__ . '/templates/pages/';
-$pages = [];
+// ── Recursive multi-folder page scanner ─────────────────────────────────
+$pagesDir   = __DIR__ . '/templates/pages/';
+$pageGroups = []; // ['Group Label' => [...page entries...]]
+
+function scan_pages_group(string $dir, string $relPrefix = ''): array {
+    $pages = [];
+    if (!is_dir($dir)) return $pages;
+    foreach (scandir($dir) as $file) {
+        if ($file[0] === '.') continue;
+        $fullPath = $dir . $file;
+        if (!is_file($fullPath) || pathinfo($file, PATHINFO_EXTENSION) !== 'html') continue;
+        $content = file_get_contents($fullPath);
+        preg_match('/<title>(.*?)<\/title>/i', $content, $tm);
+        preg_match('/data-category="(.*?)"/i', $content, $cm);
+        $pages[] = [
+            'filename' => $relPrefix . $file,
+            'basename' => $file,
+            'title'    => $tm[1] ?? pathinfo($file, PATHINFO_FILENAME),
+            'category' => $cm[1] ?? 'general',
+            'size'     => filesize($fullPath),
+            'modified' => filemtime($fullPath),
+        ];
+    }
+    usort($pages, fn($a, $b) => $b['modified'] - $a['modified']);
+    return $pages;
+}
 
 if (is_dir($pagesDir)) {
-    $files = scandir($pagesDir);
-    foreach ($files as $file) {
-        if (pathinfo($file, PATHINFO_EXTENSION) === 'html') {
-            $filePath = $pagesDir . $file;
-            $content = file_get_contents($filePath);
-            
-            // Extract title from HTML (if exists)
-            preg_match('/<title>(.*?)<\/title>/i', $content, $titleMatch);
-            $title = $titleMatch[1] ?? pathinfo($file, PATHINFO_FILENAME);
-            
-            // Extract category from filename or content
-            preg_match('/data-category="(.*?)"/i', $content, $catMatch);
-            $category = $catMatch[1] ?? 'general';
-            
-            $pages[] = [
-                'filename' => $file,
-                'title' => $title,
-                'category' => $category,
-                'size' => filesize($filePath),
-                'modified' => filemtime($filePath)
-            ];
+    $rootPages = scan_pages_group($pagesDir);
+    if ($rootPages) $pageGroups['General'] = $rootPages;
+    foreach (scandir($pagesDir) as $folder) {
+        if ($folder[0] === '.') continue;
+        $folderPath = $pagesDir . $folder . '/';
+        if (!is_dir($folderPath)) continue;
+        $folderPages = scan_pages_group($folderPath, $folder . '/');
+        if ($folderPages) {
+            $pageGroups[ucwords(str_replace(['-','_'], ' ', $folder))] = $folderPages;
         }
     }
 }
 
-// Sort by most recent
-usort($pages, function($a, $b) {
-    return $b['modified'] - $a['modified'];
-});
+$totalPageCount = array_sum(array_map('count', $pageGroups));
 
 $page_title = 'Pages Library';
 ?>
@@ -420,76 +428,108 @@ $page_title = 'Pages Library';
             </div>
         </div>
         
+        <?php
+        // Flatten all pages for stats
+        $allPagesFlat = array_merge(...array_values($pageGroups ?: [[]]));
+        $totalSize    = array_sum(array_column($allPagesFlat, 'size'));
+        ?>
         <div class="stats-bar">
             <div class="stat-item">
                 <div class="stat-icon">📄</div>
                 <div class="stat-info">
-                    <div class="stat-value"><?php echo count($pages); ?></div>
+                    <div class="stat-value"><?php echo $totalPageCount; ?></div>
                     <div class="stat-label">Total Pages</div>
                 </div>
             </div>
             <div class="stat-item">
-                <div class="stat-icon">📁</div>
+                <div class="stat-icon">📂</div>
                 <div class="stat-info">
-                    <div class="stat-value"><?php echo number_format(array_sum(array_column($pages, 'size')) / 1024, 1); ?> KB</div>
-                    <div class="stat-label">Total Size</div>
+                    <div class="stat-value"><?php echo count($pageGroups); ?></div>
+                    <div class="stat-label">Folders</div>
                 </div>
             </div>
             <div class="stat-item">
-                <div class="stat-icon">🎨</div>
+                <div class="stat-icon">💾</div>
                 <div class="stat-info">
-                    <div class="stat-value"><?php echo count(array_unique(array_column($pages, 'category'))); ?></div>
-                    <div class="stat-label">Categories</div>
+                    <div class="stat-value"><?php echo number_format($totalSize / 1024, 1); ?> KB</div>
+                    <div class="stat-label">Total Size</div>
                 </div>
             </div>
         </div>
-        
-        <div class="filter-bar">
-            <button class="filter-btn active" onclick="filterPages('all')">All Pages</button>
-            <button class="filter-btn" onclick="filterPages('cover')">📰 Covers</button>
-            <button class="filter-btn" onclick="filterPages('article')">📄 Articles</button>
-            <button class="filter-btn" onclick="filterPages('ad')">📢 Ads</button>
-            <button class="filter-btn" onclick="filterPages('interactive')">🎮 Interactive</button>
+
+        <!-- Folder filter tabs -->
+        <?php if ($totalPageCount > 0): ?>
+        <div class="filter-bar" style="flex-wrap:wrap;gap:8px;margin-bottom:20px;">
+            <button class="filter-btn active" data-folder="all" onclick="filterFolder('all',this)">
+                📁 All Folders <span style="opacity:.7;">(<?php echo $totalPageCount; ?>)</span>
+            </button>
+            <?php foreach ($pageGroups as $label => $gPages): ?>
+            <button class="filter-btn" data-folder="<?php echo htmlspecialchars($label); ?>"
+                    onclick="filterFolder(<?php echo json_encode($label); ?>, this)">
+                <?php
+                $folderIcons = ['General'=>'📃','University'=>'🎓','Corporate'=>'💼','Campaigns'=>'📣','University'=>'🎓'];
+                echo $folderIcons[$label] ?? '📂';
+                ?> <?php echo htmlspecialchars($label); ?>
+                <span style="opacity:.7;">(<?php echo count($gPages); ?>)</span>
+            </button>
+            <?php endforeach; ?>
         </div>
-        
-        <?php if (empty($pages)): ?>
+        <?php endif; ?>
+
+        <?php if ($totalPageCount === 0): ?>
             <div class="empty-state">
                 <div class="empty-icon">📭</div>
                 <h3>No Pages Yet!</h3>
-                <p>Start creating beautiful HTML pages with Claude AI</p>
+                <p>Add HTML pages to <code>templates/pages/</code> or create subfolders to organise by edition type.</p>
                 <button onclick="showUploadInfo()" class="btn btn-primary">
-                    <i class="fas fa-lightbulb"></i> Learn How to Add Pages
+                    <i class="fas fa-lightbulb"></i> Quick Start Guide
                 </button>
-                
                 <div class="upload-info">
-                    <h4>📝 Quick Start Guide:</h4>
+                    <h4>📝 How to organise pages:</h4>
                     <ol>
-                        <li>Open Claude AI and ask it to create a beautiful HTML page</li>
-                        <li>Save the HTML code to <code>templates/pages/your-page-name.html</code></li>
-                        <li>Refresh this page to see it appear!</li>
-                        <li>Start building your edition</li>
+                        <li>Add HTML files to <code>templates/pages/</code> for general pages</li>
+                        <li>Create subfolders like <code>templates/pages/university/</code> for specific edition types</li>
+                        <li>Use the Page Editor to create and save pages to any folder</li>
+                        <li>Pick pages from multiple folders when building an edition</li>
                     </ol>
                 </div>
             </div>
         <?php else: ?>
-            <div class="pages-grid">
-                <?php foreach ($pages as $page): ?>
-                    <div class="page-card" data-category="<?php echo htmlspecialchars($page['category']); ?>">
+            <?php foreach ($pageGroups as $groupLabel => $gPages): ?>
+            <div class="folder-section" data-folder="<?php echo htmlspecialchars($groupLabel); ?>" style="margin-bottom:32px;">
+                <!-- Folder header -->
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #f0f0f0;">
+                    <span style="font-size:20px;"><?php echo $folderIcons[$groupLabel] ?? '📂'; ?></span>
+                    <div>
+                        <div style="font-size:15px;font-weight:700;color:#1e2b42;"><?php echo htmlspecialchars($groupLabel); ?></div>
+                        <div style="font-size:12px;color:#888;"><?php echo count($gPages); ?> page<?php echo count($gPages) !== 1 ? 's' : ''; ?> &nbsp;·&nbsp;
+                            <code style="font-size:11px;background:#f3f4f6;padding:1px 5px;border-radius:4px;">templates/pages/<?php echo $groupLabel === 'General' ? '' : strtolower(str_replace(' ', '-', $groupLabel)) . '/'; ?></code>
+                        </div>
+                    </div>
+                    <div style="margin-left:auto;">
+                        <a href="page-editor.php?folder=<?php echo urlencode(strtolower(str_replace(' ','-',$groupLabel))); ?>"
+                           class="btn btn-primary btn-small" style="font-size:12px;padding:5px 12px;">
+                            <i class="fas fa-plus"></i> New Page Here
+                        </a>
+                    </div>
+                </div>
+
+                <div class="pages-grid">
+                    <?php foreach ($gPages as $page): ?>
+                    <div class="page-card" data-folder="<?php echo htmlspecialchars($groupLabel); ?>"
+                         data-category="<?php echo htmlspecialchars($page['category']); ?>">
                         <div class="page-preview">
-                            <?php 
-                            $icons = [
-                                'cover' => '📰',
-                                'article' => '📄',
-                                'ad' => '📢',
-                                'interactive' => '🎮',
-                                'general' => '📃'
-                            ];
-                            echo $icons[$page['category']] ?? '📃';
+                            <?php
+                            $catIcons = ['cover'=>'📰','article'=>'📄','ad'=>'📢','interactive'=>'🎮','general'=>'📃'];
+                            echo $catIcons[$page['category']] ?? '📃';
                             ?>
                             <span class="page-category"><?php echo htmlspecialchars($page['category']); ?></span>
                         </div>
                         <div class="page-info">
                             <div class="page-title"><?php echo htmlspecialchars($page['title']); ?></div>
+                            <div style="font-size:10px;color:#aaa;margin-bottom:4px;">
+                                <i class="fas fa-folder" style="margin-right:3px;"></i><?php echo htmlspecialchars($page['filename']); ?>
+                            </div>
                             <div class="page-meta">
                                 <span><i class="fas fa-file"></i> <?php echo number_format($page['size'] / 1024, 1); ?> KB</span>
                                 <span><i class="fas fa-clock"></i> <?php echo date('M j', $page['modified']); ?></span>
@@ -504,8 +544,10 @@ $page_title = 'Pages Library';
                             </div>
                         </div>
                     </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </div>
             </div>
+            <?php endforeach; ?>
         <?php endif; ?>
     </div>
     
@@ -523,19 +565,21 @@ $page_title = 'Pages Library';
     </div>
     
     <script>
+        function filterFolder(folder, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.folder-section').forEach(sec => {
+                sec.style.display = (folder === 'all' || sec.dataset.folder === folder) ? '' : 'none';
+            });
+        }
+
+        // Legacy: kept for compatibility with old filter buttons if any remain
         function filterPages(category) {
             const cards = document.querySelectorAll('.page-card');
-            const buttons = document.querySelectorAll('.filter-btn');
-            
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if (event && event.target) event.target.classList.add('active');
             cards.forEach(card => {
-                if (category === 'all' || card.dataset.category === category) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+                card.style.display = (category === 'all' || card.dataset.category === category) ? 'block' : 'none';
             });
         }
         

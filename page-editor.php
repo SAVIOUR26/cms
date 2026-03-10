@@ -16,9 +16,21 @@ $pagesDir = __DIR__ . '/templates/pages/';
 $pageContent = '';
 $pageExists = false;
 
-if ($pageFile && file_exists($pagesDir . $pageFile)) {
-    $pageContent = file_get_contents($pagesDir . $pageFile);
-    $pageExists = true;
+// Support subfolder paths like "university/page.html"
+if ($pageFile) {
+    $cleanFile = ltrim(str_replace(['..', '//'], '', $pageFile), '/');
+    if (file_exists($pagesDir . $cleanFile)) {
+        $pageContent = file_get_contents($pagesDir . $cleanFile);
+        $pageFile    = $cleanFile;
+        $pageExists  = true;
+    }
+}
+
+// Scan existing folders for the selector
+$existingFolders = [];
+foreach (scandir($pagesDir) as $item) {
+    if ($item[0] === '.') continue;
+    if (is_dir($pagesDir . $item)) $existingFolders[] = $item;
 }
 
 $page_title = 'Page Editor';
@@ -649,8 +661,25 @@ $page_title = 'Page Editor';
             
             <div class="form-group" id="newNameGroup">
                 <label>New File Name</label>
-                <input type="text" id="newFileName" placeholder="my-edited-page.html">
-                <small style="display: block; margin-top: 5px; color: #666;">Will be saved as: templates/pages/your-name.html</small>
+                <input type="text" id="newFileName" placeholder="my-edited-page.html"
+                       oninput="updateSavePath()">
+
+                <label style="margin-top:12px;display:block;">Folder <span style="font-weight:400;color:#888;">(optional — organise by edition type)</span></label>
+                <select id="folderSelect" style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:6px;font-size:14px;margin-bottom:6px;"
+                        onchange="updateSavePath()">
+                    <option value="">— Root (templates/pages/) —</option>
+                    <?php foreach ($existingFolders as $ef): ?>
+                    <option value="<?php echo htmlspecialchars($ef); ?>"><?php echo htmlspecialchars(ucwords(str_replace(['-','_'],' ',$ef))); ?> &nbsp;(<?php echo htmlspecialchars($ef); ?>/)</option>
+                    <?php endforeach; ?>
+                    <option value="__new__">+ Create new folder…</option>
+                </select>
+                <input type="text" id="newFolderName" placeholder="folder-name (e.g. university)"
+                       style="display:none;width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:6px;font-size:14px;margin-bottom:6px;"
+                       oninput="updateSavePath()">
+
+                <small id="savePathHint" style="display:block;margin-top:5px;color:#666;">
+                    Will be saved as: <code id="savePathDisplay">templates/pages/your-name.html</code>
+                </small>
             </div>
             
             <div class="modal-actions">
@@ -858,45 +887,87 @@ $page_title = 'Page Editor';
             });
         });
         
+        // ── Update save path hint ───────────────────────────
+        function updateSavePath() {
+            const folderSel = document.getElementById('folderSelect');
+            const newFolderInput = document.getElementById('newFolderName');
+            const fileInput = document.getElementById('newFileName');
+            const hint = document.getElementById('savePathDisplay');
+
+            if (!hint) return;
+
+            let folder = folderSel ? folderSel.value : '';
+            if (folder === '__new__') folder = (newFolderInput.value || 'new-folder').trim();
+
+            const fname = (fileInput.value || 'your-name').trim();
+            const base = fname.endsWith('.html') ? fname : fname + '.html';
+            hint.textContent = folder ? 'templates/pages/' + folder + '/' + base : 'templates/pages/' + base;
+        }
+
+        function handleFolderChange() {
+            const sel = document.getElementById('folderSelect');
+            const newFolderInput = document.getElementById('newFolderName');
+            if (sel.value === '__new__') {
+                newFolderInput.style.display = 'block';
+            } else {
+                newFolderInput.style.display = 'none';
+            }
+            updateSavePath();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const folderSel = document.getElementById('folderSelect');
+            if (folderSel) folderSel.addEventListener('change', handleFolderChange);
+        });
+
         async function savePage() {
             const code = codeTextarea.value;
             let fileName;
-            
+
             if (saveMode === 'new') {
-                fileName = document.getElementById('newFileName').value;
+                fileName = document.getElementById('newFileName').value.trim();
                 if (!fileName) {
                     showNotification('Please enter a file name', 'error');
                     return;
                 }
-                if (!fileName.endsWith('.html')) {
-                    fileName += '.html';
-                }
+                if (!fileName.endsWith('.html')) fileName += '.html';
             } else {
                 fileName = originalFileName;
             }
-            
-            // Send to server
+
+            // Resolve folder
+            let folder = '';
+            const folderSel = document.getElementById('folderSelect');
+            if (saveMode === 'new' && folderSel) {
+                folder = folderSel.value;
+                if (folder === '__new__') {
+                    folder = (document.getElementById('newFolderName').value || '').trim();
+                    if (!folder) {
+                        showNotification('Please enter a folder name', 'error');
+                        return;
+                    }
+                }
+            }
+
             const formData = new FormData();
             formData.append('code', code);
             formData.append('filename', fileName);
+            formData.append('folder', folder);
             formData.append('mode', saveMode);
-            
+
             try {
                 const response = await fetch('api/save-page.php', {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (result.success) {
-                    showNotification('✅ Page saved successfully!', 'success');
+                    const savedPath = result.folder ? result.folder + '/' + result.filename : result.filename;
+                    showNotification('✅ Page saved: ' + savedPath, 'success');
                     closeSaveModal();
-                    
-                    // Redirect to pages library after 1 second
-                    setTimeout(() => {
-                        window.location.href = 'pages-library.php';
-                    }, 1500);
+                    setTimeout(() => { window.location.href = 'pages-library.php'; }, 1500);
                 } else {
                     showNotification('❌ Error: ' + result.error, 'error');
                 }

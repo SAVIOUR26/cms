@@ -9,6 +9,8 @@ import 'screens/auth/register_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/home/archives_screen.dart';
 import 'screens/home/special_editions_screen.dart';
+import 'screens/home/today_edition_screen.dart';
+import 'screens/home/polls_trends_screen.dart';
 import 'screens/reader/reader_screen.dart';
 import 'screens/subscription/plans_screen.dart';
 import 'screens/subscription/payment_screen.dart';
@@ -58,6 +60,8 @@ final _router = GoRouter(
         );
       },
     ),
+    GoRoute(path: '/today-edition', builder: (_, __) => const TodayEditionScreen()),
+    GoRoute(path: '/polls-trends', builder: (_, __) => const PollsTrendsScreen()),
     GoRoute(path: '/special-editions', builder: (_, __) => const SpecialEditionsScreen()),
     GoRoute(path: '/subscribe', builder: (_, __) => const PlansScreen()),
     GoRoute(

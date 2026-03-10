@@ -9,6 +9,80 @@
 require_once __DIR__ . '/includes/auth.php';
 portal_require_login();
 
+$db   = portal_db();
+$_me  = portal_get_user();
+
+// ── Handle Admins actions ─────────────────────
+$_admins_msg = null;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['admins_action'])) {
+    if (!portal_verify_csrf()) {
+        portal_flash('error', 'Security token mismatch. Please try again.');
+        header('Location: ' . portal_url('settings.php?section=admins'));
+        exit;
+    }
+
+    $action = $_POST['admins_action'];
+
+    // Change own password
+    if ($action === 'change_password') {
+        $current  = trim($_POST['current_password'] ?? '');
+        $newPass  = trim($_POST['new_password']  ?? '');
+        $confirm  = trim($_POST['confirm_password'] ?? '');
+
+        if ($current === '' || $newPass === '' || $confirm === '') {
+            $_admins_msg = ['type' => 'error', 'text' => 'All password fields are required.'];
+        } elseif ($newPass !== $confirm) {
+            $_admins_msg = ['type' => 'error', 'text' => 'New passwords do not match.'];
+        } elseif (strlen($newPass) < 8) {
+            $_admins_msg = ['type' => 'error', 'text' => 'New password must be at least 8 characters.'];
+        } else {
+            $row = $db->prepare("SELECT password FROM cms_admins WHERE id = ? LIMIT 1");
+            $row->execute([$_me['id']]);
+            $stored = $row->fetchColumn();
+            $valid  = password_verify($current, $stored) || ($current === $stored);
+            if (!$valid) {
+                $_admins_msg = ['type' => 'error', 'text' => 'Current password is incorrect.'];
+            } else {
+                $hash = password_hash($newPass, PASSWORD_DEFAULT);
+                $db->prepare("UPDATE cms_admins SET password = ? WHERE id = ?")->execute([$hash, $_me['id']]);
+                unset($_SESSION['portal_admin_data']);
+                portal_flash('success', 'Password changed successfully.');
+                header('Location: ' . portal_url('settings.php?section=admins'));
+                exit;
+            }
+        }
+    }
+
+    // Add new admin user
+    if ($action === 'add_user') {
+        $fullName = portal_sanitize($_POST['full_name'] ?? '');
+        $username = strtolower(trim(preg_replace('/[^a-zA-Z0-9_]/', '', $_POST['username'] ?? '')));
+        $newPass  = trim($_POST['new_user_password'] ?? '');
+        $role     = in_array($_POST['role'] ?? '', ['admin', 'editor']) ? $_POST['role'] : 'editor';
+
+        if ($fullName === '' || $username === '' || $newPass === '') {
+            $_admins_msg = ['type' => 'error', 'text' => 'Full name, username, and password are required.'];
+        } elseif (strlen($newPass) < 8) {
+            $_admins_msg = ['type' => 'error', 'text' => 'Password must be at least 8 characters.'];
+        } else {
+            $exists = $db->prepare("SELECT id FROM cms_admins WHERE username = ? LIMIT 1");
+            $exists->execute([$username]);
+            if ($exists->fetchColumn()) {
+                $_admins_msg = ['type' => 'error', 'text' => "Username '$username' is already taken."];
+            } else {
+                $hash = password_hash($newPass, PASSWORD_DEFAULT);
+                $db->prepare(
+                    "INSERT INTO cms_admins (username, password, full_name, role, status, created_at)
+                     VALUES (?, ?, ?, ?, 'active', NOW())"
+                )->execute([$username, $hash, $fullName, $role]);
+                portal_flash('success', "Admin account '$username' created successfully.");
+                header('Location: ' . portal_url('settings.php?section=admins'));
+                exit;
+            }
+        }
+    }
+}
+
 $page_title   = 'Settings';
 $page_section = 'system';
 $section      = $_GET['section'] ?? 'general';
@@ -271,6 +345,91 @@ EDITIONS_URL=https://ug.kandanews.africa/editions
 
 <?php elseif ($section === 'admins'): ?>
 <!-- ── Admin Users ────────────────────────────── -->
+
+<?php if ($_admins_msg): ?>
+<div class="flash flash-<?php echo $_admins_msg['type'] === 'error' ? 'error' : 'success'; ?>">
+    <i class="fas fa-<?php echo $_admins_msg['type'] === 'error' ? 'exclamation-circle' : 'check-circle'; ?>"></i>
+    <?php echo htmlspecialchars($_admins_msg['text']); ?>
+</div>
+<?php endif; ?>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;" class="two-col-grid">
+
+<!-- Change Password -->
+<div class="card">
+    <div class="card-header">
+        <h2><i class="fas fa-key"></i> Change My Password</h2>
+    </div>
+    <form method="POST" action="<?php echo portal_url('settings.php?section=admins'); ?>">
+        <?php echo portal_csrf_field(); ?>
+        <input type="hidden" name="admins_action" value="change_password">
+        <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px;">Current Password</label>
+            <input type="password" name="current_password" required autocomplete="current-password"
+                style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;outline:none;transition:border .15s;"
+                onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+        <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px;">New Password</label>
+            <input type="password" name="new_password" required minlength="8" autocomplete="new-password"
+                style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;outline:none;transition:border .15s;"
+                onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+        <div style="margin-bottom:20px;">
+            <label style="display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px;">Confirm New Password</label>
+            <input type="password" name="confirm_password" required minlength="8" autocomplete="new-password"
+                style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;outline:none;transition:border .15s;"
+                onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+        <button type="submit" class="btn-primary-solid">
+            <i class="fas fa-lock"></i> Update Password
+        </button>
+    </form>
+</div>
+
+<!-- Add New Admin -->
+<div class="card">
+    <div class="card-header">
+        <h2><i class="fas fa-user-plus"></i> Add Admin User</h2>
+    </div>
+    <form method="POST" action="<?php echo portal_url('settings.php?section=admins'); ?>">
+        <?php echo portal_csrf_field(); ?>
+        <input type="hidden" name="admins_action" value="add_user">
+        <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px;">Full Name</label>
+            <input type="text" name="full_name" required placeholder="e.g. John Doe"
+                style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;outline:none;transition:border .15s;"
+                onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+        <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px;">Username</label>
+            <input type="text" name="username" required placeholder="e.g. johndoe" pattern="[a-zA-Z0-9_]+"
+                style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;outline:none;transition:border .15s;"
+                onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='#e5e7eb'">
+            <p style="font-size:11px;color:#888;margin-top:4px;">Letters, numbers and underscores only.</p>
+        </div>
+        <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px;">Password</label>
+            <input type="password" name="new_user_password" required minlength="8" autocomplete="new-password"
+                style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;outline:none;transition:border .15s;"
+                onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+        <div style="margin-bottom:20px;">
+            <label style="display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px;">Role</label>
+            <select name="role"
+                style="width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;outline:none;background:#fff;cursor:pointer;">
+                <option value="editor">Editor</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+        <button type="submit" class="btn-primary-solid">
+            <i class="fas fa-user-plus"></i> Create Account
+        </button>
+    </form>
+</div>
+</div><!-- /two-col-grid -->
+
+<!-- Admins table -->
 <div class="card">
     <div class="card-header">
         <h2><i class="fas fa-user-shield"></i> CMS Administrators</h2>
@@ -308,6 +467,23 @@ EDITIONS_URL=https://ug.kandanews.africa/editions
 
 <style>
 @media (max-width: 800px) { .two-col-grid { grid-template-columns: 1fr !important; } }
+.btn-primary-solid {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    background: var(--orange);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s;
+    width: 100%;
+    justify-content: center;
+}
+.btn-primary-solid:hover { background: var(--orange-l); }
 </style>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

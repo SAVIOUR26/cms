@@ -2,10 +2,12 @@
 /**
  * KandaNews API v1 — Editions Routes
  *
- * GET /editions            — List available editions
- * GET /editions/latest     — Get latest edition for user's country
- * GET /editions/today      — Get today's edition (or most recent)
- * GET /editions/{id}       — Get single edition detail + pages
+ * GET /editions                         — List available editions
+ * GET /editions/latest                  — Get latest edition for user's country
+ * GET /editions/today                   — Get today's edition (or most recent)
+ * GET /editions/date/{YYYY-MM-DD}       — Get edition for a specific date
+ * GET /editions/available-dates         — Dates that have editions in a month
+ * GET /editions/{id}                    — Get single edition detail + pages
  */
 
 function route_editions(string $action, string $method): void {
@@ -20,6 +22,10 @@ function route_editions(string $action, string $method): void {
         editions_latest($user);
     } elseif ($action === 'today') {
         editions_today($user);
+    } elseif ($action === 'available-dates') {
+        editions_available_dates($user);
+    } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $action)) {
+        editions_by_date($action, $user);
     } elseif (is_numeric($action)) {
         editions_detail((int) $action, $user);
     } else {
@@ -172,6 +178,102 @@ function editions_today(?array $user): void {
     $edition['is_free'] = (bool) $edition['is_free'];
 
     json_success(['edition' => $edition]);
+}
+
+/**
+ * GET /editions/date/{YYYY-MM-DD}?country=ug
+ *
+ * Returns the edition published on an exact date.
+ * If none found, returns 404 with { found: false }.
+ */
+function editions_by_date(string $date, ?array $user): void {
+    // Validate date
+    $dt = DateTimeImmutable::createFromFormat('Y-m-d', $date);
+    if (!$dt || $dt->format('Y-m-d') !== $date) {
+        json_error('Invalid date format. Use YYYY-MM-DD.', 400);
+    }
+
+    $country = $_GET['country'] ?? ($user['country'] ?? 'ug');
+    $pdo     = db();
+
+    $stmt = $pdo->prepare("
+        SELECT id, title, slug, country, edition_date, cover_image, page_count,
+               is_free, theme, html_url, zip_url, edition_type, category, created_at
+        FROM editions
+        WHERE country = ? AND status = 'published' AND edition_date = ?
+          AND edition_type = 'daily'
+        ORDER BY created_at DESC
+        LIMIT 1
+    ");
+    $stmt->execute([$country, $date]);
+    $edition = $stmt->fetch();
+
+    if (!$edition) {
+        json_success(['found' => false, 'date' => $date, 'edition' => null]);
+        return;
+    }
+
+    // Access check
+    $hasAccess = (bool) $edition['is_free'];
+    if (!$hasAccess && $user) {
+        $sub = $pdo->prepare("
+            SELECT id FROM subscriptions
+            WHERE user_id = ? AND status = 'active' AND expires_at > NOW() LIMIT 1
+        ");
+        $sub->execute([$user['id']]);
+        $hasAccess = (bool) $sub->fetch();
+    }
+
+    $edition['id']         = (int) $edition['id'];
+    $edition['page_count'] = (int) $edition['page_count'];
+    $edition['is_free']    = (bool) $edition['is_free'];
+    $edition['accessible'] = $hasAccess;
+
+    json_success(['found' => true, 'date' => $date, 'edition' => $edition]);
+}
+
+/**
+ * GET /editions/available-dates?country=ug&month=2026-03
+ *
+ * Returns an array of dates (YYYY-MM-DD) in the given month that have
+ * at least one published daily edition. Used by the archives calendar
+ * to highlight which dates can be tapped.
+ */
+function editions_available_dates(?array $user): void {
+    $country = $_GET['country'] ?? ($user['country'] ?? 'ug');
+    $month   = $_GET['month']   ?? date('Y-m');
+
+    // Validate month format
+    if (!preg_match('/^\d{4}-\d{2}$/', $month)) {
+        json_error('Invalid month format. Use YYYY-MM.', 400);
+    }
+
+    $year  = (int) substr($month, 0, 4);
+    $mon   = (int) substr($month, 5, 2);
+    if ($year < 2020 || $year > 2099 || $mon < 1 || $mon > 12) {
+        json_error('Month out of range.', 400);
+    }
+
+    $start = sprintf('%04d-%02d-01', $year, $mon);
+    $end   = sprintf('%04d-%02d-%02d', $year, $mon, cal_days_in_month(CAL_GREGORIAN, $mon, $year));
+
+    $stmt = db()->prepare("
+        SELECT DISTINCT DATE_FORMAT(edition_date, '%Y-%m-%d') AS date
+        FROM editions
+        WHERE country = ?
+          AND status = 'published'
+          AND edition_type = 'daily'
+          AND edition_date BETWEEN ? AND ?
+        ORDER BY date ASC
+    ");
+    $stmt->execute([$country, $start, $end]);
+    $dates = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    json_success([
+        'country' => $country,
+        'month'   => $month,
+        'dates'   => $dates,
+    ]);
 }
 
 /**

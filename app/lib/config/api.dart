@@ -19,6 +19,8 @@ class ApiConfig {
   static const String editions = '/editions';
   static const String editionsToday = '/editions/today';
   static const String editionsLatest = '/editions/latest';
+  static const String editionsAvailableDates = '/editions/available-dates';
+  // editionsByDate: use '/editions/{YYYY-MM-DD}'
 
   // Subscriptions
   static const String subscribePlans = '/subscribe/plans';

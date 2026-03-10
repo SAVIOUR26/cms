@@ -27,6 +27,10 @@ $output_dir = dirname(__DIR__) . '/output';
 if (!is_dir($covers_dir)) @mkdir($covers_dir, 0755, true);
 if (!is_dir($output_dir)) @mkdir($output_dir, 0755, true);
 
+// ── Pre-fill type/category from query params (for quick-action links)
+$_preType     = in_array($_GET['type'] ?? '', ['daily', 'special', 'rate_card']) ? $_GET['type'] : '';
+$_preCategory = $_GET['category'] ?? '';
+
 // ── Handle form submission ───────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!portal_verify_csrf()) {
@@ -261,10 +265,11 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
                 <div class="form-group">
                     <label for="edition_type">Edition Type *</label>
-                    <select id="edition_type" name="edition_type" class="form-control" required>
-                        <option value="daily"     <?php echo ($_POST['edition_type'] ?? 'daily') === 'daily' ? 'selected' : ''; ?>>Daily</option>
-                        <option value="special"   <?php echo ($_POST['edition_type'] ?? '') === 'special' ? 'selected' : ''; ?>>Special</option>
-                        <option value="rate_card"  <?php echo ($_POST['edition_type'] ?? '') === 'rate_card' ? 'selected' : ''; ?>>Rate Card</option>
+                    <select id="edition_type" name="edition_type" class="form-control" required onchange="toggleCategory(this.value)">
+                        <?php $selType = $_POST['edition_type'] ?? $_preType ?: 'daily'; ?>
+                        <option value="daily"     <?php echo $selType === 'daily'     ? 'selected' : ''; ?>>Daily</option>
+                        <option value="special"   <?php echo $selType === 'special'   ? 'selected' : ''; ?>>Special</option>
+                        <option value="rate_card"  <?php echo $selType === 'rate_card' ? 'selected' : ''; ?>>Rate Card</option>
                     </select>
                 </div>
             </div>
@@ -273,13 +278,13 @@ require_once __DIR__ . '/includes/header.php';
                 <label for="category">Category (for Special Editions)</label>
                 <select id="category" name="category" class="form-control">
                     <option value="">— None —</option>
-                    <option value="university" <?php echo ($_POST['category'] ?? '') === 'university' ? 'selected' : ''; ?>>University</option>
-                    <option value="corporate" <?php echo ($_POST['category'] ?? '') === 'corporate' ? 'selected' : ''; ?>>Corporate</option>
-                    <option value="entrepreneurship" <?php echo ($_POST['category'] ?? '') === 'entrepreneurship' ? 'selected' : ''; ?>>Entrepreneurship</option>
-                    <option value="campaigns" <?php echo ($_POST['category'] ?? '') === 'campaigns' ? 'selected' : ''; ?>>Campaigns</option>
-                    <option value="jobs_careers" <?php echo ($_POST['category'] ?? '') === 'jobs_careers' ? 'selected' : ''; ?>>Jobs &amp; Careers</option>
-                    <option value="podcasts" <?php echo ($_POST['category'] ?? '') === 'podcasts' ? 'selected' : ''; ?>>Podcasts</option>
-                    <option value="episodes" <?php echo ($_POST['category'] ?? '') === 'episodes' ? 'selected' : ''; ?>>Episodes</option>
+                    <option value="university" <?php echo ($_POST['category'] ?? $_preCategory) === 'university' ? 'selected' : ''; ?>>University</option>
+                    <option value="corporate" <?php echo ($_POST['category'] ?? $_preCategory) === 'corporate' ? 'selected' : ''; ?>>Corporate</option>
+                    <option value="entrepreneurship" <?php echo ($_POST['category'] ?? $_preCategory) === 'entrepreneurship' ? 'selected' : ''; ?>>Entrepreneurship</option>
+                    <option value="campaigns" <?php echo ($_POST['category'] ?? $_preCategory) === 'campaigns' ? 'selected' : ''; ?>>Campaigns</option>
+                    <option value="jobs_careers" <?php echo ($_POST['category'] ?? $_preCategory) === 'jobs_careers' ? 'selected' : ''; ?>>Jobs &amp; Careers</option>
+                    <option value="podcasts" <?php echo ($_POST['category'] ?? $_preCategory) === 'podcasts' ? 'selected' : ''; ?>>Podcasts</option>
+                    <option value="episodes" <?php echo ($_POST['category'] ?? $_preCategory) === 'episodes' ? 'selected' : ''; ?>>Episodes</option>
                 </select>
                 <div class="form-hint">Categorize special editions so they appear in the correct app section.</div>
             </div>

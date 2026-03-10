@@ -180,7 +180,25 @@ function subscribe_initiate(): void {
     } elseif ($provider === 'dpo') {
         $paymentData = dpo_init($user, $txRef, $amount, $currency, $plan);
     } else {
+        $pdo->prepare("DELETE FROM subscriptions WHERE id = ?")->execute([$subId]);
         json_error('Invalid payment provider. Choose flutterwave or dpo.');
+    }
+
+    // If provider returned no link, delete the pending record and return a clear error
+    if (empty($paymentData['link'])) {
+        $pdo->prepare("DELETE FROM subscriptions WHERE id = ?")->execute([$subId]);
+
+        if ($provider === 'flutterwave') {
+            $hint = empty($config['fw_secret_key'])
+                ? 'Flutterwave is not yet configured on this server (FW_SECRET_KEY missing).'
+                : 'Flutterwave could not generate a payment link. Please try again.';
+        } else {
+            $hint = empty($config['dpo_company_token'])
+                ? 'DPO is not yet configured on this server (DPO_COMPANY_TOKEN missing).'
+                : 'DPO could not generate a payment link. Please try again.';
+        }
+
+        json_error($hint, 502);
     }
 
     json_success([
@@ -189,7 +207,7 @@ function subscribe_initiate(): void {
         'amount'          => $amount,
         'currency'        => $currency,
         'provider'        => $provider,
-        'link'            => $paymentData['link'] ?? null,
+        'link'            => $paymentData['link'],
         'payment'         => $paymentData,
     ]);
 }

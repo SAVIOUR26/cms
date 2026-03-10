@@ -67,7 +67,7 @@ class _ArchivesScreenState extends ConsumerState<ArchivesScreen>
       backgroundColor: const Color(0xFFF5F6FA),
       appBar: AppBar(
         title: Text(widget.title ?? 'Archives'),
-        backgroundColor: KnColors.navy,
+        backgroundColor: KnColors.orange,
         foregroundColor: Colors.white,
         elevation: 0,
         bottom: TabBar(
@@ -612,13 +612,9 @@ class _SpecialEditionsTabState extends ConsumerState<_SpecialEditionsTab> {
                           _category = null;
                         })),
                 _Chip(
-                    label: 'Special',
-                    selected: _type == 'special',
-                    onTap: () =>
-                        setState(() {
-                          _type = 'special';
-                          _category = null;
-                        })),
+                    label: 'Special Editions',
+                    selected: false,
+                    onTap: () => context.push('/special-editions')),
                 _Chip(
                     label: 'Rate Card',
                     selected: _type == 'rate_card',

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../models/subscription.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/subscription_provider.dart';
+import '../../services/api_service.dart';
 import '../../theme/kn_theme.dart';
 
 class PlansScreen extends ConsumerStatefulWidget {
@@ -239,7 +240,11 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Payment failed: $e')),
+          SnackBar(
+            content: Text(ApiService.friendlyError(e)),
+            backgroundColor: KnColors.error,
+            duration: const Duration(seconds: 5),
+          ),
         );
       }
     } finally {

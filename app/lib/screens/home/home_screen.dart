@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/edition_provider.dart';
 import '../../providers/subscription_provider.dart';
@@ -229,21 +230,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           color: KnColors.orange,
                           badge: todayEdition.whenOrNull(
                               data: (e) => e != null ? 'NEW' : null),
-                          onTap: () {
-                            final edition = todayEdition.valueOrNull;
-                            if (edition != null && edition.htmlUrl != null) {
-                              context.push('/reader', extra: {
-                                'url': edition.htmlUrl,
-                                'title': edition.title,
-                              });
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content:
-                                        Text('No edition available today')),
-                              );
-                            }
-                          },
+                          onTap: () => context.push('/today-edition'),
                         ),
                         DashboardTile(
                           icon: Icons.library_books,
@@ -252,11 +239,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           onTap: () => context.push('/archives'),
                         ),
                         DashboardTile(
-                          icon: Icons.trending_up,
-                          label: 'Trending in\n${_countryName(country)} ${_countryFlag(country)}',
+                          icon: Icons.how_to_vote_outlined,
+                          label: '${_countryFlag(country)} Polls &\nTrends',
                           color: const Color(0xFF8B5CF6),
-                          onTap: () => context.push('/archives',
-                              extra: {'type': 'daily'}),
+                          onTap: () => context.push('/polls-trends'),
                         ),
                         DashboardTile(
                           icon: Icons.star,
@@ -370,20 +356,143 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Advertise with Us'),
-        content: const Text(
-          'Reach thousands of readers across Africa.\n\n'
-          'Contact: ads@kandanews.africa\n'
-          'WhatsApp: +256 XXX XXX XXX',
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        contentPadding: EdgeInsets.zero,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Orange header
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [KnColors.orange, Color(0xFFFF7A3D)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    width: 52,
+                    height: 52,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withAlpha(30),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.campaign, color: Colors.white, size: 28),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Advertise with Us',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Body
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  const Text(
+                    'Reach thousands of professionals, entrepreneurs, and students across Africa.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: KnColors.textSecondary,
+                      fontSize: 13,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.email_outlined, size: 13, color: KnColors.textMuted),
+                      const SizedBox(width: 4),
+                      const Text(
+                        'ads@kandanews.africa',
+                        style: TextStyle(fontSize: 12, color: KnColors.textMuted),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // View Rate Card button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.pop(ctx);
+                        context.push('/archives', extra: {
+                          'type': 'rate_card',
+                          'title': 'Rate Card',
+                        });
+                      },
+                      icon: const Icon(Icons.description_outlined, size: 18),
+                      label: const Text('View Our Rate Card'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: KnColors.navy,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  // WhatsApp button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        Navigator.pop(ctx);
+                        final uri = Uri.parse('https://wa.me/256700000000?text=Hi%2C%20I%27m%20interested%20in%20advertising%20on%20KandaNews%20Africa');
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri, mode: LaunchMode.externalApplication);
+                        }
+                      },
+                      icon: const Icon(Icons.chat_outlined, size: 18),
+                      label: const Text('WhatsApp Us Now'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF25D366),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  // Close button
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      style: TextButton.styleFrom(
+                        foregroundColor: KnColors.textMuted,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text('Close'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Close'),
-          ),
-        ],
       ),
     );
   }

@@ -679,6 +679,9 @@ $page_title = 'Dashboard';
                     <div class="user-name"><?php echo htmlspecialchars($user['full_name'] ?? $user['username']); ?></div>
                     <div class="user-role"><?php echo ucfirst($user['role']); ?></div>
                 </div>
+                <a href="/portal/" class="btn btn-primary" style="background:#f05a1a;border-color:#f05a1a;margin-right:8px;">
+                    <i class="fas fa-tachometer-alt"></i> Portal Dashboard
+                </a>
                 <a href="?logout=1" class="btn btn-secondary">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>

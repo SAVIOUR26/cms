@@ -207,11 +207,13 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
   void _onSubscribe() async {
     setState(() => _loading = true);
     try {
+      final user = ref.read(authProvider).user;
       final service = ref.read(subscriptionServiceProvider);
       final result = await service.initiate(
         plan: _selectedPlan!,
         provider: _provider,
-        phone: ref.read(authProvider).user?.phone,
+        country: user?.country,
+        phone: user?.phone,
       );
 
       if (result['ok'] == true && mounted) {

@@ -140,6 +140,7 @@ class KnDrawer extends ConsumerWidget {
                 label: 'Settings',
                 onTap: () {
                   if (!embedded) Navigator.pop(context);
+                  context.push('/settings');
                 },
               ),
             ],

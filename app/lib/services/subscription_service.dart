@@ -39,11 +39,13 @@ class SubscriptionService {
   Future<Map<String, dynamic>> initiate({
     required String plan,
     required String provider,
+    String? country,
     String? phone,
   }) async {
     return await _api.post(ApiConfig.subscribeInitiate, data: {
       'plan': plan,
       'provider': provider,
+      if (country != null) 'country': country,
       if (phone != null) 'phone': phone,
     });
   }

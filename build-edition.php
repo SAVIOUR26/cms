@@ -151,18 +151,71 @@
         }
         
         .available-pages {
-            max-height: 400px;
+            max-height: 440px;
             overflow-y: auto;
             border: 2px dashed #e0e0e0;
             border-radius: 10px;
-            padding: 15px;
+            padding: 0;
             margin-bottom: 20px;
         }
-        
+
+        /* Folder tabs */
+        .folder-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 12px 14px;
+            border-bottom: 2px solid #f0f0f0;
+            background: #fafafa;
+            border-radius: 10px 10px 0 0;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        .folder-tab {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1.5px solid #d1d5db;
+            background: #fff;
+            color: #555;
+            transition: all .15s;
+            user-select: none;
+        }
+        .folder-tab:hover { border-color: #f05a1a; color: #f05a1a; }
+        .folder-tab.active { background: #f05a1a; border-color: #f05a1a; color: #fff; }
+
+        /* Folder group header */
+        .folder-group { display: none; padding: 8px 14px; }
+        .folder-group.visible { display: block; }
+        .folder-group-header {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            color: #f05a1a;
+            padding: 4px 0 8px;
+            border-bottom: 1px dashed #f0e0d8;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .folder-group-header .folder-count {
+            background: #fff5f0;
+            color: #f05a1a;
+            font-size: 10px;
+            padding: 1px 7px;
+            border-radius: 10px;
+            border: 1px solid #ffd4c2;
+        }
+
         .page-item {
             background: #f1f2f3;
-            padding: 15px;
-            margin-bottom: 10px;
+            padding: 12px 14px;
+            margin-bottom: 8px;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
@@ -170,13 +223,13 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .page-item:hover {
             background: #fff5f0;
             border-left: 4px solid #f05a1a;
             transform: translateX(5px);
         }
-        
+
         .page-item-name {
             font-weight: 600;
             color: #1e2b42;
@@ -472,33 +525,87 @@
                     </div>
                     <div class="available-pages" id="available-pages">
                         <?php
+                        // ── Multi-folder page scanner ───────────────────
                         $pagesDir = __DIR__ . '/templates/pages/';
-                        $pages = [];
-                        
+                        $pageGroups = []; // ['Group Label' => [['filename'=>'rel/path.html','name'=>'display name'], ...]]
+
                         if (is_dir($pagesDir)) {
-                            $files = scandir($pagesDir);
-                            foreach ($files as $file) {
-                                if (pathinfo($file, PATHINFO_EXTENSION) === 'html') {
-                                    $pages[] = $file;
+                            // Root-level HTML files → "General" group
+                            $rootFiles = [];
+                            foreach (scandir($pagesDir) as $f) {
+                                if ($f[0] === '.') continue;
+                                if (!is_dir($pagesDir . $f) && pathinfo($f, PATHINFO_EXTENSION) === 'html') {
+                                    $rootFiles[] = ['filename' => $f, 'name' => str_replace(['-', '_', '.html'], [' ', ' ', ''], $f)];
+                                }
+                            }
+                            if ($rootFiles) $pageGroups['General'] = $rootFiles;
+
+                            // Subfolders → each folder becomes a group
+                            foreach (scandir($pagesDir) as $folder) {
+                                if ($folder[0] === '.') continue;
+                                $folderPath = $pagesDir . $folder . '/';
+                                if (!is_dir($folderPath)) continue;
+                                $folderPages = [];
+                                foreach (scandir($folderPath) as $f) {
+                                    if ($f[0] === '.') continue;
+                                    if (pathinfo($f, PATHINFO_EXTENSION) === 'html') {
+                                        $folderPages[] = [
+                                            'filename' => $folder . '/' . $f,
+                                            'name' => str_replace(['-', '_', '.html'], [' ', ' ', ''], $f),
+                                        ];
+                                    }
+                                }
+                                if ($folderPages) {
+                                    $pageGroups[ucwords(str_replace(['-','_'], ' ', $folder))] = $folderPages;
                                 }
                             }
                         }
-                        
-                        if (empty($pages)) {
-                            echo '<div style="text-align:center;padding:40px;color:#999;">';
-                            echo '<i class="fas fa-folder-open" style="font-size:48px;margin-bottom:15px;"></i><br>';
-                            echo 'No pages found in templates/pages/<br>';
-                            echo '<small>Add HTML pages to get started!</small>';
-                            echo '</div>';
-                        } else {
-                            foreach ($pages as $page) {
-                                echo '<div class="page-item" data-filename="' . htmlspecialchars($page) . '" onclick="addPage(this)">';
-                                echo '<span class="page-item-name">' . htmlspecialchars(str_replace(['-', '.html'], [' ', ''], $page)) . '</span>';
-                                echo '<span class="page-item-icon"><i class="fas fa-plus-circle"></i></span>';
-                                echo '</div>';
-                            }
-                        }
+
+                        $totalPages = array_sum(array_map('count', $pageGroups));
+
+                        if ($totalPages === 0):
                         ?>
+                        <div style="text-align:center;padding:40px;color:#999;">
+                            <i class="fas fa-folder-open" style="font-size:48px;margin-bottom:15px;display:block;"></i>
+                            No pages found in <code>templates/pages/</code><br>
+                            <small>Add HTML files or create subfolders to organise page sets.</small>
+                        </div>
+                        <?php else: ?>
+
+                        <!-- Folder tabs -->
+                        <div class="folder-tabs" id="folder-tabs">
+                            <span class="folder-tab active" data-group="all" onclick="filterGroup('all', this)">
+                                All <span style="opacity:.7;">(<?php echo $totalPages; ?>)</span>
+                            </span>
+                            <?php foreach ($pageGroups as $label => $pages): ?>
+                            <span class="folder-tab" data-group="<?php echo htmlspecialchars($label); ?>"
+                                  onclick="filterGroup(<?php echo json_encode($label); ?>, this)">
+                                <i class="fas fa-folder" style="font-size:10px;margin-right:4px;"></i>
+                                <?php echo htmlspecialchars($label); ?>
+                                <span style="opacity:.7;">(<?php echo count($pages); ?>)</span>
+                            </span>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <!-- Page groups -->
+                        <?php foreach ($pageGroups as $label => $pages): ?>
+                        <div class="folder-group visible" data-group="<?php echo htmlspecialchars($label); ?>">
+                            <div class="folder-group-header">
+                                <i class="fas fa-folder-open"></i>
+                                <?php echo htmlspecialchars($label); ?>
+                                <span class="folder-count"><?php echo count($pages); ?></span>
+                            </div>
+                            <?php foreach ($pages as $page): ?>
+                            <div class="page-item" data-filename="<?php echo htmlspecialchars($page['filename']); ?>"
+                                 data-group="<?php echo htmlspecialchars($label); ?>" onclick="addPage(this)">
+                                <span class="page-item-name"><?php echo htmlspecialchars($page['name']); ?></span>
+                                <span class="page-item-icon"><i class="fas fa-plus-circle"></i></span>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php endforeach; ?>
+
+                        <?php endif; ?>
                     </div>
                 </div>
                 
@@ -576,15 +683,34 @@
             document.getElementById('available-count').textContent = availablePages;
         });
         
+        // ── Folder filtering ──────────────────────────────────
+        function filterGroup(group, tabEl) {
+            // Update active tab
+            document.querySelectorAll('.folder-tab').forEach(t => t.classList.remove('active'));
+            tabEl.classList.add('active');
+
+            // Show/hide groups
+            document.querySelectorAll('.folder-group').forEach(g => {
+                if (group === 'all' || g.dataset.group === group) {
+                    g.classList.add('visible');
+                } else {
+                    g.classList.remove('visible');
+                }
+            });
+        }
+
         function addPage(element) {
             const filename = element.dataset.filename;
             if (selectedPages.some(p => p.filename === filename)) {
                 showStatus('Page already added!', 'error');
                 return;
             }
+            const group = element.dataset.group || '';
+            const rawName = element.querySelector('.page-item-name').textContent.trim();
+            const displayName = group && group !== 'General' ? group + ' › ' + rawName : rawName;
             selectedPages.push({
                 filename: filename,
-                name: element.querySelector('.page-item-name').textContent
+                name: displayName,
             });
             updateCanvas();
             updateStats();

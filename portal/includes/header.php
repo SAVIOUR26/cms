@@ -761,6 +761,10 @@ function _section_active(string $section): string {
            class="nav-item<?php echo _nav_active('upload.php'); ?>">
             <i class="fas fa-cloud-upload-alt"></i> Upload Edition
         </a>
+        <a href="<?php echo portal_url('scan-editions.php'); ?>"
+           class="nav-item<?php echo _nav_active('scan-editions.php'); ?>">
+            <i class="fas fa-folder-open"></i> Scan Editions
+        </a>
     </div>
 
     <!-- Tools -->

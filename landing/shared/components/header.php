@@ -67,8 +67,11 @@ $_og_image = isset($og_image) ? $og_image : '/shared/assets/img/kanda-icon.png';
                 <img src="/shared/assets/img/kanda-icon.png" alt="<?php echo h($_brand); ?>" width="44" height="44" style="border-radius:10px;">
             </a>
             <div class="kn-header__brand">
-                <span class="kn-header__name"><?php echo h($_brand); ?></span>
-                <span class="kn-header__country"><?php echo $_flag; ?> <?php echo h($_country_name); ?></span>
+                <span class="kn-header__name">
+                    <?php echo h($_brand); ?>
+                    <span class="kn-header__flag" aria-label="<?php echo h($_country_name); ?>"><?php echo $_flag; ?></span>
+                </span>
+                <span class="kn-header__country"><?php echo h($_country_name); ?></span>
             </div>
             <nav class="kn-header__nav" id="main-nav" aria-label="Main navigation">
                 <?php if (!$_is_hub): ?>

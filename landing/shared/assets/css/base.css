@@ -206,6 +206,16 @@ ul, ol {
     font-size: 1.1rem;
     letter-spacing: -0.01em;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.kn-header__flag {
+    font-size: 1.25rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
 }
 
 .kn-header__country {
@@ -1015,7 +1025,7 @@ ul, ol {
    ================================================================ */
 .kn-features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
 }
 
@@ -1079,7 +1089,7 @@ ul, ol {
    ================================================================ */
 .kn-countries-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
 }
 
@@ -1566,7 +1576,7 @@ ul, ol {
     margin-inline: auto;
     padding-inline: 24px;
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
     gap: 2.5rem;
     padding-bottom: 2rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -2242,6 +2252,21 @@ ul, ol {
 
     .kn-footer__grid {
         gap: 2rem;
+    }
+
+    /* Footer: compress to 2+2 on tablet */
+    .kn-footer__grid {
+        grid-template-columns: 1.2fr 1fr 1fr 1fr;
+    }
+
+    /* Features: 2 columns on tablet */
+    .kn-features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Countries: allow 2 columns on tablet */
+    .kn-countries-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 

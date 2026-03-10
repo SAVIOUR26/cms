@@ -276,6 +276,9 @@ function flutterwave_init(array $user, string $ref, float $amount, string $curre
         'customer'        => [
             'phone_number' => $user['phone'],
             'name'         => $user['full_name'] ?? 'KandaNews User',
+            // Flutterwave requires email; derive one from phone if user has none
+            'email'        => $user['email']
+                ?? (preg_replace('/[^a-z0-9]/', '', strtolower($user['phone'])) . '@users.kandanews.africa'),
         ],
         'customizations'  => [
             'title'       => 'KandaNews ' . ucfirst($plan) . ' Plan',
@@ -301,7 +304,9 @@ function flutterwave_init(array $user, string $ref, float $amount, string $curre
 
     $link = $resp['data']['link'] ?? null;
     if (!$link) {
-        // Fallback: return payment data for client-side initialization
+        // Log the Flutterwave error for server-side diagnosis
+        $fwMsg = $resp['message'] ?? ($resp['error'] ?? 'unknown error');
+        error_log("[Flutterwave] payment link failed for ref=$ref: $fwMsg");
         return [
             'method'     => 'flutterwave_standard',
             'public_key' => $config['fw_public_key'],
@@ -309,6 +314,7 @@ function flutterwave_init(array $user, string $ref, float $amount, string $curre
             'amount'     => $amount,
             'currency'   => $currency,
             'link'       => null,
+            '_fw_error'  => $fwMsg,
         ];
     }
 

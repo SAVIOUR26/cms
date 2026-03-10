@@ -33,10 +33,6 @@ class _ArchivesScreenState extends ConsumerState<ArchivesScreen>
   DateTime _focusedMonth = DateTime.now();
   DateTime? _selectedDay;
 
-  // Grid state
-  String _typeFilter = 'all';
-  String? _categoryFilter;
-
   @override
   void initState() {
     super.initState();
@@ -47,10 +43,6 @@ class _ArchivesScreenState extends ConsumerState<ArchivesScreen>
       vsync: this,
       initialIndex: isDailyFirst ? 0 : 1,
     );
-    if (widget.filterType != null && widget.filterType != 'daily') {
-      _typeFilter = widget.filterType!;
-    }
-    _categoryFilter = widget.category;
   }
 
   @override
@@ -93,11 +85,7 @@ class _ArchivesScreenState extends ConsumerState<ArchivesScreen>
             onMonthChanged: (m) => setState(() => _focusedMonth = m),
             onDaySelected: (d) => setState(() => _selectedDay = d),
           ),
-          _SpecialEditionsTab(
-            country: _country,
-            typeFilter: _typeFilter,
-            categoryFilter: _categoryFilter,
-          ),
+          _SpecialEditionsTab(country: _country),
         ],
       ),
     );
@@ -552,259 +540,205 @@ class _ErrorCard extends StatelessWidget {
 }
 
 // =============================================================================
-// TAB 2: Special Editions Grid
+// TAB 2: Special Editions — Category Browser
+// (Mirrors the content of SpecialEditionsScreen)
 // =============================================================================
 
-class _SpecialEditionsTab extends ConsumerStatefulWidget {
+class _SpecialEditionsTab extends StatelessWidget {
+  const _SpecialEditionsTab({required this.country});
+
   final String country;
-  final String typeFilter;
-  final String? categoryFilter;
 
-  const _SpecialEditionsTab({
-    required this.country,
-    required this.typeFilter,
-    required this.categoryFilter,
-  });
-
-  @override
-  ConsumerState<_SpecialEditionsTab> createState() =>
-      _SpecialEditionsTabState();
-}
-
-class _SpecialEditionsTabState extends ConsumerState<_SpecialEditionsTab> {
-  String _type = 'all';
-  String? _category;
-
-  @override
-  void initState() {
-    super.initState();
-    _type = widget.typeFilter;
-    _category = widget.categoryFilter;
-  }
+  static const _categories = [
+    _SpecialCategory(
+      label: 'University',
+      subtitle: 'Campus news & academic editions',
+      icon: Icons.school,
+      color: Color(0xFF3B82F6),
+      filter: 'university',
+    ),
+    _SpecialCategory(
+      label: 'Corporate',
+      subtitle: 'Business & enterprise editions',
+      icon: Icons.business,
+      color: Color(0xFF1E2B42),
+      filter: 'corporate',
+    ),
+    _SpecialCategory(
+      label: 'Entrepreneurship',
+      subtitle: 'Startup & innovation stories',
+      icon: Icons.rocket_launch,
+      color: Color(0xFFF05A1A),
+      filter: 'entrepreneurship',
+    ),
+    _SpecialCategory(
+      label: 'Campaigns',
+      subtitle: 'Political & advocacy coverage',
+      icon: Icons.campaign,
+      color: Color(0xFFEF4444),
+      filter: 'campaigns',
+    ),
+    _SpecialCategory(
+      label: 'Jobs & Careers',
+      subtitle: 'Opportunities & career guidance',
+      icon: Icons.work,
+      color: Color(0xFF10B981),
+      filter: 'jobs_careers',
+    ),
+    _SpecialCategory(
+      label: 'Podcasts',
+      subtitle: 'Audio shows & transcripts',
+      icon: Icons.podcasts,
+      color: Color(0xFF8B5CF6),
+      filter: 'podcasts',
+    ),
+    _SpecialCategory(
+      label: 'Episodes',
+      subtitle: 'Series & episodic content',
+      icon: Icons.play_circle_filled,
+      color: Color(0xFFF59E0B),
+      filter: 'episodes',
+    ),
+    _SpecialCategory(
+      label: 'Rate Card',
+      subtitle: 'Advertising rates & media kit',
+      icon: Icons.price_change,
+      color: Color(0xFF6D28D9),
+      filter: 'rate_card',
+      editionType: 'rate_card',
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final params = <String, dynamic>{
-      'country': widget.country,
-      'page': 1,
-      'per_page': 50,
-    };
-    if (_type != 'all') params['type'] = _type;
-    if (_category != null) params['category'] = _category;
-
-    final editionsAsync = ref.watch(editionsProvider(params));
-
-    return Column(
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
       children: [
-        Container(
-          color: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                _Chip(
-                    label: 'All',
-                    selected: _type == 'all',
-                    onTap: () =>
-                        setState(() {
-                          _type = 'all';
-                          _category = null;
-                        })),
-                _Chip(
-                    label: 'Special Editions',
-                    selected: false,
-                    onTap: () => context.push('/special-editions')),
-                _Chip(
-                    label: 'Rate Card',
-                    selected: _type == 'rate_card',
-                    onTap: () =>
-                        setState(() {
-                          _type = 'rate_card';
-                          _category = null;
-                        })),
-              ],
-            ),
+        const Text(
+          'Browse by Category',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
+            color: KnColors.navy,
           ),
         ),
-        Expanded(
-          child: editionsAsync.when(
-            loading: () => const Center(
-                child: CircularProgressIndicator(color: KnColors.orange)),
-            error: (e, _) => const Center(child: Text('Error loading editions')),
-            data: (data) {
-              final editions = data['editions'] as List<Edition>;
-              if (editions.isEmpty) {
-                return const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.library_books_outlined,
-                          size: 64, color: KnColors.textMuted),
-                      SizedBox(height: 16),
-                      Text('No editions found',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: KnColors.textSecondary)),
-                    ],
-                  ),
-                );
-              }
-              return GridView.builder(
-                padding: const EdgeInsets.all(16),
-                gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.68,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                ),
-                itemCount: editions.length,
-                itemBuilder: (ctx, i) => _GridCard(edition: editions[i]),
-              );
-            },
-          ),
+        const SizedBox(height: 6),
+        const Text(
+          'Tap a category to explore editions',
+          style: TextStyle(color: KnColors.textSecondary, fontSize: 14),
         ),
+        const SizedBox(height: 20),
+        ..._categories.map((cat) => _SpecialCategoryTile(
+              category: cat,
+              onTap: () => context.push('/archives', extra: {
+                'type': cat.editionType ?? 'special',
+                'category': cat.filter,
+                'title': cat.label,
+              }),
+            )),
       ],
     );
   }
 }
 
-class _Chip extends StatelessWidget {
+class _SpecialCategory {
   final String label;
-  final bool selected;
+  final String subtitle;
+  final IconData icon;
+  final Color color;
+  final String filter;
+  final String? editionType;
+
+  const _SpecialCategory({
+    required this.label,
+    required this.subtitle,
+    required this.icon,
+    required this.color,
+    required this.filter,
+    this.editionType,
+  });
+}
+
+class _SpecialCategoryTile extends StatelessWidget {
+  final _SpecialCategory category;
   final VoidCallback onTap;
 
-  const _Chip(
-      {required this.label, required this.selected, required this.onTap});
+  const _SpecialCategoryTile(
+      {required this.category, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: FilterChip(
-        label: Text(label),
-        selected: selected,
-        onSelected: (_) => onTap(),
-        selectedColor: KnColors.orange.withAlpha(50),
-        checkmarkColor: KnColors.orange,
-        labelStyle: TextStyle(
-          fontWeight: FontWeight.w600,
-          color: selected ? KnColors.orange : KnColors.textSecondary,
-          fontSize: 13,
-        ),
-        side: BorderSide(color: selected ? KnColors.orange : KnColors.border),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-  }
-}
-
-class _GridCard extends StatelessWidget {
-  final Edition edition;
-  const _GridCard({required this.edition});
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(14),
-      elevation: 2,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(14),
-        onTap: () {
-          if (edition.htmlUrl != null) {
-            context.push('/reader',
-                extra: {'url': edition.htmlUrl, 'title': edition.title});
-          }
-        },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 3,
-              child: ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(14)),
-                child: edition.coverImage != null
-                    ? CachedNetworkImage(
-                        imageUrl: edition.coverImage!,
-                        fit: BoxFit.cover,
-                        placeholder: (_, __) => _ph(),
-                        errorWidget: (_, __, ___) => _ph(),
-                      )
-                    : _ph(),
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        elevation: 0,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: category.color.withAlpha(60),
+                width: 1.5,
               ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                          color: KnColors.orange.withAlpha(25),
-                          borderRadius: BorderRadius.circular(4)),
-                      child: Text(edition.typeLabel,
-                          style: const TextStyle(
-                              fontSize: 9,
-                              fontWeight: FontWeight.w700,
-                              color: KnColors.orange)),
-                    ),
-                    const SizedBox(height: 4),
-                    Flexible(
-                      child: Text(edition.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 12,
-                              color: KnColors.navy)),
-                    ),
-                    Text(edition.editionDate,
-                        style: const TextStyle(
-                            fontSize: 10, color: KnColors.textMuted)),
-                    if (edition.isFree)
-                      const Text('FREE',
-                          style: TextStyle(
-                              fontSize: 9,
-                              fontWeight: FontWeight.w800,
-                              color: KnColors.success)),
-                  ],
+              boxShadow: [
+                BoxShadow(
+                  color: category.color.withAlpha(20),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
                 ),
-              ),
+              ],
             ),
-          ],
+            child: Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: category.color.withAlpha(25),
+                    borderRadius: BorderRadius.circular(13),
+                  ),
+                  child: Icon(category.icon, color: category.color, size: 24),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        category.label,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          color: KnColors.navy,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        category.subtitle,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: KnColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: category.color.withAlpha(150),
+                  size: 16,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
-
-  Widget _ph() => Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [KnColors.navy, KnColors.navy.withAlpha(180)],
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(edition.typeIcon, style: const TextStyle(fontSize: 28)),
-              const SizedBox(height: 6),
-              const Text('KandaNews',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 10)),
-            ],
-          ),
-        ),
-      );
 }
+

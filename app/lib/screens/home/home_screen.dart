@@ -202,7 +202,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 Text(
                   isSubscribed
                       ? 'Your subscription is active'
-                      : 'Subscribe to read all editions',
+                      : 'Tap to Know, Swipe to Grow',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: KnColors.textSecondary,
@@ -239,10 +239,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           onTap: () => context.push('/archives'),
                         ),
                         DashboardTile(
-                          icon: Icons.how_to_vote_outlined,
-                          label: '${_countryFlag(country)} Polls &\nTrends',
-                          color: const Color(0xFF8B5CF6),
-                          onTap: () => context.push('/polls-trends'),
+                          icon: Icons.auto_awesome,
+                          label: 'Special\nEditions',
+                          color: const Color(0xFFF59E0B),
+                          onTap: () => context.push('/special-editions'),
                         ),
                         DashboardTile(
                           icon: Icons.star,
@@ -252,10 +252,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           onTap: () => context.push('/subscribe'),
                         ),
                         DashboardTile(
-                          icon: Icons.auto_awesome,
-                          label: 'Special\nEditions',
-                          color: const Color(0xFFF59E0B),
-                          onTap: () => context.push('/special-editions'),
+                          icon: Icons.how_to_vote_outlined,
+                          label: '${_countryFlag(country)} Polls &\nTrends',
+                          color: const Color(0xFF8B5CF6),
+                          onTap: () => context.push('/polls-trends'),
                         ),
                         DashboardTile(
                           icon: Icons.campaign,
@@ -517,7 +517,9 @@ class _MarqueeWidgetState extends State<_MarqueeWidget>
   double _textWidth = 0;
 
   static const _text =
-      'Designed for Professionals, Entrepreneurs and University Students Across Africa';
+      'Built for Professionals, Entrepreneurs and University Students Across Africa'
+      '     ·     '
+      "For Africa's Thinkers, Builders & Future Leaders";
 
   @override
   void initState() {

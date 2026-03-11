@@ -146,3 +146,22 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./_deploy/
           server-dir: ng.kandanews.africa/public_html/
+
+  deploy-ads:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare ads portal
+        run: |
+          mkdir -p _deploy
+          cp -r ads/* _deploy/
+      - name: Deploy ads.kandanews.africa
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: ./_deploy/
+          server-dir: ads.kandanews.africa/public_html/
+          exclude: |
+            setup.sql

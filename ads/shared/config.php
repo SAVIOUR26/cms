@@ -1,7 +1,14 @@
 <?php
-// Load .env from /home/user/cms/.env
-$envFile = '/home/user/cms/.env';
-if (is_file($envFile)) {
+// Load .env — walk up from this file's directory to find it
+$envFile = null;
+$search  = __DIR__;
+for ($i = 0; $i < 4; $i++) {
+    if (is_file($search . '/.env')) { $envFile = $search . '/.env'; break; }
+    $parent = dirname($search);
+    if ($parent === $search) break;
+    $search = $parent;
+}
+if ($envFile) {
     foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
         if (!$line || $line[0] === '#' || strpos($line, '=') === false) continue;
         [$k, $v] = explode('=', $line, 2);

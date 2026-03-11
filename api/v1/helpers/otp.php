@@ -92,9 +92,8 @@ function otp_send_sms(string $phone, string $code): bool {
     $senderId = $config['at_sender_id'];
 
     if (!$apiKey || !$username) {
-        // Development: log instead of sending
-        error_log("[OTP] $phone => $code (SMS not configured)");
-        return true;
+        error_log("[OTP] SMS not configured — AT_API_KEY or AT_USERNAME missing. Phone: $phone Code: $code");
+        return false; // fail loudly so caller returns 502 to the app
     }
 
     $message = "Your KandaNews verification code is: $code. Valid for 5 minutes. Do not share this code.";
@@ -103,32 +102,55 @@ function otp_send_sms(string $phone, string $code): bool {
         ? 'https://api.sandbox.africastalking.com/version1/messaging'
         : 'https://api.africastalking.com/version1/messaging';
 
+    // Build POST fields — omit 'from' if no sender ID (AT will use shared shortcode)
+    $fields = [
+        'username' => $username,
+        'to'       => $phone,
+        'message'  => $message,
+    ];
+    if ($senderId) {
+        $fields['from'] = $senderId;
+    }
+
+    error_log("[OTP SMS] Sending to $phone via $url (username=$username, senderId=" . ($senderId ?: 'none') . ")");
+
     $ch = curl_init($url);
     curl_setopt_array($ch, [
         CURLOPT_POST           => true,
-        CURLOPT_POSTFIELDS     => http_build_query([
-            'username' => $username,
-            'to'       => $phone,
-            'message'  => $message,
-            'from'     => $senderId,
-        ]),
+        CURLOPT_POSTFIELDS     => http_build_query($fields),
         CURLOPT_HTTPHEADER     => [
             'Accept: application/json',
+            'Content-Type: application/x-www-form-urlencoded',
             'apiKey: ' . $apiKey,
         ],
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_TIMEOUT        => 15,
     ]);
 
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $response  = curl_exec($ch);
+    $httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
     curl_close($ch);
 
+    if ($curlError) {
+        error_log("[OTP SMS ERROR] cURL error for $phone: $curlError");
+        return false;
+    }
+
+    error_log("[OTP SMS] HTTP $httpCode — Response: $response");
+
+    // AT returns 201 on success
     if ($httpCode >= 200 && $httpCode < 300) {
+        $body = json_decode($response, true);
+        // Check if AT reported delivery failure inside the 200 response
+        $status = $body['SMSMessageData']['Recipients'][0]['status'] ?? '';
+        if ($status && $status !== 'Success') {
+            error_log("[OTP SMS WARNING] AT accepted but status=$status for $phone");
+        }
         return true;
     }
 
-    error_log("[OTP SMS ERROR] HTTP $httpCode — $response");
+    error_log("[OTP SMS ERROR] HTTP $httpCode for $phone — $response");
     return false;
 }
 

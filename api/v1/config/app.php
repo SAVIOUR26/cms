@@ -6,14 +6,20 @@
  * NEVER commit real credentials — use .env on the server.
  */
 
-// Load .env if available
-$envFile = dirname(__DIR__, 2) . '/.env';
-if (is_file($envFile)) {
-    foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
-        if ($line[0] === '#') continue;
-        if (strpos($line, '=') === false) continue;
-        [$key, $val] = explode('=', $line, 2);
-        $_ENV[trim($key)] = trim($val);
+// Load .env — check above public_html first (recommended), then inside it
+$_envCandidates = [
+    dirname(__DIR__, 2) . '/.env',   // api.kandanews.africa/.env  (above public_html)
+    dirname(__DIR__, 1) . '/.env',   // public_html/.env
+];
+foreach ($_envCandidates as $_envCandidate) {
+    if (is_file($_envCandidate)) {
+        foreach (file($_envCandidate, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+            if (!$line || $line[0] === '#') continue;
+            if (strpos($line, '=') === false) continue;
+            [$key, $val] = explode('=', $line, 2);
+            $_ENV[trim($key)] = trim($val);
+        }
+        break;
     }
 }
 

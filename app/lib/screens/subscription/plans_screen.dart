@@ -127,38 +127,45 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
 
             const SizedBox(height: 24),
 
-            // Payment method selection
-            const Text(
-              'Payment Method',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: KnColors.navy,
+            // Payment info
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+              decoration: BoxDecoration(
+                color: KnColors.navy.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: KnColors.navy.withOpacity(0.12)),
               ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: _ProviderChip(
-                    label: 'Flutterwave',
-                    subtitle: 'Mobile Money & Card',
-                    icon: Icons.account_balance_wallet,
-                    selected: _provider == 'flutterwave',
-                    onTap: () => setState(() => _provider = 'flutterwave'),
+              child: Row(
+                children: [
+                  const Icon(Icons.account_balance_wallet,
+                      color: KnColors.orange, size: 28),
+                  const SizedBox(width: 14),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Supported Payment',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: KnColors.navy,
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'Mobile Money and Card Payments',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: KnColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _ProviderChip(
-                    label: 'DPO',
-                    subtitle: 'Card Payment',
-                    icon: Icons.credit_card,
-                    selected: _provider == 'dpo',
-                    onTap: () => setState(() => _provider = 'dpo'),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
 
             const SizedBox(height: 28),
@@ -185,12 +192,10 @@ class _PlansScreenState extends ConsumerState<PlansScreen> {
             ),
 
             const SizedBox(height: 16),
-            Text(
-              _provider == 'flutterwave'
-                  ? 'Secure payment via Mobile Money or Card'
-                  : 'Secure card payment via DPO',
+            const Text(
+              'Secure payment via Mobile Money or Card',
               textAlign: TextAlign.center,
-              style: const TextStyle(color: KnColors.textMuted, fontSize: 13),
+              style: TextStyle(color: KnColors.textMuted, fontSize: 13),
             ),
             const SizedBox(height: 4),
             const Text(
@@ -378,59 +383,3 @@ class _PlanCard extends StatelessWidget {
   }
 }
 
-class _ProviderChip extends StatelessWidget {
-  final String label;
-  final String subtitle;
-  final IconData icon;
-  final bool selected;
-  final VoidCallback onTap;
-
-  const _ProviderChip({
-    required this.label,
-    required this.subtitle,
-    required this.icon,
-    required this.selected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final color = selected ? KnColors.orange : KnColors.textMuted;
-    return Material(
-      color: selected ? KnColors.orange.withAlpha(13) : Colors.white,
-      borderRadius: BorderRadius.circular(14),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: selected ? KnColors.orange : KnColors.border,
-              width: selected ? 2 : 1.5,
-            ),
-          ),
-          child: Column(
-            children: [
-              Icon(icon, color: color, size: 28),
-              const SizedBox(height: 6),
-              Text(
-                label,
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 14,
-                  color: selected ? KnColors.navy : KnColors.textSecondary,
-                ),
-              ),
-              Text(
-                subtitle,
-                style: const TextStyle(fontSize: 11, color: KnColors.textMuted),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}

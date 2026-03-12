@@ -24,7 +24,9 @@ foreach ($_envCandidates as $_envCandidate) {
 }
 
 function env(string $key, $default = null) {
-    return $_ENV[$key] ?? getenv($key) ?: $default;
+    if (array_key_exists($key, $_ENV)) return $_ENV[$key];
+    $val = getenv($key);
+    return ($val !== false) ? $val : $default;
 }
 
 return [
@@ -54,7 +56,7 @@ return [
     // ── SMS (Africa's Talking) ──
     'at_api_key'   => env('AT_API_KEY', ''),
     'at_username'  => env('AT_USERNAME', 'sandbox'),
-    'at_sender_id' => env('AT_SENDER_ID', 'KandaNews'),
+    'at_sender_id' => env('AT_SENDER_ID', ''),
 
     // ── Payments: Flutterwave ──
     'fw_public_key'    => env('FW_PUBLIC_KEY', ''),

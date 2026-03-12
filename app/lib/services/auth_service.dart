@@ -36,10 +36,16 @@ class AuthService {
       );
 
       // Save user info
-      final user = data['user'];
-      await StorageService.setUserId(user['id']);
-      await StorageService.setUserCountry(user['country'] ?? country);
+      final userData = data['user'];
+      await StorageService.setUserId(userData['id']);
+      await StorageService.setUserCountry(userData['country'] ?? country);
       await StorageService.setIsNewUser(data['is_new'] == true);
+
+      // Cache user profile so checkAuth() works without a network call
+      await StorageService.saveUser(User.fromJson(userData));
+
+      // Mark onboarding done so the app never sends the user back to login on reopen
+      await StorageService.setOnboardingDone();
     }
 
     return response;
@@ -63,6 +69,8 @@ class AuthService {
 
     if (response['ok'] == true) {
       await StorageService.setIsNewUser(false);
+      // Refresh cached user with completed profile
+      await StorageService.saveUser(User.fromJson(response['data']['user']));
     }
 
     return response;

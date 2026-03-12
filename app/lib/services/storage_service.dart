@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../config/constants.dart';
+import '../models/user.dart';
 
 /// Secure token + preferences storage
 class StorageService {
@@ -68,6 +70,24 @@ class StorageService {
   static Future<bool> isOnboardingDone() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(AppConstants.keyOnboardingDone) ?? false;
+  }
+
+  // ── Cached user profile ──
+
+  static Future<void> saveUser(User user) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(AppConstants.keyUserCache, jsonEncode(user.toJson()));
+  }
+
+  static Future<User?> getCachedUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString(AppConstants.keyUserCache);
+    if (raw == null) return null;
+    try {
+      return User.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+    } catch (_) {
+      return null;
+    }
   }
 
   // ── Clear all ──

@@ -39,7 +39,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> checkAuth() async {
     final loggedIn = await _authService.isLoggedIn();
     if (loggedIn) {
-      final user = await _authService.getProfile();
+      // Try a live profile fetch first; fall back to cache if network fails
+      User? user = await _authService.getProfile();
+      if (user != null) {
+        await StorageService.saveUser(user); // keep cache fresh
+      } else {
+        user = await StorageService.getCachedUser();
+      }
+
       if (user != null) {
         final isNew = await StorageService.getIsNewUser();
         state = AuthState(

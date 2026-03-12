@@ -8,12 +8,16 @@ $COUNTRY = ['name' => 'Africa', 'flag' => '🌍', 'email' => 'hello@kandanews.af
 $COUNTRIES = [];
 require_once __DIR__ . '/shared/includes/helpers.php';
 require_once __DIR__ . '/shared/includes/country-config.php';
+require_once __DIR__ . '/../blog/includes/markdown.php';
 
 // Override for hub page
 $COUNTRY = ['name' => 'Africa', 'flag' => '🌍', 'email' => 'hello@kandanews.africa'];
 $_country_name = 'Africa';
 // Set hub flag so header knows this is the hub page
 $_is_hub = true;
+
+// Load latest 3 blog posts for the landing section
+$_blog_posts = array_slice(get_all_posts(__DIR__ . '/../blog/posts'), 0, 3);
 
 require_once __DIR__ . '/shared/components/header.php';
 ?>
@@ -304,6 +308,76 @@ require_once __DIR__ . '/shared/components/header.php';
     </ul>
   </div>
 </section>
+
+
+<!-- ===== FROM THE BLOG ===== -->
+<?php if (!empty($_blog_posts)): ?>
+<section class="kn-section kn-reveal" aria-labelledby="blog-heading">
+  <div class="container">
+    <div class="kn-section__header">
+      <h2 id="blog-heading" class="kn-section__title">
+        <i class="fa-solid fa-pen-nib" style="color:var(--kn-orange);margin-right:0.4rem;"></i>
+        From the Blog
+      </h2>
+      <p class="kn-section__lead">News, insights and updates from our team across the continent.</p>
+    </div>
+
+    <div class="kn-posts-grid" role="list">
+      <?php foreach ($_blog_posts as $post): ?>
+        <article class="kn-post-card kn-reveal" role="listitem">
+
+          <?php if ($post['image']): ?>
+            <a href="/blog/post.php?slug=<?php echo urlencode($post['slug']); ?>" class="kn-post-card__img-link" aria-hidden="true" tabindex="-1">
+              <img
+                class="kn-post-card__img"
+                src="<?php echo h($post['image']); ?>"
+                alt="<?php echo h($post['title']); ?>"
+                loading="lazy"
+              >
+            </a>
+          <?php endif; ?>
+
+          <div class="kn-post-card__body">
+            <div class="kn-post-card__meta">
+              <time datetime="<?php echo h($post['date']); ?>"><?php echo format_date($post['date']); ?></time>
+              <?php if ($post['author']): ?>
+                <span>&middot;</span>
+                <span><?php echo h($post['author']); ?></span>
+              <?php endif; ?>
+              <?php if ($post['tags']): ?>
+                <span>&middot;</span>
+                <span class="kn-post-card__tag"><?php echo h($post['tags']); ?></span>
+              <?php endif; ?>
+            </div>
+
+            <h3 class="kn-post-card__title">
+              <a href="/blog/post.php?slug=<?php echo urlencode($post['slug']); ?>">
+                <?php echo h($post['title']); ?>
+              </a>
+            </h3>
+
+            <?php if ($post['excerpt']): ?>
+              <p class="kn-post-card__excerpt"><?php echo h($post['excerpt']); ?></p>
+            <?php endif; ?>
+
+            <a href="/blog/post.php?slug=<?php echo urlencode($post['slug']); ?>" class="kn-post-card__read">
+              Read article <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+
+        </article>
+      <?php endforeach; ?>
+    </div>
+
+    <div class="text-center" style="margin-top:2.5rem;">
+      <a href="/blog/" class="kn-btn kn-btn--outline" aria-label="View all blog posts">
+        <i class="fa-solid fa-book-open"></i> View all posts
+      </a>
+    </div>
+
+  </div>
+</section>
+<?php endif; ?>
 
 
 <!-- ===== DOWNLOAD APP ===== -->

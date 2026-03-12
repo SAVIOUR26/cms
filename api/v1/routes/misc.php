@@ -57,7 +57,7 @@ function misc_sms_test(): void {
         ]);
     }
 
-    $testCode = (string) random_int(100000, 999999);
+    $testCode = otp_generate();
     $message  = "Your KandaNews verification code is: $testCode. Valid for 5 minutes. Do not share this code.";
 
     // Call AT directly here so we can expose the raw response

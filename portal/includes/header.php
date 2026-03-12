@@ -801,6 +801,27 @@ function _section_active(string $section): string {
         </a>
     </div>
 
+    <!-- Advertising -->
+    <div class="nav-section">
+        <div class="nav-section-label">Advertising</div>
+        <a href="<?php echo portal_url('ads.php'); ?>"
+           class="nav-item<?php echo _nav_active('ads.php'); ?>">
+            <i class="fas fa-bullhorn"></i> Ads Dashboard
+        </a>
+        <a href="<?php echo portal_url('ads.php?tab=advertisers'); ?>"
+           class="nav-item">
+            <i class="fas fa-building"></i> Advertisers
+        </a>
+        <a href="<?php echo portal_url('ads.php?tab=bookings'); ?>"
+           class="nav-item">
+            <i class="fas fa-calendar-check"></i> Bookings
+        </a>
+        <a href="<?php echo portal_url('ads.php?tab=payments'); ?>"
+           class="nav-item">
+            <i class="fas fa-receipt"></i> Payment Log
+        </a>
+    </div>
+
     <!-- System -->
     <div class="nav-section">
         <div class="nav-section-label">System</div>

@@ -141,12 +141,24 @@ function otp_send_sms(string $phone, string $code): bool {
 
     // AT returns 201 on success
     if ($httpCode >= 200 && $httpCode < 300) {
-        $body = json_decode($response, true);
-        // Check if AT reported delivery failure inside the 200 response
-        $status = $body['SMSMessageData']['Recipients'][0]['status'] ?? '';
-        if ($status && $status !== 'Success') {
-            error_log("[OTP SMS WARNING] AT accepted but status=$status for $phone");
+        $body      = json_decode($response, true);
+        $recipient = $body['SMSMessageData']['Recipients'][0] ?? [];
+        $status    = $recipient['status']     ?? '';
+        $statusCode = (int) ($recipient['statusCode'] ?? 0);
+
+        // AT status codes that mean delivery FAILED despite HTTP 2xx
+        // 405 = InsufficientBalance, 402 = InvalidSenderId, 403 = InvalidPhoneNumber
+        // 401 = RiskHold, 407 = CouldNotRoute, 502 = RejectedByGateway
+        $failCodes = [401, 402, 403, 404, 405, 406, 407, 500, 501, 502];
+        if (in_array($statusCode, $failCodes, true)) {
+            error_log("[OTP SMS FAILED] AT status=$status (code=$statusCode) for $phone. Full response: $response");
+            return false;
         }
+
+        if ($status && $status !== 'Success') {
+            error_log("[OTP SMS WARNING] AT non-success status=$status for $phone");
+        }
+
         return true;
     }
 

@@ -80,31 +80,46 @@ function misc_sms_test(): void {
     $curlErr    = curl_error($ch);
     curl_close($ch);
 
-    $atBody     = json_decode($atResponse, true);
-    $recipient  = $atBody['SMSMessageData']['Recipients'][0] ?? [];
-    $atStatus   = $recipient['status']     ?? 'unknown';
-    $atCode     = $recipient['statusCode'] ?? 'unknown';
-    $atCost     = $recipient['cost']       ?? 'unknown';
+    $atBody        = json_decode($atResponse, true);
+    $recipient     = $atBody['SMSMessageData']['Recipients'][0] ?? [];
+    $topLevelMsg   = $atBody['SMSMessageData']['Message'] ?? '';
+    $atStatus      = $recipient['status']     ?? ($topLevelMsg ?: 'unknown');
+    $atCode        = $recipient['statusCode'] ?? 'unknown';
+    $atCost        = $recipient['cost']       ?? 'unknown';
+
+    // When Recipients is empty AT puts the error in the top-level Message field
+    $isTopLevelError = empty($recipient) && $topLevelMsg;
+
+    $diagnosis = match(true) {
+        in_array((int)$atCode, [100, 101, 102], true)
+            => 'SUCCESS — SMS queued/sent.',
+        (int)$atCode === 405
+            => 'FAILED — InsufficientBalance. Top up your AT wallet: africastalking.com → Billing.',
+        (int)$atCode === 402 || ($isTopLevelError && str_contains($topLevelMsg, 'InvalidSenderId'))
+            => 'FAILED — InvalidSenderId. "KandaNews" is not registered. '
+             . 'Go to AT Dashboard → SMS → Sender IDs → Add "KandaNews". '
+             . 'OR blank out AT_SENDER_ID= in your .env to use a shared shortcode immediately.',
+        (int)$atCode === 401
+            => 'FAILED — RiskHold. Contact Africa\'s Talking support.',
+        (int)$atCode === 403
+            => 'FAILED — InvalidPhoneNumber. Check the phone number format.',
+        (int)$atCode === 407
+            => 'FAILED — CouldNotRoute. Try blanking AT_SENDER_ID in .env.',
+        default
+            => 'Check at_status and at_raw above for details.',
+    };
 
     json_success([
-        'http_code'     => $httpCode,
-        'curl_error'    => $curlErr ?: null,
-        'at_status'     => $atStatus,
-        'at_status_code'=> $atCode,
-        'at_cost'       => $atCost,
-        'at_raw'        => $atBody,
-        'phone'         => $phone,
-        'test_code'     => $testCode,
-        'config'        => $configStatus,
-        'diagnosis'     => match((int)$atCode) {
-            100, 101, 102 => 'SUCCESS — SMS queued/sent.',
-            405 => 'FAILED — InsufficientBalance. Top up your AT wallet at africastalking.com/billing',
-            402 => 'FAILED — InvalidSenderId. Register "KandaNews" in AT dashboard → SMS → Sender IDs',
-            401 => 'FAILED — RiskHold. Contact Africa\'s Talking support.',
-            403 => 'FAILED — InvalidPhoneNumber. Check the phone number format.',
-            407 => 'FAILED — CouldNotRoute. Network routing issue, try without Sender ID.',
-            default => 'Check at_status and at_raw above for details.',
-        },
+        'http_code'      => $httpCode,
+        'curl_error'     => $curlErr ?: null,
+        'at_status'      => $atStatus,
+        'at_status_code' => $atCode,
+        'at_cost'        => $atCost,
+        'at_raw'         => $atBody,
+        'phone'          => $phone,
+        'test_code'      => $testCode,
+        'config'         => $configStatus,
+        'diagnosis'      => $diagnosis,
     ]);
 }
 

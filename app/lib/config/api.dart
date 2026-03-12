@@ -29,5 +29,11 @@ class ApiConfig {
   static const String subscribeVerify = '/subscribe/verify';
 
   // Misc
-  static const String quoteOfDay = '/misc/quote';
+  static const String quoteOfDay  = '/misc/quote';
+  static const String homeBanners = '/misc/banners';
+
+  // SDUI — server-driven content
+  static const String editionCategories = '/edition-categories';
+  static const String polls             = '/polls';
+  static const String events            = '/events';
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:intl/intl.dart';
 import '../../models/edition.dart';
 import '../../providers/auth_provider.dart';
@@ -140,13 +141,7 @@ class _EditionTile extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: edition.coverImage != null
-                    ? CachedNetworkImage(
-                        imageUrl: edition.coverImage!,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        placeholder: (_, __) => _CoverPlaceholder(title: edition.title),
-                        errorWidget: (_, __, ___) => _CoverPlaceholder(title: edition.title),
-                      )
+                    ? _SmartCover(url: edition.coverImage!, fallbackTitle: edition.title)
                     : _CoverPlaceholder(title: edition.title),
               ),
             ),
@@ -304,6 +299,48 @@ class _MetaChip extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Renders cover.html (HTML first page) via InAppWebView, or a static image
+/// if the URL points to an image file. Aspect ratio matches edition pages (461:600).
+class _SmartCover extends StatelessWidget {
+  final String url;
+  final String fallbackTitle;
+
+  const _SmartCover({required this.url, required this.fallbackTitle});
+
+  bool get _isHtml => url.endsWith('.html');
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isHtml) {
+      // Render the HTML cover page in a non-interactive WebView
+      // The cover page is designed at 461×600px; we scale it to fill the tile.
+      return AspectRatio(
+        aspectRatio: 461 / 600,
+        child: IgnorePointer(
+          child: InAppWebView(
+            initialUrlRequest: URLRequest(url: WebUri(url)),
+            initialSettings: InAppWebViewSettings(
+              javaScriptEnabled: true,      // needed for CSS animations
+              disableVerticalScroll: true,
+              disableHorizontalScroll: true,
+              transparentBackground: false,
+              disableContextMenu: true,
+            ),
+          ),
+        ),
+      );
+    }
+
+    return CachedNetworkImage(
+      imageUrl: url,
+      width: double.infinity,
+      fit: BoxFit.cover,
+      placeholder: (_, __) => _CoverPlaceholder(title: fallbackTitle),
+      errorWidget: (_, __, ___) => _CoverPlaceholder(title: fallbackTitle),
     );
   }
 }

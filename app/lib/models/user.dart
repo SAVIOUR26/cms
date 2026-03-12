@@ -11,6 +11,7 @@ class User {
   final String? roleDetail;
   final String country;
   final String? avatarUrl;
+  final String? dateOfBirth;
 
   const User({
     required this.id,
@@ -24,6 +25,7 @@ class User {
     this.roleDetail,
     required this.country,
     this.avatarUrl,
+    this.dateOfBirth,
   });
 
   bool get isProfileComplete => firstName != null && surname != null && role != null;
@@ -63,6 +65,7 @@ class User {
       roleDetail: json['role_detail'],
       country: json['country'] ?? 'ug',
       avatarUrl: json['avatar_url'],
+      dateOfBirth: json['date_of_birth'] ?? json['dob'],
     );
   }
 
@@ -78,6 +81,7 @@ class User {
         'role_detail': roleDetail,
         'country': country,
         'avatar_url': avatarUrl,
+        'date_of_birth': dateOfBirth,
       };
 
   User copyWith({

@@ -276,14 +276,15 @@ function flutterwave_init(array $user, string $ref, float $amount, string $curre
         'customer'        => [
             'phone_number' => $user['phone'],
             'name'         => $user['full_name'] ?? 'KandaNews User',
-            // Flutterwave requires email; derive one from phone if user has none
-            'email'        => $user['email']
-                ?? (preg_replace('/[^a-z0-9]/', '', strtolower($user['phone'])) . '@users.kandanews.africa'),
+            // Flutterwave requires an email; use the user's own if set,
+            // otherwise fall back to payments@kandanews.africa so payment
+            // notification emails are received by the KandaNews team.
+            'email'        => $user['email'] ?? 'payments@kandanews.africa',
         ],
         'customizations'  => [
             'title'       => 'KandaNews ' . ucfirst($plan) . ' Plan',
             'description' => 'KandaNews subscription — ' . $plan . ' access',
-            'logo'        => $config['app_url'] . '/shared/assets/img/kanda-square.png',
+            'logo'        => $config['app_url'] . '/shared/assets/img/kanda-icon.png',
         ],
     ];
 

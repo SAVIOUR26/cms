@@ -253,7 +253,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         ),
                         DashboardTile(
                           icon: Icons.how_to_vote_outlined,
-                          label: '${_countryFlag(country)} Polls &\nTrends',
+                          label: '${_countryFlag(country)} Polls &\nEvents',
                           color: const Color(0xFF8B5CF6),
                           onTap: () => context.push('/polls-trends'),
                         ),
@@ -266,6 +266,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       ],
                     );
                   },
+                ),
+
+                // Start Here banner
+                _StartHereBanner(
+                  onTap: () => context.push('/special-editions'),
+                  // TODO: update onTap to open the "About KandaNews" intro edition
+                  // once it is added to the database.
                 ),
 
                 const SizedBox(height: 24),
@@ -494,6 +501,128 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Full-width animated "Start Here" banner shown on the dashboard.
+/// Pulses with an orange glow to draw the reader's attention toward
+/// the introductory "About KandaNews" edition.
+class _StartHereBanner extends StatefulWidget {
+  final VoidCallback onTap;
+  const _StartHereBanner({required this.onTap});
+
+  @override
+  State<_StartHereBanner> createState() => _StartHereBannerState();
+}
+
+class _StartHereBannerState extends State<_StartHereBanner>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _pulseCtrl;
+  late Animation<double> _pulseAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1400),
+    )..repeat(reverse: true);
+    _pulseAnim = Tween<double>(begin: 0.45, end: 1.0).animate(
+      CurvedAnimation(parent: _pulseCtrl, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _pulseCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _pulseAnim,
+      builder: (context, _) {
+        return GestureDetector(
+          onTap: widget.onTap,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [KnColors.navy, Color(0xFF1A3251)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: KnColors.orange.withAlpha((_pulseAnim.value * 220).toInt()),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: KnColors.orange.withAlpha((_pulseAnim.value * 55).toInt()),
+                  blurRadius: 18,
+                  spreadRadius: 1,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                // Animated icon container
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: KnColors.orange.withAlpha(
+                        (_pulseAnim.value * 50).toInt() + 20),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.play_circle_fill,
+                    color: KnColors.orange,
+                    size: 30,
+                  ),
+                ),
+                const SizedBox(width: 14),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'New here? Start here →',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                      SizedBox(height: 3),
+                      Text(
+                        "Discover why Africa's sharpest minds read KandaNews",
+                        style: TextStyle(
+                          color: Colors.white60,
+                          fontSize: 12,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  color: KnColors.orange,
+                  size: 15,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

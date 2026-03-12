@@ -100,7 +100,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<bool> register({
     required String firstName,
     required String surname,
-    required int age,
+    required String dob,
     required String role,
     required String roleDetail,
   }) async {
@@ -109,7 +109,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final result = await _authService.register(
         firstName: firstName,
         surname: surname,
-        age: age,
+        dob: dob,
         role: role,
         roleDetail: roleDetail,
       );

@@ -9,6 +9,7 @@ function route_misc(string $action, string $method): void {
     switch ("$method $action") {
         case 'GET quote':    misc_quote();    break;
         case 'GET sms-test': misc_sms_test(); break;
+        case 'GET banners':  misc_banners();  break;
         default: json_error('Not found', 404);
     }
 }
@@ -150,4 +151,37 @@ function misc_quote(): void {
         'quote'  => $selected['quote'],
         'author' => $selected['author'],
     ]);
+}
+
+/**
+ * GET /misc/banners?country=ug
+ *
+ * Returns active promotional banners for the home screen.
+ * Respects starts_at / ends_at scheduling windows.
+ */
+function misc_banners(): void {
+    $user    = optional_auth();
+    $country = $_GET['country'] ?? ($user['country'] ?? 'ug');
+    $country = strtolower(trim($country));
+
+    $pdo  = db();
+    $stmt = $pdo->prepare("
+        SELECT id, title, subtitle, action_url, action_label,
+               bg_color_hex, icon_name
+        FROM   home_banners
+        WHERE  is_active = 1
+          AND  (country IS NULL OR country = ?)
+          AND  (starts_at IS NULL OR starts_at <= NOW())
+          AND  (ends_at   IS NULL OR ends_at   >= NOW())
+        ORDER  BY sort_order ASC, id ASC
+    ");
+    $stmt->execute([$country]);
+    $banners = $stmt->fetchAll();
+
+    foreach ($banners as &$b) {
+        $b['id'] = (int) $b['id'];
+    }
+    unset($b);
+
+    json_success(['banners' => $banners]);
 }

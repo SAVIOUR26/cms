@@ -30,6 +30,16 @@
  *   GET  /editions/today         Today's edition
  *
  *   GET  /misc/quote             Quote of the day
+ *   GET  /misc/banners           Active home banners
+ *
+ *   GET  /edition-categories     Server-controlled category list
+ *
+ *   GET  /polls                  List polls with vote counts
+ *   POST /polls/{id}/vote        Cast a vote (auth required)
+ *   GET  /polls/{id}/results     Live results for one poll
+ *
+ *   GET  /events                 List published events
+ *   GET  /events/{id}            Single event detail
  */
 
 // ── Bootstrap ──
@@ -121,6 +131,21 @@ switch ($resource) {
     case 'misc':
         require __DIR__ . '/routes/misc.php';
         route_misc($action, $method);
+        break;
+
+    case 'edition-categories':
+        require __DIR__ . '/routes/categories.php';
+        route_categories($action, $method);
+        break;
+
+    case 'polls':
+        require __DIR__ . '/routes/polls.php';
+        route_polls($action, $method, $extra);
+        break;
+
+    case 'events':
+        require __DIR__ . '/routes/events.php';
+        route_events($action, $method);
         break;
 
     case '':

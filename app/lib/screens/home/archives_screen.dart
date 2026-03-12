@@ -6,6 +6,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import '../../models/edition.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/content_provider.dart';
 import '../../providers/edition_provider.dart';
 import '../../theme/kn_theme.dart';
 
@@ -540,204 +541,130 @@ class _ErrorCard extends StatelessWidget {
 }
 
 // =============================================================================
-// TAB 2: Special Editions — Category Browser
-// (Mirrors the content of SpecialEditionsScreen)
+// TAB 2: Special Editions — Category Browser (SDUI — fetched from server)
 // =============================================================================
 
-class _SpecialEditionsTab extends StatelessWidget {
+class _SpecialEditionsTab extends ConsumerWidget {
   const _SpecialEditionsTab({required this.country});
 
   final String country;
 
-  static const _categories = [
-    _SpecialCategory(
-      label: 'University',
-      subtitle: 'Campus news & academic editions',
-      icon: Icons.school,
-      color: Color(0xFF3B82F6),
-      filter: 'university',
-    ),
-    _SpecialCategory(
-      label: 'Corporate',
-      subtitle: 'Business & enterprise editions',
-      icon: Icons.business,
-      color: Color(0xFF1E2B42),
-      filter: 'corporate',
-    ),
-    _SpecialCategory(
-      label: 'Entrepreneurship',
-      subtitle: 'Startup & innovation stories',
-      icon: Icons.rocket_launch,
-      color: Color(0xFFF05A1A),
-      filter: 'entrepreneurship',
-    ),
-    _SpecialCategory(
-      label: 'Campaigns',
-      subtitle: 'Political & advocacy coverage',
-      icon: Icons.campaign,
-      color: Color(0xFFEF4444),
-      filter: 'campaigns',
-    ),
-    _SpecialCategory(
-      label: 'Jobs & Careers',
-      subtitle: 'Opportunities & career guidance',
-      icon: Icons.work,
-      color: Color(0xFF10B981),
-      filter: 'jobs_careers',
-    ),
-    _SpecialCategory(
-      label: 'Podcasts',
-      subtitle: 'Audio shows & transcripts',
-      icon: Icons.podcasts,
-      color: Color(0xFF8B5CF6),
-      filter: 'podcasts',
-    ),
-    _SpecialCategory(
-      label: 'Episodes',
-      subtitle: 'Series & episodic content',
-      icon: Icons.play_circle_filled,
-      color: Color(0xFFF59E0B),
-      filter: 'episodes',
-    ),
-    _SpecialCategory(
-      label: 'Rate Card',
-      subtitle: 'Advertising rates & media kit',
-      icon: Icons.price_change,
-      color: Color(0xFF6D28D9),
-      filter: 'rate_card',
-      editionType: 'rate_card',
-    ),
-  ];
-
   @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
-      children: [
-        const Text(
-          'Browse by Category',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w800,
-            color: KnColors.navy,
-          ),
-        ),
-        const SizedBox(height: 6),
-        const Text(
-          'Tap a category to explore editions',
-          style: TextStyle(color: KnColors.textSecondary, fontSize: 14),
-        ),
-        const SizedBox(height: 20),
-        ..._categories.map((cat) => _SpecialCategoryTile(
-              category: cat,
-              onTap: () => context.push('/archives', extra: {
-                'type': cat.editionType ?? 'special',
-                'category': cat.filter,
-                'title': cat.label,
-              }),
-            )),
-      ],
-    );
-  }
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final catsAsync = ref.watch(editionCategoriesProvider(country));
 
-class _SpecialCategory {
-  final String label;
-  final String subtitle;
-  final IconData icon;
-  final Color color;
-  final String filter;
-  final String? editionType;
-
-  const _SpecialCategory({
-    required this.label,
-    required this.subtitle,
-    required this.icon,
-    required this.color,
-    required this.filter,
-    this.editionType,
-  });
-}
-
-class _SpecialCategoryTile extends StatelessWidget {
-  final _SpecialCategory category;
-  final VoidCallback onTap;
-
-  const _SpecialCategoryTile(
-      {required this.category, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Material(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        elevation: 0,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: category.color.withAlpha(60),
-                width: 1.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: category.color.withAlpha(20),
-                  blurRadius: 8,
-                  offset: const Offset(0, 3),
-                ),
-              ],
+    return catsAsync.when(
+      loading: () =>
+          const Center(child: CircularProgressIndicator(color: KnColors.orange)),
+      error: (_, __) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.wifi_off, size: 48, color: KnColors.textMuted),
+            const SizedBox(height: 12),
+            const Text('Could not load categories',
+                style: TextStyle(color: KnColors.navy, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 12),
+            ElevatedButton.icon(
+              onPressed: () => ref.invalidate(editionCategoriesProvider(country)),
+              icon: const Icon(Icons.refresh),
+              label: const Text('Retry'),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: KnColors.orange,
+                  foregroundColor: Colors.white),
             ),
-            child: Row(
-              children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: category.color.withAlpha(25),
-                    borderRadius: BorderRadius.circular(13),
-                  ),
-                  child: Icon(category.icon, color: category.color, size: 24),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        category.label,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: KnColors.navy,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        category.subtitle,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: KnColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  color: category.color.withAlpha(150),
-                  size: 16,
-                ),
-              ],
-            ),
-          ),
+          ],
         ),
       ),
+      data: (categories) {
+        if (categories.isEmpty) {
+          return const Center(
+            child: Text('No categories available.',
+                style: TextStyle(color: KnColors.textSecondary)),
+          );
+        }
+        return ListView(
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
+          children: [
+            const Text('Browse by Category',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: KnColors.navy)),
+            const SizedBox(height: 6),
+            const Text('Tap a category to explore editions',
+                style: TextStyle(color: KnColors.textSecondary, fontSize: 14)),
+            const SizedBox(height: 20),
+            ...categories.map((cat) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Material(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    elevation: 0,
+                    child: InkWell(
+                      onTap: () => context.push('/archives', extra: {
+                        'type': cat.editionType,
+                        'category': cat.slug,
+                        'title': cat.label,
+                      }),
+                      borderRadius: BorderRadius.circular(16),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 18, vertical: 16),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                              color: cat.color.withAlpha(60), width: 1.5),
+                          boxShadow: [
+                            BoxShadow(
+                                color: cat.color.withAlpha(20),
+                                blurRadius: 8,
+                                offset: const Offset(0, 3)),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: cat.color.withAlpha(25),
+                                borderRadius: BorderRadius.circular(13),
+                              ),
+                              child: Icon(cat.icon,
+                                  color: cat.color, size: 24),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(cat.label,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16,
+                                          color: KnColors.navy)),
+                                  if (cat.description != null) ...[
+                                    const SizedBox(height: 2),
+                                    Text(cat.description!,
+                                        style: const TextStyle(
+                                            fontSize: 12,
+                                            color: KnColors.textSecondary)),
+                                  ],
+                                ],
+                              ),
+                            ),
+                            Icon(Icons.arrow_forward_ios,
+                                color: cat.color.withAlpha(150), size: 16),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                )),
+          ],
+        );
+      },
     );
   }
 }

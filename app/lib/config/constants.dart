@@ -12,6 +12,7 @@ class AppConstants {
   static const String keyUserCountry = 'user_country';
   static const String keyIsNewUser = 'is_new_user';
   static const String keyOnboardingDone = 'onboarding_done';
+  static const String keyUserCache = 'user_cache';
 
   // Supported countries
   static const List<Map<String, String>> countries = [

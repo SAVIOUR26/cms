@@ -59,10 +59,10 @@ function registerEdition(array $meta): ?int {
         $stmt = $db->prepare("
             INSERT INTO editions
                 (title, slug, country, edition_date, edition_type, category,
-                 html_url, zip_url, page_count, is_free, theme, description, status, created_at)
+                 cover_image, html_url, zip_url, page_count, is_free, theme, description, status, created_at)
             VALUES
                 (:title, :slug, :country, :edition_date, :edition_type, :category,
-                 :html_url, :zip_url, :page_count, :is_free, :theme, :description, 'draft', NOW())
+                 :cover_image, :html_url, :zip_url, :page_count, :is_free, :theme, :description, 'draft', NOW())
         ");
         $stmt->execute([
             ':title'        => $meta['title'],
@@ -71,6 +71,7 @@ function registerEdition(array $meta): ?int {
             ':edition_date' => $meta['date'],
             ':edition_type' => $meta['edition_type'] ?? 'daily',
             ':category'     => $meta['category'] ?? null,
+            ':cover_image'  => $meta['cover_image'] ?? null,
             ':html_url'     => $meta['html_url'],
             ':zip_url'      => $meta['zip_url'] ?? null,
             ':page_count'   => $meta['page_count'] ?? 0,
@@ -165,26 +166,34 @@ try {
     $allCSS = '';
     $allSlides = '';
     $allThumbs = '';
-    
+    $firstPageCSS  = '';   // CSS for cover.html
+    $firstPageBody = '';   // Body for cover.html
+
     foreach ($pages as $idx => $page) {
         $filename = $page['filename'] ?? '';
         if ($filename[0] !== '/') {
             $filename = '../templates/pages/' . $filename;
         }
-        
+
         if (!file_exists($filename)) {
             throw new Exception("File not found: " . basename($filename));
         }
-        
+
         $parts = extractParts(file_get_contents($filename));
-        
+
         // Scope CSS with page class
         $scopedCSS = scopeCSS($parts['css'], "page-{$idx}");
         $allCSS .= "/* Page {$idx} */\n" . $scopedCSS . "\n";
-        
+
+        // Capture first page for standalone cover.html
+        if ($idx === 0) {
+            $firstPageCSS  = $scopedCSS;
+            $firstPageBody = $parts['body'];
+        }
+
         // Main slide - keep body exactly as template designed it
         $allSlides .= "<div class=\"swiper-slide page-{$idx}\">{$parts['body']}</div>\n";
-        
+
         // Thumbnail - same content, smaller
         $allThumbs .= "<div class=\"swiper-slide\"><div class=\"thumb-page page-{$idx}\">{$parts['body']}</div><span class=\"thumb-num\">" . ($idx + 1) . "</span></div>\n";
     }
@@ -734,6 +743,26 @@ HTML;
         $zip->close();
     }
     
+    // ── Write standalone cover.html (first page only, no JS/Swiper) ──
+    $coverHtml = <<<COVERPAGE
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=461, initial-scale=1.0, user-scalable=no">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 461px; height: 600px; overflow: hidden; background: #1e2b42; }
+{$firstPageCSS}
+</style>
+</head>
+<body>
+<div class="page-0">{$firstPageBody}</div>
+</body>
+</html>
+COVERPAGE;
+    file_put_contents($outputDir . 'cover.html', $coverHtml);
+
     // ── Auto-register in API database as draft ──
     $country     = $input['country'] ?? 'ug';
     $editionType = $input['edition_type'] ?? 'daily';
@@ -762,8 +791,9 @@ HTML;
         $cmsBaseUrl = rtrim(getenv('APP_URL') ?: ($_ENV['APP_URL'] ?? 'https://cms.kandanews.africa'), '/');
     }
 
-    $htmlUrl = $cmsBaseUrl . '/output/' . $dirName . '/index.html';
-    $zipUrl  = $cmsBaseUrl . '/output/' . $dirName . '/' . $zipName;
+    $htmlUrl  = $cmsBaseUrl . '/output/' . $dirName . '/index.html';
+    $zipUrl   = $cmsBaseUrl . '/output/' . $dirName . '/' . $zipName;
+    $coverUrl = $cmsBaseUrl . '/output/' . $dirName . '/cover.html';
 
     $editionId = registerEdition([
         'title'        => $title,
@@ -771,6 +801,7 @@ HTML;
         'country'      => $country,
         'edition_type' => $editionType,
         'category'     => $category,
+        'cover_image'  => $coverUrl,
         'html_url'     => $htmlUrl,
         'zip_url'      => $zipUrl,
         'page_count'   => $total,

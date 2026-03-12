@@ -58,16 +58,53 @@ function misc_sms_test(): void {
     }
 
     $testCode = (string) random_int(100000, 999999);
-    $sent = otp_send_sms($phone, $testCode);
+    $message  = "Your KandaNews verification code is: $testCode. Valid for 5 minutes. Do not share this code.";
+
+    // Call AT directly here so we can expose the raw response
+    $url    = $username === 'sandbox'
+        ? 'https://api.sandbox.africastalking.com/version1/messaging'
+        : 'https://api.africastalking.com/version1/messaging';
+    $fields = ['username' => $username, 'to' => $phone, 'message' => $message];
+    if ($senderId) $fields['from'] = $senderId;
+
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => http_build_query($fields),
+        CURLOPT_HTTPHEADER     => ['Accept: application/json', 'Content-Type: application/x-www-form-urlencoded', 'apiKey: ' . $apiKey],
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT        => 15,
+    ]);
+    $atResponse = curl_exec($ch);
+    $httpCode   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlErr    = curl_error($ch);
+    curl_close($ch);
+
+    $atBody     = json_decode($atResponse, true);
+    $recipient  = $atBody['SMSMessageData']['Recipients'][0] ?? [];
+    $atStatus   = $recipient['status']     ?? 'unknown';
+    $atCode     = $recipient['statusCode'] ?? 'unknown';
+    $atCost     = $recipient['cost']       ?? 'unknown';
 
     json_success([
-        'sms_sent'   => $sent,
-        'phone'      => $phone,
-        'test_code'  => $testCode, // visible here for verification
-        'config'     => $configStatus,
-        'note'       => $sent
-            ? 'SMS dispatched to Africa\'s Talking. Check your phone and server error_log for the AT response.'
-            : 'SMS FAILED. Check server error_log for details.',
+        'http_code'     => $httpCode,
+        'curl_error'    => $curlErr ?: null,
+        'at_status'     => $atStatus,
+        'at_status_code'=> $atCode,
+        'at_cost'       => $atCost,
+        'at_raw'        => $atBody,
+        'phone'         => $phone,
+        'test_code'     => $testCode,
+        'config'        => $configStatus,
+        'diagnosis'     => match((int)$atCode) {
+            100, 101, 102 => 'SUCCESS — SMS queued/sent.',
+            405 => 'FAILED — InsufficientBalance. Top up your AT wallet at africastalking.com/billing',
+            402 => 'FAILED — InvalidSenderId. Register "KandaNews" in AT dashboard → SMS → Sender IDs',
+            401 => 'FAILED — RiskHold. Contact Africa\'s Talking support.',
+            403 => 'FAILED — InvalidPhoneNumber. Check the phone number format.',
+            407 => 'FAILED — CouldNotRoute. Network routing issue, try without Sender ID.',
+            default => 'Check at_status and at_raw above for details.',
+        },
     ]);
 }
 

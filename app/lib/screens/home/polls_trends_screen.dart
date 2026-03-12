@@ -15,7 +15,7 @@ class PollsTrendsScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF0F2F5),
       appBar: AppBar(
-        title: Text('$flag Polls & Trends'),
+        title: Text('$flag Polls & Events'),
         backgroundColor: KnColors.orange,
         foregroundColor: Colors.white,
         elevation: 0,

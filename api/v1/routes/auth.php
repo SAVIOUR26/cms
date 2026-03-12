@@ -164,13 +164,16 @@ function auth_register(): void {
         json_error('Surname must be 2-50 characters');
     }
 
-    // Validate age
-    if (!isset($input['age'])) {
-        json_error('Age is required');
+    // Validate date of birth (YYYY-MM-DD)
+    $dob = trim($input['dob'] ?? '');
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $dob)) {
+        json_error('Date of birth is required (format: YYYY-MM-DD)');
     }
-    $age = (int) $input['age'];
-    if ($age < 13 || $age > 120) {
-        json_error('Age must be between 13 and 120');
+    $dobTs = strtotime($dob);
+    if (!$dobTs) json_error('Invalid date of birth');
+    $ageYears = (int) floor((time() - $dobTs) / (365.25 * 86400));
+    if ($ageYears < 13 || $ageYears > 120) {
+        json_error('You must be at least 13 years old to register');
     }
 
     // Validate role
@@ -189,17 +192,18 @@ function auth_register(): void {
     // Build full name
     $fullName = $firstName . ' ' . $surname;
 
-    // Update user record
+    // Update user record — store dob and derive age for legacy compatibility
     $stmt = db()->prepare("
         UPDATE users
-        SET first_name = ?, surname = ?, full_name = ?, age = ?, role = ?, role_detail = ?, updated_at = NOW()
+        SET first_name = ?, surname = ?, full_name = ?, date_of_birth = ?, age = ?,
+            role = ?, role_detail = ?, updated_at = NOW()
         WHERE id = ?
     ");
-    $stmt->execute([$firstName, $surname, $fullName, $age, $role, $roleDetail, $user['id']]);
+    $stmt->execute([$firstName, $surname, $fullName, $dob, $ageYears, $role, $roleDetail, $user['id']]);
 
     // Fetch updated user
     $stmt = db()->prepare("
-        SELECT id, phone, full_name, first_name, surname, age, role, role_detail, avatar_url, country
+        SELECT id, phone, full_name, first_name, surname, date_of_birth, age, role, role_detail, avatar_url, country
         FROM users WHERE id = ?
     ");
     $stmt->execute([$user['id']]);

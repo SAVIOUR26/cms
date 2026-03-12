@@ -16,9 +16,24 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _firstNameCtrl = TextEditingController();
   final _surnameCtrl = TextEditingController();
-  final _ageCtrl = TextEditingController();
   final _roleDetailCtrl = TextEditingController();
+
+  // Date of Birth
+  int? _dobDay;
+  int? _dobMonth;
+  int? _dobYear;
+
   String? _selectedRole;
+
+  static const _monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+  ];
+
+  String? get _dobString {
+    if (_dobDay == null || _dobMonth == null || _dobYear == null) return null;
+    return '$_dobYear-${_dobMonth!.toString().padLeft(2, '0')}-${_dobDay!.toString().padLeft(2, '0')}';
+  }
 
   String get _roleDetailLabel {
     final match = AppConstants.userRoles.where((r) => r['value'] == _selectedRole);
@@ -30,6 +45,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final authState = ref.watch(authProvider);
     final screenWidth = MediaQuery.of(context).size.width;
     final isDesktop = screenWidth > 800;
+    final currentYear = DateTime.now().year;
 
     final registerForm = SingleChildScrollView(
       padding: const EdgeInsets.all(28),
@@ -80,21 +96,80 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               validator: (v) =>
                   v == null || v.trim().length < 2 ? 'Enter your surname' : null,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
 
-            // Age
-            TextFormField(
-              controller: _ageCtrl,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Age',
-                prefixIcon: Icon(Icons.cake_outlined),
+            // Date of Birth
+            const Text(
+              'Date of Birth',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                color: KnColors.textSecondary,
               ),
-              validator: (v) {
-                final age = int.tryParse(v ?? '');
-                if (age == null || age < 13 || age > 120) return 'Enter a valid age (13+)';
-                return null;
-              },
+            ),
+            const SizedBox(height: 8),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Day
+                Expanded(
+                  child: DropdownButtonFormField<int>(
+                    decoration: const InputDecoration(
+                      labelText: 'Day',
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                    ),
+                    value: _dobDay,
+                    isExpanded: true,
+                    items: List.generate(
+                      31,
+                      (i) => DropdownMenuItem(value: i + 1, child: Text('${i + 1}')),
+                    ),
+                    onChanged: (v) => setState(() => _dobDay = v),
+                    validator: (v) => v == null ? 'Day' : null,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                // Month
+                Expanded(
+                  flex: 3,
+                  child: DropdownButtonFormField<int>(
+                    decoration: const InputDecoration(
+                      labelText: 'Month',
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                    ),
+                    value: _dobMonth,
+                    isExpanded: true,
+                    items: List.generate(
+                      12,
+                      (i) => DropdownMenuItem(value: i + 1, child: Text(_monthNames[i])),
+                    ),
+                    onChanged: (v) => setState(() => _dobMonth = v),
+                    validator: (v) => v == null ? 'Month' : null,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                // Year
+                Expanded(
+                  flex: 2,
+                  child: DropdownButtonFormField<int>(
+                    decoration: const InputDecoration(
+                      labelText: 'Year',
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                    ),
+                    value: _dobYear,
+                    isExpanded: true,
+                    items: List.generate(
+                      87,
+                      (i) {
+                        final year = currentYear - 13 - i;
+                        return DropdownMenuItem(value: year, child: Text('$year'));
+                      },
+                    ),
+                    onChanged: (v) => setState(() => _dobYear = v),
+                    validator: (v) => v == null ? 'Year' : null,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 24),
 
@@ -269,12 +344,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       );
       return;
     }
+    if (_dobDay == null || _dobMonth == null || _dobYear == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select your date of birth')),
+      );
+      return;
+    }
     if (!_formKey.currentState!.validate()) return;
 
     final success = await ref.read(authProvider.notifier).register(
           firstName: _firstNameCtrl.text.trim(),
           surname: _surnameCtrl.text.trim(),
-          age: int.parse(_ageCtrl.text.trim()),
+          dob: _dobString!,
           role: _selectedRole!,
           roleDetail: _roleDetailCtrl.text.trim(),
         );

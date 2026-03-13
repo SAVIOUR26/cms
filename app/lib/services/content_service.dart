@@ -129,4 +129,18 @@ class ContentService {
     } catch (_) {}
     return [];
   }
+
+  /// Fire-and-forget — increments impression_count on the server.
+  Future<void> trackBannerImpression(int id) async {
+    try {
+      await _api.post(ApiConfig.bannerImpression, data: {'id': id});
+    } catch (_) {}
+  }
+
+  /// Fire-and-forget — increments click_count on the server.
+  Future<void> trackBannerClick(int id) async {
+    try {
+      await _api.post(ApiConfig.bannerClick, data: {'id': id});
+    } catch (_) {}
+  }
 }

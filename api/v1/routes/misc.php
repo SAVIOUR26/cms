@@ -7,9 +7,11 @@
 
 function route_misc(string $action, string $method): void {
     switch ("$method $action") {
-        case 'GET quote':    misc_quote();    break;
-        case 'GET sms-test': misc_sms_test(); break;
-        case 'GET banners':  misc_banners();  break;
+        case 'GET quote':              misc_quote();                      break;
+        case 'GET sms-test':           misc_sms_test();                   break;
+        case 'GET banners':            misc_banners();                    break;
+        case 'POST banner-impression': misc_banner_track('impression');   break;
+        case 'POST banner-click':      misc_banner_track('click');        break;
         default: json_error('Not found', 404);
     }
 }
@@ -184,4 +186,30 @@ function misc_banners(): void {
     unset($b);
 
     json_success(['banners' => $banners]);
+}
+
+/**
+ * POST /misc/banner-impression   body: {"id": 5}
+ * POST /misc/banner-click        body: {"id": 5}
+ *
+ * Fire-and-forget analytics tracking for home carousel banners.
+ * Increments the appropriate counter atomically.
+ * No auth required — intentionally lightweight.
+ */
+function misc_banner_track(string $type): void {
+    $body = json_decode(file_get_contents('php://input'), true) ?? [];
+    $id   = (int)($body['id'] ?? 0);
+
+    if ($id < 1) {
+        json_success(['tracked' => false]);
+        return;
+    }
+
+    $col = $type === 'impression' ? 'impression_count' : 'click_count';
+
+    $pdo = db();
+    $pdo->prepare("UPDATE home_banners SET {$col} = {$col} + 1 WHERE id = ?")
+        ->execute([$id]);
+
+    json_success(['tracked' => true]);
 }

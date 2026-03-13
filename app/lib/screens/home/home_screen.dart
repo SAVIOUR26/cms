@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../models/home_banner.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/content_provider.dart';
 import '../../providers/edition_provider.dart';
 import '../../providers/subscription_provider.dart';
 import '../../theme/kn_theme.dart';
@@ -40,7 +43,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     final authState = ref.watch(authProvider);
     final user = authState.user;
     final country = user?.country ?? 'ug';
-    final quote = ref.watch(quoteProvider);
     final todayEdition = ref.watch(todayEditionProvider(country));
     final subscription = ref.watch(subscriptionStatusProvider);
 
@@ -58,7 +60,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       firstName: firstName,
       isSubscribed: isSubscribed,
       todayEdition: todayEdition,
-      quote: quote,
       user: user,
       country: country,
       isDesktop: isDesktop,
@@ -138,7 +139,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     required String firstName,
     required bool isSubscribed,
     required AsyncValue todayEdition,
-    required AsyncValue<Map<String, dynamic>?> quote,
     required dynamic user,
     required String country,
     required bool isDesktop,
@@ -174,6 +174,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ref.invalidate(todayEditionProvider(country));
             ref.invalidate(quoteProvider);
             ref.invalidate(subscriptionStatusProvider);
+            ref.invalidate(homeBannersProvider(country));
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -268,67 +269,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   },
                 ),
 
-                // Start Here banner
-                _StartHereBanner(
-                  onTap: () => context.push('/special-editions'),
-                  // TODO: update onTap to open the "About KandaNews" intro edition
-                  // once it is added to the database.
-                ),
-
                 const SizedBox(height: 24),
 
-                // Quote card (centered)
-                quote.when(
-                  data: (q) {
-                    if (q == null) return const SizedBox.shrink();
-                    return Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        gradient: KnColors.primaryGradient,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'QUOTE OF THE DAY',
-                            style: TextStyle(
-                              color: KnColors.orange,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 13,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          const Icon(Icons.format_quote,
-                              color: KnColors.orange, size: 32),
-                          const SizedBox(height: 8),
-                          Text(
-                            q['quote'] ?? '',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontStyle: FontStyle.italic,
-                              height: 1.5,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            '— ${q['author'] ?? 'Unknown'}',
-                            style: TextStyle(
-                              color: Colors.white.withAlpha(179),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  loading: () => const SizedBox.shrink(),
-                  error: (_, __) => const SizedBox.shrink(),
-                ),
+                // Info Carousel — Quote of the Day + server-driven banners.
+                // Quote is always the first slide; banners follow in sort_order.
+                _InfoCarousel(country: country),
 
                 const SizedBox(height: 24),
               ],
@@ -337,16 +282,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         ),
       ],
     );
-  }
-
-  String _countryName(String code) {
-    const names = {
-      'ug': 'Uganda',
-      'ke': 'Kenya',
-      'ng': 'Nigeria',
-      'za': 'South Africa',
-    };
-    return names[code.toLowerCase()] ?? 'Africa';
   }
 
   String _countryFlag(String code) {
@@ -505,127 +440,295 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 }
 
-/// Full-width animated "Start Here" banner shown on the dashboard.
-/// Pulses with an orange glow to draw the reader's attention toward
-/// the introductory "About KandaNews" edition.
-class _StartHereBanner extends StatefulWidget {
-  final VoidCallback onTap;
-  const _StartHereBanner({required this.onTap});
+// ─────────────────────────────────────────────────────────────────────────────
+// Info Carousel
+//
+// Combines the Quote of the Day (always first) with server-driven home banners.
+// Auto-advances every 3 seconds with a smooth PageView slide animation.
+// Dot indicators show the current position when there are multiple slides.
+// Banner impressions and clicks are tracked silently in the background.
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _InfoCarousel extends ConsumerStatefulWidget {
+  final String country;
+  const _InfoCarousel({required this.country});
 
   @override
-  State<_StartHereBanner> createState() => _StartHereBannerState();
+  ConsumerState<_InfoCarousel> createState() => _InfoCarouselState();
 }
 
-class _StartHereBannerState extends State<_StartHereBanner>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _pulseCtrl;
-  late Animation<double> _pulseAnim;
+class _InfoCarouselState extends ConsumerState<_InfoCarousel> {
+  final _pageCtrl = PageController();
+  Timer? _timer;
+  int _page = 0;
 
   @override
   void initState() {
     super.initState();
-    _pulseCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1400),
-    )..repeat(reverse: true);
-    _pulseAnim = Tween<double>(begin: 0.45, end: 1.0).animate(
-      CurvedAnimation(parent: _pulseCtrl, curve: Curves.easeInOut),
-    );
+    _timer = Timer.periodic(const Duration(seconds: 3), (_) => _advance());
   }
 
   @override
   void dispose() {
-    _pulseCtrl.dispose();
+    _timer?.cancel();
+    _pageCtrl.dispose();
     super.dispose();
+  }
+
+  void _advance() {
+    if (!mounted) return;
+    final quote = ref.read(quoteProvider).valueOrNull;
+    final banners = ref.read(homeBannersProvider(widget.country)).valueOrNull ?? [];
+    final total = (quote != null ? 1 : 0) + banners.length;
+    if (total < 2) return;
+    final next = (_page + 1) % total;
+    _pageCtrl.animateToPage(
+      next,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _pulseAnim,
-      builder: (context, _) {
-        return GestureDetector(
-          onTap: widget.onTap,
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [KnColors.navy, Color(0xFF1A3251)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: KnColors.orange.withAlpha((_pulseAnim.value * 220).toInt()),
-                width: 1.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: KnColors.orange.withAlpha((_pulseAnim.value * 55).toInt()),
-                  blurRadius: 18,
-                  spreadRadius: 1,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                // Animated icon container
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: KnColors.orange.withAlpha(
-                        (_pulseAnim.value * 50).toInt() + 20),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.play_circle_fill,
-                    color: KnColors.orange,
-                    size: 30,
-                  ),
-                ),
-                const SizedBox(width: 14),
-                const Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'New here? Start here →',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                      SizedBox(height: 3),
-                      Text(
-                        "Discover why Africa's sharpest minds read KandaNews",
-                        style: TextStyle(
-                          color: Colors.white60,
-                          fontSize: 12,
-                          height: 1.4,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 10),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  color: KnColors.orange,
-                  size: 15,
-                ),
-              ],
+    final quote = ref.watch(quoteProvider).valueOrNull;
+    final banners = ref.watch(homeBannersProvider(widget.country)).valueOrNull ?? [];
+
+    final hasQuote = quote != null;
+    final total = (hasQuote ? 1 : 0) + banners.length;
+
+    // Still loading — show a ghost card so layout doesn't jump
+    if (total == 0) {
+      return Container(
+        height: 148,
+        decoration: BoxDecoration(
+          gradient: KnColors.primaryGradient,
+          borderRadius: BorderRadius.circular(16),
+        ),
+      );
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          height: 148,
+          child: PageView.builder(
+            controller: _pageCtrl,
+            itemCount: total,
+            onPageChanged: (i) {
+              setState(() => _page = i);
+              // Track impression when a banner slide becomes visible
+              final bannerIndex = hasQuote ? i - 1 : i;
+              if (bannerIndex >= 0 && bannerIndex < banners.length) {
+                ref
+                    .read(contentServiceProvider)
+                    .trackBannerImpression(banners[bannerIndex].id);
+              }
+            },
+            itemBuilder: (ctx, i) {
+              if (hasQuote && i == 0) {
+                return _buildQuoteSlide(quote!);
+              }
+              final banner = banners[hasQuote ? i - 1 : i];
+              return _buildBannerSlide(ctx, banner);
+            },
+          ),
+        ),
+        if (total > 1) ...[
+          const SizedBox(height: 10),
+          _buildDots(total),
+        ],
+      ],
+    );
+  }
+
+  // ── Quote slide (always first) ──────────────────────────────────────────
+
+  Widget _buildQuoteSlide(Map<String, dynamic> q) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      decoration: BoxDecoration(
+        gradient: KnColors.primaryGradient,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'QUOTE OF THE DAY',
+            style: TextStyle(
+              color: KnColors.orange,
+              fontWeight: FontWeight.w700,
+              fontSize: 11,
+              letterSpacing: 1.2,
             ),
           ),
-        );
+          const SizedBox(height: 8),
+          const Icon(Icons.format_quote, color: KnColors.orange, size: 24),
+          const SizedBox(height: 6),
+          Text(
+            q['quote'] ?? '',
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontStyle: FontStyle.italic,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '— ${q['author'] ?? 'Unknown'}',
+            style: TextStyle(
+              color: Colors.white.withAlpha(179),
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Banner slide ─────────────────────────────────────────────────────────
+
+  Widget _buildBannerSlide(BuildContext context, HomeBanner banner) {
+    return GestureDetector(
+      onTap: () async {
+        ref.read(contentServiceProvider).trackBannerClick(banner.id);
+        final url = banner.actionUrl;
+        if (url == null || url.isEmpty) return;
+        if (url.startsWith('/')) {
+          // Internal deep-link
+          context.push(url);
+        } else {
+          final uri = Uri.tryParse(url);
+          if (uri != null && await canLaunchUrl(uri)) {
+            launchUrl(uri, mode: LaunchMode.externalApplication);
+          }
+        }
       },
+      child: Container(
+        width: double.infinity,
+        margin: const EdgeInsets.symmetric(horizontal: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [banner.bgColor, banner.bgColor.withAlpha(210)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            // Icon circle
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: Colors.white.withAlpha(25),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(banner.icon, color: Colors.white, size: 26),
+            ),
+            const SizedBox(width: 14),
+            // Text content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    banner.title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                  if (banner.subtitle != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      banner.subtitle!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.white.withAlpha(179),
+                        fontSize: 12,
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                  if (banner.actionLabel != null) ...[
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withAlpha(30),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                            color: Colors.white.withAlpha(80), width: 1),
+                      ),
+                      child: Text(
+                        banner.actionLabel!,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            if (banner.actionUrl != null) ...[
+              const SizedBox(width: 8),
+              Icon(Icons.arrow_forward_ios,
+                  color: Colors.white.withAlpha(179), size: 14),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Dot indicators ────────────────────────────────────────────────────────
+
+  Widget _buildDots(int total) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(total, (i) {
+        final active = i == _page;
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          margin: const EdgeInsets.symmetric(horizontal: 3),
+          width: active ? 20 : 6,
+          height: 6,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(3),
+            color: active
+                ? KnColors.orange
+                : KnColors.navy.withAlpha(50),
+          ),
+        );
+      }),
     );
   }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Marquee
+// ─────────────────────────────────────────────────────────────────────────────
 
 /// Horizontal scrolling marquee for the target audience tagline.
 /// Uses a continuous translate animation so the text scrolls smoothly
@@ -755,6 +858,10 @@ class _MarqueeWidgetState extends State<_MarqueeWidget>
     );
   }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Background painters
+// ─────────────────────────────────────────────────────────────────────────────
 
 /// Paints the fixed dark grid with light orange lines wallpaper
 class _DashboardGridPainter extends CustomPainter {

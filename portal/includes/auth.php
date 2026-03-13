@@ -72,8 +72,8 @@ function portal_ensure_schema(PDO $db): void {
     if ($ran) return;
     $ran = true;
 
+    // migration_002: add `category` column to editions
     try {
-        // migration_002: add `category` column to editions
         $cols = $db->query("SHOW COLUMNS FROM editions LIKE 'category'")->fetchAll();
         if (empty($cols)) {
             $db->exec("ALTER TABLE editions
@@ -81,8 +81,22 @@ function portal_ensure_schema(PDO $db): void {
                 ADD INDEX idx_category (category)");
         }
     } catch (PDOException $e) {
-        // Non-fatal — log and continue; page may still partially work
-        error_log('portal_ensure_schema error: ' . $e->getMessage());
+        error_log('portal_ensure_schema (002) error: ' . $e->getMessage());
+    }
+
+    // migration_006: add impression_count + click_count to home_banners
+    try {
+        $tables = $db->query("SHOW TABLES LIKE 'home_banners'")->fetchAll();
+        if (!empty($tables)) {
+            $cols = $db->query("SHOW COLUMNS FROM home_banners LIKE 'impression_count'")->fetchAll();
+            if (empty($cols)) {
+                $db->exec("ALTER TABLE home_banners
+                    ADD COLUMN impression_count INT UNSIGNED NOT NULL DEFAULT 0,
+                    ADD COLUMN click_count      INT UNSIGNED NOT NULL DEFAULT 0");
+            }
+        }
+    } catch (PDOException $e) {
+        error_log('portal_ensure_schema (006) error: ' . $e->getMessage());
     }
 }
 

@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ")->execute([$slug, $label, $description, $icon_name,
                              $color_hex, $sort_order, $edition_type,
                              $country, $is_active, $id]);
-                portal_flash('success', "Category "{$label}" updated.");
+                portal_flash('success', "Category \"{$label}\" updated.");
             } else {
                 $pdo->prepare("
                     INSERT INTO edition_categories
@@ -98,11 +98,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ")->execute([$slug, $label, $description, $icon_name,
                              $color_hex, $sort_order, $edition_type,
                              $country, $is_active]);
-                portal_flash('success', "Category "{$label}" created.");
+                portal_flash('success', "Category \"{$label}\" created.");
             }
         } catch (PDOException $e) {
             if (str_contains($e->getMessage(), '1062')) {
-                portal_flash('error', "Slug "{$slug}" is already in use. Choose a different slug.");
+                portal_flash('error', "Slug \"{$slug}\" is already in use. Choose a different slug.");
             } else {
                 portal_flash('error', 'Database error: ' . $e->getMessage());
             }
@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $slug->execute([$id]);
             $row = $slug->fetch();
             $pdo->prepare("DELETE FROM edition_categories WHERE id = ?")->execute([$id]);
-            portal_flash('success', 'Category' . ($row ? " "{$row['slug']}"" : '') . ' deleted.');
+            portal_flash('success', 'Category' . ($row ? " \"{$row['slug']}\"" : '') . ' deleted.');
         }
         header('Location: ' . portal_url('edition-categories.php'));
         exit;

@@ -8,7 +8,7 @@ $COUNTRY = ['name' => 'Africa', 'flag' => '🌍', 'email' => 'hello@kandanews.af
 $COUNTRIES = [];
 require_once __DIR__ . '/shared/includes/helpers.php';
 require_once __DIR__ . '/shared/includes/country-config.php';
-require_once __DIR__ . '/../blog/includes/markdown.php';
+require_once __DIR__ . '/blog/includes/markdown.php';
 
 // Override for hub page
 $COUNTRY = ['name' => 'Africa', 'flag' => '🌍', 'email' => 'hello@kandanews.africa'];
@@ -17,7 +17,7 @@ $_country_name = 'Africa';
 $_is_hub = true;
 
 // Load latest 3 blog posts for the landing section
-$_blog_posts = array_slice(get_all_posts(__DIR__ . '/../blog/posts'), 0, 3);
+$_blog_posts = array_slice(get_all_posts(__DIR__ . '/blog/posts'), 0, 3);
 
 require_once __DIR__ . '/shared/components/header.php';
 ?>

@@ -791,6 +791,14 @@ function _section_active(string $section): string {
     <!-- Engagement -->
     <div class="nav-section">
         <div class="nav-section-label">Engagement</div>
+        <a href="<?php echo portal_url('polls.php'); ?>"
+           class="nav-item<?php echo _nav_active('polls.php'); ?>">
+            <i class="fas fa-poll"></i> Polls
+        </a>
+        <a href="<?php echo portal_url('events.php'); ?>"
+           class="nav-item<?php echo _nav_active('events.php'); ?>">
+            <i class="fas fa-calendar-alt"></i> Events
+        </a>
         <a href="<?php echo portal_url('banners.php'); ?>"
            class="nav-item<?php echo _nav_active('banners.php'); ?>">
             <i class="fas fa-images"></i> Home Banners

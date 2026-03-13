@@ -788,6 +788,15 @@ function _section_active(string $section): string {
         </a>
     </div>
 
+    <!-- Engagement -->
+    <div class="nav-section">
+        <div class="nav-section-label">Engagement</div>
+        <a href="<?php echo portal_url('banners.php'); ?>"
+           class="nav-item<?php echo _nav_active('banners.php'); ?>">
+            <i class="fas fa-images"></i> Home Banners
+        </a>
+    </div>
+
     <!-- Audience -->
     <div class="nav-section">
         <div class="nav-section-label">Audience</div>

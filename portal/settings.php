@@ -83,6 +83,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['admins_action'])) {
     }
 }
 
+// ── Handle Timezone action ─────────────────────────────────────────────────
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['timezone_action'])) {
+    if (!portal_verify_csrf()) {
+        portal_flash('error', 'Security token mismatch. Please try again.');
+        header('Location: ' . portal_url('settings.php?section=general'));
+        exit;
+    }
+    $tz = $_POST['timezone'] ?? '';
+    if ($tz && @timezone_open($tz)) {
+        portal_setting_set('timezone', $tz);
+        date_default_timezone_set($tz);
+        portal_flash('success', 'Timezone updated to ' . $tz . '. All timestamps will now use this zone.');
+    } else {
+        portal_flash('error', 'Invalid timezone selected.');
+    }
+    header('Location: ' . portal_url('settings.php?section=general'));
+    exit;
+}
+
 $page_title   = 'Settings';
 $page_section = 'system';
 $section      = $_GET['section'] ?? 'general';
@@ -161,6 +180,175 @@ require_once __DIR__ . '/includes/header.php';
         Never commit <code style="background:rgba(255,255,255,.15);padding:2px 6px;border-radius:4px;">.env</code> to git.
     </p>
 </div>
+
+<?php
+// ── Timezone card ─────────────────────────────────────────────────────────
+$_tz_regions = [
+    'East Africa (EAT — UTC+3)' => [
+        'Africa/Nairobi'       => 'Nairobi — Kenya, Uganda, Tanzania, Ethiopia (recommended)',
+        'Africa/Kampala'       => 'Kampala — Uganda',
+        'Africa/Dar_es_Salaam' => 'Dar es Salaam — Tanzania',
+        'Africa/Addis_Ababa'   => 'Addis Ababa — Ethiopia',
+        'Africa/Mogadishu'     => 'Mogadishu — Somalia',
+    ],
+    'Central Africa (CAT — UTC+2)' => [
+        'Africa/Khartoum'      => 'Khartoum — Sudan',
+        'Africa/Maputo'        => 'Maputo — Mozambique, Zambia, Zimbabwe',
+        'Africa/Harare'        => 'Harare — Zimbabwe',
+        'Africa/Lusaka'        => 'Lusaka — Zambia',
+        'Africa/Kigali'        => 'Kigali — Rwanda',
+        'Africa/Bujumbura'     => 'Bujumbura — Burundi',
+    ],
+    'South Africa (SAST — UTC+2)' => [
+        'Africa/Johannesburg'  => 'Johannesburg — South Africa',
+    ],
+    'West Africa (WAT — UTC+1)' => [
+        'Africa/Lagos'         => 'Lagos — Nigeria',
+        'Africa/Accra'         => 'Accra — Ghana (GMT)',
+        'Africa/Abidjan'       => 'Abidjan — Côte d\'Ivoire',
+    ],
+    'North Africa' => [
+        'Africa/Cairo'         => 'Cairo — Egypt (EET UTC+2)',
+        'Africa/Casablanca'    => 'Casablanca — Morocco (WET UTC+1)',
+    ],
+    'Universal' => [
+        'UTC'                  => 'UTC — Coordinated Universal Time',
+    ],
+];
+$_cur_tz = portal_setting_get('timezone', 'Africa/Nairobi');
+try { $_cur_dt = new DateTimeImmutable('now', new DateTimeZone($_cur_tz)); } catch (Exception $e) { $_cur_dt = new DateTimeImmutable('now'); }
+?>
+
+<!-- Timezone -->
+<div class="card" style="margin-bottom:24px;">
+    <div class="card-header">
+        <h2><i class="fas fa-clock" style="color:var(--orange);"></i> Timezone</h2>
+        <span class="badge badge-active" id="tz-live-badge">
+            <?php echo htmlspecialchars($_cur_tz); ?>
+            &nbsp;·&nbsp;
+            <span id="tz-live-time"><?php echo $_cur_dt->format('D, d M Y H:i:s'); ?></span>
+        </span>
+    </div>
+
+    <p style="font-size:13px;color:#666;margin-bottom:20px;line-height:1.6;">
+        All scheduled posts, publish timestamps, and reports use this timezone.
+        <strong>East Africa Time (EAT, UTC+3)</strong> covers Kenya, Uganda, Tanzania, and Ethiopia —
+        <code>Africa/Nairobi</code> is the canonical IANA identifier recommended for the region.
+    </p>
+
+    <form method="POST" action="<?php echo portal_url('settings.php?section=general'); ?>" id="tz-form">
+        <?php echo portal_csrf_field(); ?>
+        <input type="hidden" name="timezone_action" value="1">
+
+        <div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:flex-end;">
+            <div>
+                <label style="display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:8px;">
+                    Select Timezone
+                </label>
+                <select name="timezone" id="tz-select"
+                    style="width:100%;padding:11px 14px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;
+                           outline:none;background:#fff;cursor:pointer;transition:border .15s;"
+                    onfocus="this.style.borderColor='var(--orange)'"
+                    onblur="this.style.borderColor='#e5e7eb'">
+                    <?php foreach ($_tz_regions as $_group => $_zones): ?>
+                    <optgroup label="<?php echo htmlspecialchars($_group); ?>">
+                        <?php foreach ($_zones as $_tz_id => $_tz_label): ?>
+                        <option value="<?php echo htmlspecialchars($_tz_id); ?>"
+                            <?php echo $_tz_id === $_cur_tz ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($_tz_label); ?>
+                        </option>
+                        <?php endforeach; ?>
+                    </optgroup>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <button type="submit" class="btn-primary-solid" style="width:auto;padding:11px 28px;white-space:nowrap;">
+                <i class="fas fa-save"></i> Save Timezone
+            </button>
+        </div>
+
+        <!-- Live preview strip -->
+        <div id="tz-preview" style="margin-top:16px;padding:14px 18px;background:#f8fafc;border:1.5px solid #e5e7eb;
+             border-radius:8px;display:flex;gap:32px;flex-wrap:wrap;font-size:13px;align-items:center;">
+            <div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#888;margin-bottom:2px;">
+                    Selected Zone
+                </div>
+                <div style="font-weight:700;color:var(--navy);" id="preview-tz"><?php echo htmlspecialchars($_cur_tz); ?></div>
+            </div>
+            <div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#888;margin-bottom:2px;">
+                    Local Date &amp; Time
+                </div>
+                <div style="font-weight:700;color:var(--navy);font-size:15px;" id="preview-time">—</div>
+            </div>
+            <div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#888;margin-bottom:2px;">
+                    UTC Offset
+                </div>
+                <div style="font-weight:700;color:var(--orange);" id="preview-offset">—</div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+(function () {
+    // Curated offset map (avoids a round-trip to the server)
+    const TZ_OFFSETS = {
+        'Africa/Nairobi':'+03:00','Africa/Kampala':'+03:00','Africa/Dar_es_Salaam':'+03:00',
+        'Africa/Addis_Ababa':'+03:00','Africa/Mogadishu':'+03:00',
+        'Africa/Khartoum':'+02:00','Africa/Maputo':'+02:00','Africa/Harare':'+02:00',
+        'Africa/Lusaka':'+02:00','Africa/Kigali':'+02:00','Africa/Bujumbura':'+02:00',
+        'Africa/Johannesburg':'+02:00','Africa/Lagos':'+01:00',
+        'Africa/Accra':'+00:00','Africa/Abidjan':'+00:00',
+        'Africa/Cairo':'+02:00','Africa/Casablanca':'+01:00','UTC':'+00:00',
+    };
+
+    const sel       = document.getElementById('tz-select');
+    const pTime     = document.getElementById('preview-time');
+    const pOffset   = document.getElementById('preview-offset');
+    const pTZ       = document.getElementById('preview-tz');
+    const liveBadge = document.getElementById('tz-live-time');
+    let   ticker;
+
+    function fmtDate(d) {
+        const days   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const pad    = n => String(n).padStart(2,'0');
+        return days[d.getDay()] + ', ' + pad(d.getDate()) + ' ' + months[d.getMonth()] + ' ' +
+               d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    }
+
+    function nowInTz(tzName) {
+        try {
+            return new Date().toLocaleString('en-GB', {
+                timeZone: tzName, weekday:'short', day:'2-digit',
+                month:'short', year:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false
+            }).replace(/,/g,'');
+        } catch(e) { return '—'; }
+    }
+
+    function update() {
+        const tz     = sel.value;
+        const offset = TZ_OFFSETS[tz] || '—';
+        pTZ.textContent     = tz;
+        pOffset.textContent = 'UTC ' + offset;
+        pTime.textContent   = nowInTz(tz);
+        if (liveBadge) liveBadge.textContent = nowInTz('<?php echo addslashes($_cur_tz); ?>');
+    }
+
+    sel.addEventListener('change', function () {
+        clearInterval(ticker);
+        update();
+        ticker = setInterval(update, 1000);
+    });
+
+    // Boot
+    update();
+    ticker = setInterval(update, 1000);
+})();
+</script>
 
 <?php elseif ($section === 'integrations'): ?>
 <!-- ── Integrations ──────────────────────────── -->

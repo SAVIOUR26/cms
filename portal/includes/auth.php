@@ -13,7 +13,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-date_default_timezone_set('Africa/Kampala');
+// Default to East Africa Time; overridden from cms_settings after DB connects.
+date_default_timezone_set('Africa/Nairobi');
 
 // ──────────────────────────────────────────────
 // .env loader (mirrors api/v1/config/app.php)
@@ -58,8 +59,25 @@ function portal_db(): PDO {
     ]);
 
     portal_ensure_schema($pdo);
+    _portal_apply_timezone($pdo);
 
     return $pdo;
+}
+
+/**
+ * Apply the timezone stored in cms_settings, falling back to Africa/Nairobi.
+ * Called once per request right after the DB connection is established.
+ */
+function _portal_apply_timezone(PDO $db): void {
+    try {
+        $row = $db->query("SELECT value FROM cms_settings WHERE `key` = 'timezone' LIMIT 1")->fetch();
+        $tz  = $row ? $row['value'] : 'Africa/Nairobi';
+        if (@timezone_open($tz)) {
+            date_default_timezone_set($tz);
+        }
+    } catch (PDOException $e) {
+        // table may not exist yet on first boot — stay with the default
+    }
 }
 
 /**
@@ -71,6 +89,22 @@ function portal_ensure_schema(PDO $db): void {
     static $ran = false;
     if ($ran) return;
     $ran = true;
+
+    // migration_010: cms_settings key-value store (timezone, future site-wide prefs)
+    try {
+        $db->exec("CREATE TABLE IF NOT EXISTS cms_settings (
+            `key`        VARCHAR(100)  NOT NULL,
+            `value`      TEXT          NOT NULL DEFAULT '',
+            `updated_at` TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP
+                         ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`key`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
+        // Seed the default timezone row if missing
+        $db->exec("INSERT IGNORE INTO cms_settings (`key`, `value`) VALUES ('timezone', 'Africa/Nairobi')");
+    } catch (PDOException $e) {
+        error_log('portal_ensure_schema (010) error: ' . $e->getMessage());
+    }
 
     // migration_002: add `category` column to editions
     try {
@@ -98,6 +132,28 @@ function portal_ensure_schema(PDO $db): void {
     } catch (PDOException $e) {
         error_log('portal_ensure_schema (006) error: ' . $e->getMessage());
     }
+}
+
+// ──────────────────────────────────────────────
+// Site settings (cms_settings table)
+// ──────────────────────────────────────────────
+
+function portal_setting_get(string $key, string $default = ''): string {
+    try {
+        $stmt = portal_db()->prepare("SELECT value FROM cms_settings WHERE `key` = ? LIMIT 1");
+        $stmt->execute([$key]);
+        $val = $stmt->fetchColumn();
+        return $val !== false ? $val : $default;
+    } catch (PDOException $e) {
+        return $default;
+    }
+}
+
+function portal_setting_set(string $key, string $value): void {
+    portal_db()->prepare(
+        "INSERT INTO cms_settings (`key`, `value`) VALUES (?, ?)
+         ON DUPLICATE KEY UPDATE `value` = VALUES(`value`), `updated_at` = NOW()"
+    )->execute([$key, $value]);
 }
 
 // ──────────────────────────────────────────────

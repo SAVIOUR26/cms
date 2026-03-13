@@ -9,14 +9,14 @@ import '../../providers/auth_provider.dart';
 import '../../providers/content_provider.dart';
 import '../../theme/kn_theme.dart';
 
-class PollsTrendsScreen extends ConsumerStatefulWidget {
-  const PollsTrendsScreen({super.key});
+class PollsEventsScreen extends ConsumerStatefulWidget {
+  const PollsEventsScreen({super.key});
 
   @override
-  ConsumerState<PollsTrendsScreen> createState() => _PollsTrendsScreenState();
+  ConsumerState<PollsEventsScreen> createState() => _PollsEventsScreenState();
 }
 
-class _PollsTrendsScreenState extends ConsumerState<PollsTrendsScreen>
+class _PollsEventsScreenState extends ConsumerState<PollsEventsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabs;
 

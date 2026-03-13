@@ -255,7 +255,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           icon: Icons.how_to_vote_outlined,
                           label: '${_countryFlag(country)} Polls &\nEvents',
                           color: const Color(0xFF8B5CF6),
-                          onTap: () => context.push('/polls-trends'),
+                          onTap: () => context.push('/polls-events'),
                         ),
                         DashboardTile(
                           icon: Icons.campaign,

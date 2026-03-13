@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /portal/
+
+    # 1. Strip .php from any explicitly-requested URL → 301 clean redirect
+    #    THE_REQUEST holds the original browser request, so this never loops
+    #    even after rule 2 has internally appended .php.
+    RewriteCond %{THE_REQUEST} \.php[\s?] [NC]
+    RewriteRule ^(.+)\.php$ $1 [R=301,L,QSA]
+
+    # 2. Internally serve the .php file for clean-URL requests
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.+)$ $1.php [L]
+</IfModule>

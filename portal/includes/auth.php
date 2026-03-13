@@ -252,6 +252,8 @@ function portal_base_url(): string {
 }
 
 function portal_url(string $path = ''): string {
+    // Strip .php extension for clean URLs, preserving any query string
+    $path = preg_replace('/\.php(?=\?|$)/', '', $path);
     return portal_base_url() . '/' . ltrim($path, '/');
 }
 

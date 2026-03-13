@@ -28,7 +28,8 @@ $_current_path = $_SERVER['SCRIPT_NAME'];
 
 function _nav_active(string $page): string {
     global $_current_page;
-    return $_current_page === $page ? ' active' : '';
+    // Compare without .php so active state works for both clean and legacy URLs
+    return basename($_current_page, '.php') === basename($page, '.php') ? ' active' : '';
 }
 function _section_active(string $section): string {
     global $page_section;

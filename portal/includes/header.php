@@ -803,6 +803,14 @@ function _section_active(string $section): string {
            class="nav-item<?php echo _nav_active('banners.php'); ?>">
             <i class="fas fa-images"></i> Home Banners
         </a>
+        <a href="<?php echo portal_url('quotes.php'); ?>"
+           class="nav-item<?php echo _nav_active('quotes.php'); ?>">
+            <i class="fas fa-quote-left"></i> Quotes
+        </a>
+        <a href="<?php echo portal_url('edition-categories.php'); ?>"
+           class="nav-item<?php echo _nav_active('edition-categories.php'); ?>">
+            <i class="fas fa-th-large"></i> Edition Categories
+        </a>
     </div>
 
     <!-- Audience -->

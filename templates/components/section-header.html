@@ -1,0 +1,71 @@
+<!--
+  COMPONENT: Section Header
+  USAGE: Top of any page — full-width gradient block with icon, title, subtitle
+  REPLACE: gradient colors (--header-from, --header-to), icon emoji or FA icon, title, subtitle
+-->
+
+<!-- CSS — add to <style> block -->
+<style>
+.section-header {
+    background: linear-gradient(135deg, var(--header-from, #1e7e34) 0%, var(--header-to, #28a745) 100%);
+    color: white;
+    padding: 32px 25px 28px;
+    position: relative;
+    overflow: hidden;
+}
+.section-header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 50%;
+}
+.section-header-icon {
+    font-size: 36px;
+    margin-bottom: 10px;
+    display: block;
+}
+.section-header-title {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.section-header-subtitle {
+    font-size: 13px;
+    opacity: 0.88;
+    line-height: 1.4;
+}
+.section-header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+}
+</style>
+
+<!-- HTML — paste at top of .page-wrapper -->
+<div class="section-header">
+    <span class="section-header-badge">🔥 Top Stories</span>
+    <div class="section-header-icon">🇺🇬</div>
+    <h1 class="section-header-title">
+        <i class="fas fa-fire"></i>
+        <span>Trending in Uganda</span>
+    </h1>
+    <p class="section-header-subtitle">What's happening in the Pearl of Africa</p>
+</div>

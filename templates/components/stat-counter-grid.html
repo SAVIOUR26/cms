@@ -1,0 +1,86 @@
+<!--
+  COMPONENT: Stat Counter Grid (2×2)
+  USAGE: Success Story, Did You Know, any page with 4 key numbers
+  ANIMATION: Count-up on initPage() call — triggered by Swiper slide entry
+  REPLACE: data-count, data-suffix, .achievement-icon, .achievement-label
+-->
+
+<!-- CSS — add to <style> block -->
+<style>
+.achievement-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+}
+.achievement-item {
+    background: #fff8e1;
+    padding: 16px 12px;
+    border-radius: 12px;
+    text-align: center;
+    border: 2px solid #ffe082;
+    transition: transform 0.2s;
+}
+.achievement-item:active { transform: scale(0.97); }
+.achievement-icon { font-size: 26px; margin-bottom: 8px; }
+.achievement-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent, #f39c12);
+    margin: 4px 0;
+    font-variant-numeric: tabular-nums;
+}
+.achievement-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+</style>
+
+<!-- HTML — paste into content area -->
+<div class="achievement-grid" data-animate data-delay="3">
+    <div class="achievement-item">
+        <div class="achievement-icon">🏆</div>
+        <div class="achievement-value" data-count="35000" data-prefix="$" data-suffix="">$0</div>
+        <div class="achievement-label">Prize Money Won</div>
+    </div>
+    <div class="achievement-item">
+        <div class="achievement-icon">🌍</div>
+        <div class="achievement-value" data-count="4" data-suffix="">0</div>
+        <div class="achievement-label">Countries Served</div>
+    </div>
+    <div class="achievement-item">
+        <div class="achievement-icon">👥</div>
+        <div class="achievement-value" data-count="500000" data-suffix="+">0</div>
+        <div class="achievement-label">Lives Impacted</div>
+    </div>
+    <div class="achievement-item">
+        <div class="achievement-icon">⏱️</div>
+        <div class="achievement-value" data-count="2" data-suffix=" Min">0</div>
+        <div class="achievement-label">Test Duration</div>
+    </div>
+</div>
+
+<!-- JS — include in initPage() function -->
+<script>
+function initStatCounters() {
+    document.querySelectorAll('[data-count]').forEach(el => {
+        const end = parseInt(el.dataset.count);
+        const suffix = el.dataset.suffix || '';
+        const prefix = el.dataset.prefix || '';
+        const duration = 1500;
+        const startTime = performance.now();
+        function update(now) {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const value = Math.round(end * eased);
+            el.textContent = prefix + value.toLocaleString() + suffix;
+            if (progress < 1) requestAnimationFrame(update);
+        }
+        requestAnimationFrame(update);
+    });
+}
+</script>

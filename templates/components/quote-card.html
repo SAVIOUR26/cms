@@ -1,0 +1,85 @@
+<!--
+  COMPONENT: Quote Card (Glassmorphism)
+  USAGE: Inspiration, Success Story, Back Cover
+  REPLACE: quote text, attribution name and title, accent color via --quote-accent
+-->
+
+<!-- CSS — add to <style> block -->
+<style>
+.quote-card {
+    background: linear-gradient(135deg, var(--quote-accent, #9B59B6) 0%, var(--quote-accent-dark, #7D3C98) 100%);
+    color: white;
+    padding: 24px 20px 20px;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    margin: 20px 0;
+}
+.quote-card::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 120px;
+    height: 120px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+}
+.quote-card::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: -20px;
+    width: 80px;
+    height: 80px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+}
+.quote-mark {
+    font-size: 52px;
+    line-height: 1;
+    opacity: 0.25;
+    font-family: Georgia, serif;
+    position: absolute;
+    top: 10px;
+    left: 16px;
+}
+.quote-text {
+    font-size: 15px;
+    font-style: italic;
+    line-height: 1.65;
+    position: relative;
+    z-index: 2;
+    padding-left: 28px;
+    padding-top: 8px;
+}
+.quote-attribution {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.25);
+    font-size: 12px;
+    font-weight: 700;
+    opacity: 0.9;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.quote-attribution::before {
+    content: '—';
+    opacity: 0.6;
+}
+</style>
+
+<!-- HTML — paste into content area -->
+<div class="quote-card" data-animate data-delay="4">
+    <div class="quote-mark">"</div>
+    <div class="quote-text">
+        Don't wait for someone else to solve the problems you see around you.
+        You have the power to create change right now, right where you are.
+    </div>
+    <div class="quote-attribution">
+        Brian Gitta, Founder — Matibabu
+    </div>
+</div>

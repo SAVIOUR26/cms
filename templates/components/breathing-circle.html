@@ -1,0 +1,99 @@
+<!--
+  COMPONENT: Breathing Circle (Mental Health page)
+  USAGE: Mental Health page only
+  ANIMATION: CSS-driven 4-4-6 breathing cycle (inhale 4s, hold 4s, exhale 6s)
+  NOTE: This component uses CSS auto-animation (acceptable on Mental Health page
+  since the calming visual should begin immediately when the slide appears)
+-->
+
+<!-- CSS — add to <style> block -->
+<style>
+.breathing-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+    gap: 16px;
+}
+.breathing-circle-wrap {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.breathing-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px solid var(--breath-color, #6c63ff);
+    opacity: 0.3;
+    animation: breathe-ring 14s ease-in-out infinite;
+}
+.breathing-ring:nth-child(2) { animation-delay: 0.5s; opacity: 0.15; transform: scale(1.15); }
+.breathing-ring:nth-child(3) { animation-delay: 1s; opacity: 0.08; transform: scale(1.3); }
+@keyframes breathe-ring {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    28% { transform: scale(1.25); opacity: 0.5; }   /* inhale complete */
+    57% { transform: scale(1.25); opacity: 0.4; }   /* hold complete */
+    85% { transform: scale(0.95); opacity: 0.2; }   /* exhale complete */
+}
+.breathing-core {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--breath-color, #6c63ff), var(--breath-color-lt, #9b8dff));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 28px;
+    position: relative;
+    z-index: 2;
+    animation: breathe-core 14s ease-in-out infinite;
+    box-shadow: 0 0 0 0 rgba(108, 99, 255, 0.4);
+}
+@keyframes breathe-core {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(108,99,255,0.4); }
+    28% { transform: scale(1.18); box-shadow: 0 0 0 15px rgba(108,99,255,0); }
+    57% { transform: scale(1.18); }
+    85% { transform: scale(0.95); }
+}
+.breathing-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--breath-color, #6c63ff);
+    text-align: center;
+    animation: breathe-label 14s ease-in-out infinite;
+}
+@keyframes breathe-label {
+    0%, 5%   { opacity: 1; content: 'Breathe in...'; }
+    28%, 30% { opacity: 0.5; }
+    35%, 55% { opacity: 1; }  /* hold */
+    57%, 60% { opacity: 0.5; }
+    65%, 95% { opacity: 1; }  /* breathe out */
+    100%     { opacity: 1; }
+}
+.breathing-instruction {
+    font-size: 12px;
+    color: #888;
+    text-align: center;
+    line-height: 1.5;
+}
+</style>
+
+<!-- HTML — paste into content area -->
+<div class="breathing-container" data-animate data-delay="2">
+    <div class="breathing-circle-wrap">
+        <div class="breathing-ring"></div>
+        <div class="breathing-ring"></div>
+        <div class="breathing-ring"></div>
+        <div class="breathing-core">🫧</div>
+    </div>
+    <div class="breathing-label">Breathe in...</div>
+    <div class="breathing-instruction">
+        In for 4 · Hold for 4 · Out for 6<br>
+        Follow the circle. Just once.
+    </div>
+</div>

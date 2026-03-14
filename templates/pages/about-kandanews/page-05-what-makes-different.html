@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" data-category="careers">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>More Than News - KandaNews Africa</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #3498db #f1f1f1;
+        }
+        .page-wrapper::-webkit-scrollbar { width: 6px; }
+        .page-wrapper::-webkit-scrollbar-track { background: #f1f1f1; }
+        .page-wrapper::-webkit-scrollbar-thumb { background: #3498db; border-radius: 3px; }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0b1525, #1a2f4a);
+            padding: 26px 24px 22px;
+            position: relative; overflow: hidden;
+        }
+        .header::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #3498db, #5dade2, #3498db);
+        }
+        .kicker {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: #3498db; margin-bottom: 8px;
+        }
+        .title {
+            font-size: 28px; font-weight: 900;
+            color: #fff; letter-spacing: -0.5px; line-height: 1.05;
+        }
+        .subtitle {
+            font-size: 12px; color: rgba(255,255,255,0.45);
+            margin-top: 8px; line-height: 1.55;
+        }
+
+        /* Intro */
+        .intro-text {
+            padding: 20px 24px 0;
+            font-size: 13px; color: #374151; line-height: 1.7;
+        }
+
+        /* Features label */
+        .feat-label {
+            padding: 16px 24px 12px;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: #9ca3af;
+        }
+
+        /* Features grid */
+        .feat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 0 16px;
+        }
+
+        .feat-card {
+            background: #f8f9fa;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 14px 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.45s ease, transform 0.45s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .feat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px; height: 100%;
+            background: #3498db;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .feat-card.is-visible { opacity: 1; transform: translateY(0); }
+        .feat-card.is-visible::before { opacity: 1; }
+        .feat-card:nth-child(2) { transition-delay: 0.07s; }
+        .feat-card:nth-child(3) { transition-delay: 0.14s; }
+        .feat-card:nth-child(4) { transition-delay: 0.21s; }
+        .feat-card:nth-child(5) { transition-delay: 0.28s; }
+        .feat-card:nth-child(6) { transition-delay: 0.35s; }
+
+        .feat-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+        .feat-title { font-size: 11.5px; font-weight: 700; color: #1e2b42; margin-bottom: 2px; }
+        .feat-desc  { font-size: 10px; color: #888; line-height: 1.4; }
+
+        /* Experience callout */
+        .exp-callout {
+            margin: 16px 16px 0;
+            background: linear-gradient(135deg, #3498db, #2471a3);
+            border-radius: 14px;
+            padding: 18px 20px;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s ease 0.25s, transform 0.5s ease 0.25s;
+        }
+        .exp-callout.is-visible { opacity: 1; transform: translateY(0); }
+        .exp-label {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: rgba(255,255,255,0.55); margin-bottom: 8px;
+        }
+        .exp-text {
+            font-size: 13.5px; font-weight: 700;
+            color: #fff; line-height: 1.5;
+        }
+        .exp-sub {
+            font-size: 11px; color: rgba(255,255,255,0.65);
+            margin-top: 6px; font-style: italic;
+        }
+
+        /* Closing line */
+        .outro {
+            padding: 14px 24px 20px;
+            font-size: 12px; font-weight: 600;
+            color: #1e2b42; text-align: center;
+            font-style: italic;
+        }
+        .outro span { color: #3498db; }
+
+        [data-animate] {
+            opacity: 0; transform: translateY(18px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        [data-animate].is-visible { opacity: 1; transform: translateY(0); }
+        [data-animate][data-delay="1"] { transition-delay: 0.1s; }
+        [data-animate][data-delay="2"] { transition-delay: 0.2s; }
+        [data-animate][data-delay="3"] { transition-delay: 0.3s; }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+    <div class="header">
+        <div class="kicker">What Makes Us Different</div>
+        <h2 class="title">More Than News</h2>
+        <p class="subtitle">KandaNews is designed as a knowledge platform, not just a publication.</p>
+    </div>
+
+    <p class="intro-text" data-animate>
+        Our editions combine six pillars of content carefully chosen to empower every reader who opens them:
+    </p>
+
+    <div class="feat-label" data-animate data-delay="1">Our Content Pillars</div>
+
+    <div class="feat-grid">
+        <div class="feat-card" data-animate>
+            <div class="feat-icon">📰</div>
+            <div>
+                <div class="feat-title">Insightful Stories</div>
+                <div class="feat-desc">Depth over drama. Context over noise.</div>
+            </div>
+        </div>
+        <div class="feat-card" data-animate>
+            <div class="feat-icon">🚀</div>
+            <div>
+                <div class="feat-title">Growth Opportunities</div>
+                <div class="feat-desc">Scholarships, jobs, grants & programs.</div>
+            </div>
+        </div>
+        <div class="feat-card" data-animate>
+            <div class="feat-icon">🏆</div>
+            <div>
+                <div class="feat-title">Entrepreneurial Spark</div>
+                <div class="feat-desc">Real stories from African founders.</div>
+            </div>
+        </div>
+        <div class="feat-card" data-animate>
+            <div class="feat-icon">💼</div>
+            <div>
+                <div class="feat-title">Career Intelligence</div>
+                <div class="feat-desc">Skills, trends & hiring insights.</div>
+            </div>
+        </div>
+        <div class="feat-card" data-animate>
+            <div class="feat-icon">🤖</div>
+            <div>
+                <div class="feat-title">Tech &amp; Innovation</div>
+                <div class="feat-desc">AI, startups &amp; digital transformation.</div>
+            </div>
+        </div>
+        <div class="feat-card" data-animate>
+            <div class="feat-icon">🌍</div>
+            <div>
+                <div class="feat-title">Ideas Shaping Africa</div>
+                <div class="feat-desc">Big thinking. Continental perspective.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Experience callout -->
+    <div class="exp-callout" data-animate>
+        <div class="exp-label">The Experience</div>
+        <div class="exp-text">Modern HTML5 digital presentation — engaging, interactive, and visually inspiring.</div>
+        <div class="exp-sub">News reimagined for a new generation.</div>
+    </div>
+
+    <div class="outro" data-animate>
+        This is not news. This is <span>knowledge in motion</span>.
+    </div>
+
+</div>
+<script>
+function initPage() {
+    document.querySelectorAll('[data-animate]').forEach(function(el, i) {
+        setTimeout(function() { el.classList.add('is-visible'); }, i * 100);
+    });
+}
+if (document.querySelector('.page-wrapper')) { setTimeout(initPage, 300); }
+</script>
+</body>
+</html>

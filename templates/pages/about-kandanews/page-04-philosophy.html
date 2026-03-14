@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" data-category="did-you-know">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The KandaNews Philosophy - KandaNews Africa</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #00bcd4 #e9ecef;
+        }
+        .page-wrapper::-webkit-scrollbar { width: 6px; }
+        .page-wrapper::-webkit-scrollbar-track { background: #e9ecef; }
+        .page-wrapper::-webkit-scrollbar-thumb { background: #00bcd4; border-radius: 3px; }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0b1525, #1a2f4a);
+            padding: 24px 24px 20px;
+            position: relative; overflow: hidden;
+        }
+        .header::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #00bcd4, #26c6da, #00bcd4);
+        }
+        .header::before {
+            content: '💭';
+            position: absolute; right: 16px; top: 14px;
+            font-size: 56px; opacity: 0.08;
+        }
+        .kicker {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: #00bcd4; margin-bottom: 8px;
+        }
+        .title {
+            font-size: 26px; font-weight: 900;
+            color: #fff; letter-spacing: -0.5px; line-height: 1.1;
+        }
+
+        /* Famous saying intro */
+        .intro {
+            padding: 20px 24px 0;
+            font-size: 12.5px; color: #555; line-height: 1.7;
+        }
+
+        /* Minds pyramid */
+        .minds-block {
+            margin: 18px 16px 0;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .mind-row {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            padding: 0;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .mind-row.is-visible { opacity: 1; transform: translateX(0); }
+        .mind-row:nth-child(2) { transition-delay: 0.12s; }
+        .mind-row:nth-child(3) { transition-delay: 0.24s; }
+
+        .mind-label-col {
+            width: 120px;
+            flex-shrink: 0;
+            padding: 14px 14px;
+            font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .mind-text-col {
+            flex: 1;
+            padding: 14px 16px;
+            font-size: 12.5px; font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .mind-row.small {
+            background: #f0f0f0;
+        }
+        .mind-row.small .mind-label-col { color: #999; background: #e8e8e8; }
+        .mind-row.small .mind-text-col  { color: #888; }
+
+        .mind-row.average {
+            background: #e8f4f8;
+        }
+        .mind-row.average .mind-label-col { color: #0097a7; background: #d0edf5; }
+        .mind-row.average .mind-text-col  { color: #37474f; }
+
+        .mind-row.great {
+            background: #00bcd4;
+        }
+        .mind-row.great .mind-label-col { color: rgba(255,255,255,0.7); background: rgba(0,0,0,0.1); }
+        .mind-row.great .mind-text-col  { color: #fff; font-size: 13.5px; font-weight: 800; }
+
+        /* Chain */
+        .chain-title {
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: #9ca3af; text-align: center;
+            padding: 18px 24px 10px;
+        }
+
+        .chain {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            padding: 0 20px;
+            margin-bottom: 16px;
+        }
+        .chain-item {
+            flex: 1;
+            text-align: center;
+            padding: 12px 8px;
+            border-radius: 10px;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.45s ease, transform 0.45s ease;
+        }
+        .chain-item.is-visible { opacity: 1; transform: translateY(0); }
+        .chain-item:nth-child(2) { transition-delay: 0.12s; }
+        .chain-item:nth-child(3) { transition-delay: 0.24s; }
+        .chain-item:nth-child(4) { transition-delay: 0.36s; }
+
+        .ci-icon { font-size: 20px; margin-bottom: 5px; display: block; }
+        .ci-word { font-size: 10px; font-weight: 700; color: #1e2b42; }
+
+        .chain-arr {
+            font-size: 16px; color: #d1d5db;
+            flex-shrink: 0; padding: 0 2px;
+        }
+
+        /* Principle box */
+        .principle {
+            margin: 4px 16px 20px;
+            background: linear-gradient(135deg, #060e1c, #1e2b42);
+            border-radius: 14px;
+            padding: 20px 20px;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+        }
+        .principle.is-visible { opacity: 1; transform: translateY(0); }
+        .pr-label {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: #00bcd4; margin-bottom: 10px;
+        }
+        .pr-question {
+            font-size: 14px; font-weight: 700;
+            color: #fff; line-height: 1.55;
+            font-style: italic;
+        }
+        .pr-question .accent { color: #4dd0e1; }
+        .pr-verdict {
+            margin-top: 10px;
+            font-size: 11px; color: rgba(255,255,255,0.45);
+            line-height: 1.5; font-style: normal;
+        }
+        .pr-verdict strong { color: #f05a1a; }
+
+        [data-animate] {
+            opacity: 0; transform: translateY(18px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        [data-animate].is-visible { opacity: 1; transform: translateY(0); }
+        [data-animate][data-delay="1"] { transition-delay: 0.1s; }
+        [data-animate][data-delay="2"] { transition-delay: 0.2s; }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+    <div class="header">
+        <div class="kicker">The KandaNews Philosophy</div>
+        <h2 class="title">Ideas Shape Civilizations</h2>
+    </div>
+
+    <p class="intro" data-animate>
+        There is a famous saying:<br>
+        <em>"Small minds discuss people. Average minds discuss events. Great minds discuss ideas."</em>
+    </p>
+
+    <!-- Minds pyramid -->
+    <div class="minds-block" data-animate data-delay="1">
+        <div class="mind-row small">
+            <div class="mind-label-col">Small Minds</div>
+            <div class="mind-text-col">Discuss people</div>
+        </div>
+        <div class="mind-row average">
+            <div class="mind-label-col">Average Minds</div>
+            <div class="mind-text-col">Discuss events</div>
+        </div>
+        <div class="mind-row great">
+            <div class="mind-label-col">Great Minds</div>
+            <div class="mind-text-col">Discuss ideas</div>
+        </div>
+    </div>
+
+    <!-- Chain -->
+    <div class="chain-title" data-animate data-delay="2">At KandaNews, ideas drive a chain</div>
+    <div class="chain">
+        <div class="chain-item" data-animate>
+            <span class="ci-icon">💡</span>
+            <div class="ci-word">Ideas</div>
+        </div>
+        <div class="chain-arr">→</div>
+        <div class="chain-item" data-animate>
+            <span class="ci-icon">⚙️</span>
+            <div class="ci-word">Innovation</div>
+        </div>
+        <div class="chain-arr">→</div>
+        <div class="chain-item" data-animate>
+            <span class="ci-icon">🚀</span>
+            <div class="ci-word">Opportunity</div>
+        </div>
+        <div class="chain-arr">→</div>
+        <div class="chain-item" data-animate>
+            <span class="ci-icon">🌍</span>
+            <div class="ci-word">Transformation</div>
+        </div>
+    </div>
+
+    <!-- Guiding principle -->
+    <div class="principle" data-animate>
+        <div class="pr-label">Our Guiding Principle</div>
+        <div class="pr-question">
+            Does this <span class="accent">empower</span> the reader to think, grow, and build?
+        </div>
+        <div class="pr-verdict">
+            If it does not &mdash; <strong>it does not belong here.</strong><br>
+            Every edition of KandaNews is guided by this one simple test.
+        </div>
+    </div>
+
+</div>
+<script>
+function initPage() {
+    document.querySelectorAll('[data-animate]').forEach(function(el, i) {
+        setTimeout(function() { el.classList.add('is-visible'); }, i * 110);
+    });
+}
+if (document.querySelector('.page-wrapper')) { setTimeout(initPage, 300); }
+</script>
+</body>
+</html>

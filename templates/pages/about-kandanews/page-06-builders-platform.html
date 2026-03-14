@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" data-category="community">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Who KandaNews Is Built For - KandaNews Africa</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #ff6b35 #f1f1f1;
+        }
+        .page-wrapper::-webkit-scrollbar { width: 6px; }
+        .page-wrapper::-webkit-scrollbar-track { background: #f1f1f1; }
+        .page-wrapper::-webkit-scrollbar-thumb { background: #ff6b35; border-radius: 3px; }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0b1525, #2a1a0e);
+            padding: 26px 24px 22px;
+            position: relative; overflow: hidden;
+        }
+        .header::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #ff6b35, #f05a1a, #ff6b35);
+        }
+        .header::before {
+            content: '🌍';
+            position: absolute; right: 16px; top: 14px;
+            font-size: 56px; opacity: 0.1;
+        }
+        .kicker {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: #ff6b35; margin-bottom: 8px;
+        }
+        .title {
+            font-size: 26px; font-weight: 900;
+            color: #fff; letter-spacing: -0.5px; line-height: 1.1;
+        }
+        .sub {
+            font-size: 12px; color: rgba(255,255,255,0.45);
+            margin-top: 7px; line-height: 1.55;
+        }
+
+        /* Intro */
+        .intro {
+            padding: 18px 24px 0;
+            font-size: 13px; color: #374151; line-height: 1.7;
+        }
+
+        /* Community cards */
+        .community-label {
+            padding: 16px 24px 12px;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: #9ca3af;
+        }
+
+        .people-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 0 16px;
+        }
+
+        .person-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #fafafa;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 13px 16px;
+            opacity: 0;
+            transform: translateX(-16px);
+            transition: opacity 0.45s ease, transform 0.45s ease;
+        }
+        .person-row.is-visible { opacity: 1; transform: translateX(0); }
+        .person-row:nth-child(2) { transition-delay: 0.08s; }
+        .person-row:nth-child(3) { transition-delay: 0.16s; }
+        .person-row:nth-child(4) { transition-delay: 0.24s; }
+        .person-row:nth-child(5) { transition-delay: 0.32s; }
+
+        .pr-emoji {
+            font-size: 24px; width: 36px; text-align: center; flex-shrink: 0;
+        }
+        .pr-name { font-size: 13px; font-weight: 700; color: #1e2b42; }
+        .pr-desc { font-size: 10.5px; color: #888; margin-top: 2px; }
+
+        .pr-accent {
+            margin-left: auto; flex-shrink: 0;
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #ff6b35;
+        }
+
+        /* Belief block */
+        .belief {
+            margin: 16px 16px 0;
+            background: linear-gradient(135deg, #fff5f0, #fffaf8);
+            border: 1.5px solid #fddfd3;
+            border-radius: 14px;
+            padding: 18px 18px;
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.5s ease 0.28s, transform 0.5s ease 0.28s;
+        }
+        .belief.is-visible { opacity: 1; transform: translateY(0); }
+        .belief-text {
+            font-size: 13.5px; font-weight: 700;
+            color: #1e2b42; line-height: 1.55;
+        }
+        .belief-text em { color: #ff6b35; font-style: normal; }
+        .belief-sub {
+            font-size: 11.5px; color: #666;
+            margin-top: 8px; line-height: 1.55;
+        }
+
+        /* Drucker quote */
+        .drucker {
+            margin: 12px 16px 20px;
+            background: #060e1c;
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: flex; gap: 10px;
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.5s ease 0.35s, transform 0.5s ease 0.35s;
+        }
+        .drucker.is-visible { opacity: 1; transform: translateY(0); }
+        .dq-mark {
+            font-size: 26px; color: #ff6b35;
+            font-family: Georgia, serif;
+            line-height: 1; flex-shrink: 0; margin-top: -3px;
+        }
+        .dq-text { font-size: 12px; font-style: italic; color: rgba(255,255,255,0.65); line-height: 1.6; }
+        .dq-attr { font-size: 10px; font-weight: 700; color: #ff6b35; margin-top: 6px; }
+
+        [data-animate] {
+            opacity: 0; transform: translateY(18px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        [data-animate].is-visible { opacity: 1; transform: translateY(0); }
+        [data-animate][data-delay="1"] { transition-delay: 0.1s; }
+        [data-animate][data-delay="2"] { transition-delay: 0.2s; }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+    <div class="header">
+        <div class="kicker">A Platform for Africa's Builders</div>
+        <h2 class="title">Who KandaNews<br>Is Built For</h2>
+        <p class="sub">For those who believe Africa's future is shaped through knowledge, responsibility &amp; action.</p>
+    </div>
+
+    <p class="intro" data-animate>
+        Our community is built around one shared conviction: that Africa's future is not something that will simply happen &mdash; it is something we will build together.
+    </p>
+
+    <div class="community-label" data-animate data-delay="1">Our Community</div>
+
+    <div class="people-list">
+        <div class="person-row" data-animate>
+            <div class="pr-emoji">🎓</div>
+            <div>
+                <div class="pr-name">University Students</div>
+                <div class="pr-desc">Hungry for knowledge beyond the classroom</div>
+            </div>
+            <div class="pr-accent"></div>
+        </div>
+        <div class="person-row" data-animate>
+            <div class="pr-emoji">👔</div>
+            <div>
+                <div class="pr-name">Professionals</div>
+                <div class="pr-desc">Building careers that create impact</div>
+            </div>
+            <div class="pr-accent"></div>
+        </div>
+        <div class="person-row" data-animate>
+            <div class="pr-emoji">🚀</div>
+            <div>
+                <div class="pr-name">Entrepreneurs</div>
+                <div class="pr-desc">Turning ideas into real solutions</div>
+            </div>
+            <div class="pr-accent"></div>
+        </div>
+        <div class="person-row" data-animate>
+            <div class="pr-emoji">💡</div>
+            <div>
+                <div class="pr-name">Innovators</div>
+                <div class="pr-desc">Questioning what exists to build what should</div>
+            </div>
+            <div class="pr-accent"></div>
+        </div>
+        <div class="person-row" data-animate>
+            <div class="pr-emoji">🌍</div>
+            <div>
+                <div class="pr-name">Thinkers Shaping Tomorrow</div>
+                <div class="pr-desc">The dreamers who refuse to accept the status quo</div>
+            </div>
+            <div class="pr-accent"></div>
+        </div>
+    </div>
+
+    <div class="belief" data-animate>
+        <div class="belief-text">If you believe in <em>learning</em>, <em>growth</em>, and <em>impact</em> —</div>
+        <div class="belief-sub">You are exactly who KandaNews was built for. This space is yours.</div>
+    </div>
+
+    <div class="drucker" data-animate>
+        <div class="dq-mark">"</div>
+        <div>
+            <div class="dq-text">The best way to predict the future is to create it.</div>
+            <div class="dq-attr">— Peter Drucker</div>
+        </div>
+    </div>
+
+</div>
+<script>
+function initPage() {
+    document.querySelectorAll('[data-animate]').forEach(function(el, i) {
+        setTimeout(function() { el.classList.add('is-visible'); }, i * 100);
+    });
+}
+if (document.querySelector('.page-wrapper')) { setTimeout(initPage, 300); }
+</script>
+</body>
+</html>

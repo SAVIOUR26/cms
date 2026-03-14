@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" data-category="mental-health">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Platform That Walks With You - KandaNews Africa</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #6c63ff #f1f1f1;
+        }
+        .page-wrapper::-webkit-scrollbar { width: 6px; }
+        .page-wrapper::-webkit-scrollbar-track { background: #f1f1f1; }
+        .page-wrapper::-webkit-scrollbar-thumb { background: #6c63ff; border-radius: 3px; }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a1040, #2d1b6e);
+            padding: 26px 24px 22px;
+            position: relative; overflow: hidden;
+        }
+        .header::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #6c63ff, #9c94ff, #6c63ff);
+        }
+        .header-glow {
+            position: absolute;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(108,99,255,0.25) 0%, transparent 70%);
+            top: -60px; right: -40px;
+            animation: breathe 5s ease-in-out infinite;
+        }
+        @keyframes breathe { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
+        .kicker {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: #9c94ff; margin-bottom: 8px; position: relative; z-index: 2;
+        }
+        .title {
+            font-size: 24px; font-weight: 900;
+            color: #fff; letter-spacing: -0.3px; line-height: 1.15;
+            position: relative; z-index: 2;
+        }
+        .sub {
+            font-size: 12px; color: rgba(255,255,255,0.45);
+            margin-top: 7px; position: relative; z-index: 2;
+        }
+
+        /* Promise intro */
+        .promise-intro {
+            padding: 22px 24px 0;
+        }
+        .pi-label {
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: #9ca3af; margin-bottom: 12px;
+        }
+        .pi-statement {
+            font-size: 18px; font-weight: 800;
+            color: #1e2b42; line-height: 1.35;
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .pi-statement.is-visible { opacity: 1; transform: translateY(0); }
+        .pi-statement span { color: #6c63ff; }
+        .pi-sub {
+            font-size: 12.5px; color: #555;
+            margin-top: 8px; line-height: 1.65;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.5s ease 0.15s, transform 0.5s ease 0.15s;
+        }
+        .pi-sub.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* Journey roles */
+        .journey-label {
+            padding: 20px 24px 12px;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: #9ca3af;
+        }
+
+        .roles-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            padding: 0 16px;
+        }
+
+        .role-card {
+            background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+            border: 1px solid #ddd6fe;
+            border-radius: 12px;
+            padding: 13px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.45s ease, transform 0.45s ease;
+        }
+        .role-card.is-visible { opacity: 1; transform: translateY(0); }
+        .role-card:nth-child(2) { transition-delay: 0.09s; }
+        .role-card:nth-child(3) { transition-delay: 0.18s; }
+        .role-card:nth-child(4) { transition-delay: 0.27s; }
+
+        .rc-icon { font-size: 20px; flex-shrink: 0; }
+        .rc-text { font-size: 11.5px; font-weight: 600; color: #4c1d95; line-height: 1.35; }
+        .rc-desc  { font-size: 10px; color: #7c3aed; margin-top: 2px; opacity: 0.7; }
+
+        /* Mission statement */
+        .mission {
+            margin: 16px 16px 0;
+            background: linear-gradient(135deg, #1a1040, #2d1b6e);
+            border-radius: 14px;
+            padding: 18px 20px;
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.5s ease 0.25s, transform 0.5s ease 0.25s;
+        }
+        .mission.is-visible { opacity: 1; transform: translateY(0); }
+        .mission-label {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: rgba(255,255,255,0.35); margin-bottom: 10px;
+        }
+        .mission-text {
+            font-size: 14px; font-weight: 700;
+            color: #fff; line-height: 1.55;
+        }
+        .mission-text em { color: #9c94ff; font-style: normal; }
+
+        /* Goal line */
+        .goal {
+            margin: 12px 16px 20px;
+            background: linear-gradient(135deg, #6c63ff, #5a52dd);
+            border-radius: 12px;
+            padding: 14px 18px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(108,99,255,0.3);
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.5s ease 0.32s, transform 0.5s ease 0.32s;
+        }
+        .goal.is-visible { opacity: 1; transform: translateY(0); }
+        .goal-pre { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+        .goal-text { font-size: 14px; font-weight: 800; color: #fff; line-height: 1.4; }
+
+        [data-animate] {
+            opacity: 0; transform: translateY(18px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        [data-animate].is-visible { opacity: 1; transform: translateY(0); }
+        [data-animate][data-delay="1"] { transition-delay: 0.1s; }
+        [data-animate][data-delay="2"] { transition-delay: 0.2s; }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+    <div class="header">
+        <div class="header-glow"></div>
+        <div class="kicker">The KandaNews Promise</div>
+        <h2 class="title">A Platform That<br>Walks With You</h2>
+        <p class="sub">We will be part of your journey. Every edition of KandaNews is created with one goal.</p>
+    </div>
+
+    <div class="promise-intro">
+        <div class="pi-label" data-animate>At KandaNews, we make a simple promise:</div>
+        <div class="pi-statement" data-animate>
+            We will be part of <span>your journey</span>.
+        </div>
+        <div class="pi-sub" data-animate>
+            No matter where you are on the path &mdash; starting out or scaling up &mdash; KandaNews walks with you.
+        </div>
+    </div>
+
+    <div class="journey-label" data-animate>Your journey as:</div>
+
+    <div class="roles-grid">
+        <div class="role-card" data-animate>
+            <div class="rc-icon">🔭</div>
+            <div>
+                <div class="rc-text">A student searching for direction</div>
+            </div>
+        </div>
+        <div class="role-card" data-animate>
+            <div class="rc-icon">🏗️</div>
+            <div>
+                <div class="rc-text">A professional building a career</div>
+            </div>
+        </div>
+        <div class="role-card" data-animate>
+            <div class="rc-icon">🌱</div>
+            <div>
+                <div class="rc-text">An entrepreneur creating opportunity</div>
+            </div>
+        </div>
+        <div class="role-card" data-animate>
+            <div class="rc-icon">✍️</div>
+            <div>
+                <div class="rc-text">A thinker shaping ideas</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mission" data-animate>
+        <div class="mission-label">Our Mission</div>
+        <div class="mission-text">
+            To provide <em>inspiration</em>, <em>information</em>, and <em>perspective</em>
+            that helps you move forward.
+        </div>
+    </div>
+
+    <div class="goal" data-animate>
+        <div class="goal-pre">Every Edition, One Goal</div>
+        <div class="goal-text">To empower you to grow.</div>
+    </div>
+
+</div>
+<script>
+function initPage() {
+    document.querySelectorAll('[data-animate]').forEach(function(el, i) {
+        setTimeout(function() { el.classList.add('is-visible'); }, i * 110);
+    });
+}
+if (document.querySelector('.page-wrapper')) { setTimeout(initPage, 300); }
+</script>
+</body>
+</html>

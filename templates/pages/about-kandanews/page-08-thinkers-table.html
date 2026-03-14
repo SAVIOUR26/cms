@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" data-category="did-you-know">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Where Ideas Are Discussed - KandaNews Africa</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #00bcd4 #e9ecef;
+        }
+        .page-wrapper::-webkit-scrollbar { width: 6px; }
+        .page-wrapper::-webkit-scrollbar-track { background: #e9ecef; }
+        .page-wrapper::-webkit-scrollbar-thumb { background: #00bcd4; border-radius: 3px; }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0b1525, #012a30);
+            padding: 26px 24px 22px;
+            position: relative; overflow: hidden;
+        }
+        .header::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #00bcd4, #26c6da, #00bcd4);
+        }
+        .header::before {
+            content: '🧠';
+            position: absolute; right: 16px; top: 14px;
+            font-size: 60px; opacity: 0.08;
+        }
+        .kicker {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: #00bcd4; margin-bottom: 8px;
+        }
+        .title {
+            font-size: 26px; font-weight: 900;
+            color: #fff; letter-spacing: -0.5px; line-height: 1.1;
+        }
+        .sub {
+            font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 7px; line-height: 1.5;
+        }
+
+        /* intro */
+        .intro {
+            padding: 18px 24px 0;
+            font-size: 13px; color: #374151; line-height: 1.7;
+        }
+
+        /* Topics label */
+        .topics-label {
+            padding: 16px 24px 12px;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: #9ca3af;
+        }
+
+        /* Topic cards */
+        .topics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 0 16px;
+        }
+
+        .topic-card {
+            border-radius: 14px;
+            padding: 18px 14px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .topic-card.is-visible { opacity: 1; transform: translateY(0); }
+        .topic-card:nth-child(2) { transition-delay: 0.1s; }
+        .topic-card:nth-child(3) { transition-delay: 0.2s; }
+        .topic-card:nth-child(4) { transition-delay: 0.3s; }
+
+        .topic-card.t1 { background: linear-gradient(135deg, #00bcd4, #0097a7); }
+        .topic-card.t2 { background: linear-gradient(135deg, #1e2b42, #2a3f5f); }
+        .topic-card.t3 { background: linear-gradient(135deg, #f05a1a, #d94a0e); }
+        .topic-card.t4 { background: linear-gradient(135deg, #7b1fa2, #9c27b0); }
+
+        .tc-number {
+            font-size: 11px; font-weight: 800;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.35);
+            margin-bottom: 8px;
+        }
+        .tc-icon { font-size: 28px; margin-bottom: 10px; display: block; }
+        .tc-title {
+            font-size: 12.5px; font-weight: 800;
+            color: #fff; line-height: 1.35;
+        }
+
+        /* Progress thought bar */
+        .thought-bar {
+            margin: 16px 16px 0;
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex; align-items: center; gap: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.5s ease 0.3s, transform 0.5s ease 0.3s;
+        }
+        .thought-bar.is-visible { opacity: 1; transform: translateY(0); }
+        .tb-icon { font-size: 32px; flex-shrink: 0; }
+        .tb-text { flex: 1; }
+        .tb-title { font-size: 13px; font-weight: 700; color: #1e2b42; margin-bottom: 4px; }
+        .tb-desc  { font-size: 11px; color: #666; line-height: 1.5; }
+
+        /* Closing line */
+        .closing {
+            padding: 14px 24px 20px;
+            font-size: 12.5px; font-weight: 600;
+            color: #1e2b42; text-align: center;
+            line-height: 1.55;
+        }
+        .closing span { color: #00bcd4; }
+
+        [data-animate] {
+            opacity: 0; transform: translateY(18px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        [data-animate].is-visible { opacity: 1; transform: translateY(0); }
+        [data-animate][data-delay="1"] { transition-delay: 0.1s; }
+        [data-animate][data-delay="2"] { transition-delay: 0.2s; }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+    <div class="header">
+        <div class="kicker">Thinkers on the Table</div>
+        <h2 class="title">Where Ideas Are Discussed</h2>
+        <p class="sub">One unique feature of KandaNews: the exploration of big ideas that most platforms never touch.</p>
+    </div>
+
+    <p class="intro" data-animate>
+        Meaningful progress begins when people are willing to think deeply and question boldly. Our platform hosts the conversations that matter most.
+    </p>
+
+    <div class="topics-label" data-animate data-delay="1">Discussion Topics</div>
+
+    <div class="topics-grid">
+        <div class="topic-card t1" data-animate>
+            <div class="tc-number">01</div>
+            <span class="tc-icon">🏫</span>
+            <div class="tc-title">The Future of African Universities</div>
+        </div>
+        <div class="topic-card t2" data-animate>
+            <div class="tc-number">02</div>
+            <span class="tc-icon">🚀</span>
+            <div class="tc-title">Entrepreneurship &amp; Innovation</div>
+        </div>
+        <div class="topic-card t3" data-animate>
+            <div class="tc-number">03</div>
+            <span class="tc-icon">🤖</span>
+            <div class="tc-title">Technology &amp; Artificial Intelligence</div>
+        </div>
+        <div class="topic-card t4" data-animate>
+            <div class="tc-number">04</div>
+            <span class="tc-icon">🌐</span>
+            <div class="tc-title">Lessons from Global Development</div>
+        </div>
+    </div>
+
+    <div class="thought-bar" data-animate>
+        <div class="tb-icon">💬</div>
+        <div class="tb-text">
+            <div class="tb-title">Think. Question. Build.</div>
+            <div class="tb-desc">Progress begins when people are willing to question boldly and think without limits.</div>
+        </div>
+    </div>
+
+    <div class="closing" data-animate>
+        At KandaNews, <span>big ideas</span> are not optional.<br>They are the whole point.
+    </div>
+
+</div>
+<script>
+function initPage() {
+    document.querySelectorAll('[data-animate]').forEach(function(el, i) {
+        setTimeout(function() { el.classList.add('is-visible'); }, i * 110);
+    });
+}
+if (document.querySelector('.page-wrapper')) { setTimeout(initPage, 300); }
+</script>
+</body>
+</html>

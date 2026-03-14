@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" data-category="trending">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Continental Vision - KandaNews Africa</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #0a1e0a;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #1e7e34 #0f290f;
+        }
+        .page-wrapper::-webkit-scrollbar { width: 6px; }
+        .page-wrapper::-webkit-scrollbar-track { background: #0f290f; }
+        .page-wrapper::-webkit-scrollbar-thumb { background: #1e7e34; border-radius: 3px; }
+
+        /* bg */
+        .bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+        .bg-orb {
+            position: absolute;
+            width: 260px; height: 260px;
+            background: radial-gradient(circle, rgba(30,126,52,0.16) 0%, transparent 70%);
+            top: -60px; right: -60px;
+            animation: pulse 7s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%,100% { opacity: 0.7; } 50% { opacity: 1; } }
+        .bg-grid {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(30,126,52,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30,126,52,0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .inner { position: relative; z-index: 5; }
+
+        /* Header */
+        .header {
+            padding: 26px 24px 22px;
+            border-bottom: 1px solid rgba(30,126,52,0.2);
+            position: relative;
+        }
+        .header::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, #1e7e34, transparent);
+        }
+        .kicker {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: #4caf50; margin-bottom: 8px;
+        }
+        .title {
+            font-size: 28px; font-weight: 900; letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 30%, #4caf50 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 7px; }
+
+        /* Not limited para */
+        .intro { padding: 18px 24px 0; font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.7; }
+
+        /* Cities banner */
+        .cities-banner {
+            margin: 18px 16px 0;
+            background: rgba(30,126,52,0.1);
+            border: 1px solid rgba(30,126,52,0.2);
+            border-radius: 14px;
+            padding: 16px 18px;
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .cities-banner.is-visible { opacity: 1; transform: translateY(0); }
+        .cb-label {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: #4caf50; margin-bottom: 12px;
+        }
+        .cities-flow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .city-chip {
+            display: flex; align-items: center; gap: 6px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 11px; font-weight: 600;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Explores section */
+        .explores-label {
+            padding: 18px 24px 12px;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .explore-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 0 16px;
+        }
+
+        .explore-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 10px;
+            padding: 11px 14px;
+            opacity: 0;
+            transform: translateX(-14px);
+            transition: opacity 0.45s ease, transform 0.45s ease;
+        }
+        .explore-item.is-visible { opacity: 1; transform: translateX(0); }
+        .explore-item:nth-child(2) { transition-delay: 0.1s; }
+        .explore-item:nth-child(3) { transition-delay: 0.2s; }
+        .explore-item:nth-child(4) { transition-delay: 0.3s; }
+
+        .ei-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #4caf50; flex-shrink: 0;
+        }
+        .ei-text { font-size: 12.5px; color: rgba(255,255,255,0.75); font-weight: 500; }
+
+        /* Meeting place callout */
+        .meeting {
+            margin: 16px 16px 20px;
+            background: linear-gradient(135deg, rgba(30,126,52,0.2), rgba(30,126,52,0.08));
+            border: 1px solid rgba(30,126,52,0.3);
+            border-radius: 14px;
+            padding: 16px 18px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.5s ease 0.3s, transform 0.5s ease 0.3s;
+        }
+        .meeting.is-visible { opacity: 1; transform: translateY(0); }
+        .meeting-text {
+            font-size: 14px; font-weight: 700;
+            color: #fff; line-height: 1.5;
+        }
+        .meeting-text .hi { color: #66bb6a; }
+        .meeting-sub {
+            font-size: 11px; color: rgba(255,255,255,0.45);
+            margin-top: 6px;
+        }
+
+        [data-animate] {
+            opacity: 0; transform: translateY(18px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        [data-animate].is-visible { opacity: 1; transform: translateY(0); }
+        [data-animate][data-delay="1"] { transition-delay: 0.1s; }
+        [data-animate][data-delay="2"] { transition-delay: 0.2s; }
+        [data-animate][data-delay="3"] { transition-delay: 0.3s; }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="bg">
+        <div class="bg-grid"></div>
+        <div class="bg-orb"></div>
+    </div>
+    <div class="inner">
+        <div class="header">
+            <div class="kicker">A Continental Vision</div>
+            <h2 class="title">An African Conversation</h2>
+            <p class="sub">Not limited to one city. Not limited to one country. Our vision is continental.</p>
+        </div>
+
+        <p class="intro" data-animate>
+            KandaNews is not limited to one city or one country. Through our editions we explore ideas from every corner of Africa, bringing the continent into one shared conversation.
+        </p>
+
+        <div class="cities-banner" data-animate data-delay="1">
+            <div class="cb-label">From City to City</div>
+            <div class="cities-flow">
+                <div class="city-chip">🇺🇬 Kampala</div>
+                <div class="city-chip">🇰🇪 Nairobi</div>
+                <div class="city-chip">🇳🇬 Lagos</div>
+                <div class="city-chip">🇿🇦 Johannesburg</div>
+                <div class="city-chip">🌍 And Beyond</div>
+            </div>
+        </div>
+
+        <div class="explores-label" data-animate data-delay="2">Through our editions we explore:</div>
+
+        <div class="explore-list">
+            <div class="explore-item" data-animate>
+                <div class="ei-dot"></div>
+                <div class="ei-text">Ideas from African universities</div>
+            </div>
+            <div class="explore-item" data-animate>
+                <div class="ei-dot"></div>
+                <div class="ei-text">Insights from industry leaders</div>
+            </div>
+            <div class="explore-item" data-animate>
+                <div class="ei-dot"></div>
+                <div class="ei-text">Stories of entrepreneurs across the continent</div>
+            </div>
+            <div class="explore-item" data-animate>
+                <div class="ei-dot"></div>
+                <div class="ei-text">Lessons from successful nations around the world</div>
+            </div>
+        </div>
+
+        <div class="meeting" data-animate>
+            <div class="meeting-text">KandaNews aims to become a <span class="hi">meeting place</span><br>for African ideas.</div>
+            <div class="meeting-sub">Where thought leads, progress follows.</div>
+        </div>
+    </div>
+</div>
+<script>
+function initPage() {
+    document.querySelectorAll('[data-animate]').forEach(function(el, i) {
+        setTimeout(function() { el.classList.add('is-visible'); }, i * 110);
+    });
+}
+if (document.querySelector('.page-wrapper')) { setTimeout(initPage, 300); }
+</script>
+</body>
+</html>

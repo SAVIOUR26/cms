@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en" data-category="cover">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About KandaNews Africa - Cover</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #060e1c;
+            color: #fff;
+            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* ── Africa skyline silhouette (CSS) ──── */
+        .africa-shape {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* Abstract continent outline via clip-path */
+        .continent {
+            position: absolute;
+            width: 320px; height: 380px;
+            background: radial-gradient(ellipse at 50% 40%,
+                rgba(240,90,26,0.12) 0%,
+                rgba(240,90,26,0.06) 45%,
+                transparent 70%);
+            top: 80px; left: 50%;
+            transform: translateX(-50%);
+            clip-path: polygon(
+                45% 0%, 60% 2%, 72% 8%, 80% 18%, 82% 30%, 90% 38%,
+                95% 50%, 92% 62%, 85% 72%, 78% 80%, 70% 88%, 60% 94%,
+                52% 100%, 44% 96%, 38% 88%, 30% 80%, 22% 70%, 16% 58%,
+                10% 45%, 8% 32%, 12% 20%, 20% 10%, 32% 4%
+            );
+            animation: breathe 8s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%,100% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+            50%      { transform: translateX(-50%) scale(1.04); opacity: 1; }
+        }
+
+        /* Grid lines */
+        .grid {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(240,90,26,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(240,90,26,0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Dot nodes on grid (like network/city dots) */
+        .node {
+            position: absolute;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #f05a1a;
+            animation: blink 3s ease-in-out infinite;
+        }
+        .node::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 1px solid rgba(240,90,26,0.3);
+            animation: ripple 3s ease-out infinite;
+        }
+        @keyframes blink  { 0%,100% { opacity: 0.9; } 50% { opacity: 0.4; } }
+        @keyframes ripple { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(3); opacity: 0; } }
+
+        .n1 { top: 30%; left: 38%; animation-delay: 0s; }
+        .n2 { top: 44%; left: 52%; animation-delay: 0.8s; background: #ff7a3d; }
+        .n3 { top: 58%; left: 42%; animation-delay: 1.6s; }
+        .n4 { top: 35%; left: 60%; animation-delay: 2.4s; background: rgba(240,90,26,0.6); }
+        .n5 { top: 52%; left: 33%; animation-delay: 1.2s; }
+
+        /* Connecting lines between nodes */
+        .svg-lines {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+        }
+
+        /* Shimmer sweep */
+        .shimmer {
+            position: absolute;
+            top: 0; left: -100%;
+            width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.025), transparent);
+            animation: sweep 5s ease-in-out infinite;
+            z-index: 3;
+        }
+        @keyframes sweep { 0% { left: -60%; } 100% { left: 120%; } }
+
+        /* ── Layout ──────────────────────────── */
+        .inner {
+            position: relative;
+            z-index: 10;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top bar */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 22px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+        .kn-mark {
+            display: flex; align-items: center; gap: 9px;
+        }
+        .kn-k {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, #f05a1a, #ff7a3d);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 17px; font-weight: 900; color: #fff;
+            box-shadow: 0 4px 12px rgba(240,90,26,0.4);
+            animation: glow 3s ease-in-out infinite;
+        }
+        @keyframes glow {
+            0%,100% { box-shadow: 0 4px 12px rgba(240,90,26,0.4); }
+            50%      { box-shadow: 0 4px 22px rgba(240,90,26,0.7); }
+        }
+        .kn-word { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; }
+        .kn-word .w { color: #fff; }
+        .kn-word .o { color: #f05a1a; }
+
+        .about-chip {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 4px 10px; border-radius: 20px;
+        }
+
+        /* Hero */
+        .hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 24px 16px;
+            text-align: center;
+        }
+
+        .icon-halo {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            margin-bottom: 22px;
+        }
+        .icon-bubble {
+            width: 42px; height: 42px;
+            background: rgba(240,90,26,0.12);
+            border: 1px solid rgba(240,90,26,0.25);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            animation: float 4s ease-in-out infinite;
+        }
+        .icon-bubble:nth-child(2) { animation-delay: 0.6s; }
+        .icon-bubble:nth-child(3) { animation-delay: 1.2s; }
+        .icon-bubble:nth-child(4) { animation-delay: 1.8s; }
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50%      { transform: translateY(-8px); }
+        }
+
+        .eyebrow {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 3.5px; text-transform: uppercase;
+            color: #f05a1a; margin-bottom: 14px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .ey-line {
+            height: 1px; width: 24px;
+            background: linear-gradient(90deg, transparent, #f05a1a);
+        }
+        .ey-line.r { background: linear-gradient(90deg, #f05a1a, transparent); }
+
+        .headline {
+            font-size: 34px; font-weight: 900;
+            line-height: 1.05; letter-spacing: -1px;
+            margin-bottom: 14px;
+        }
+        .hl-1 { color: #fff; display: block; }
+        .hl-2 {
+            display: block;
+            background: linear-gradient(135deg, #f05a1a 0%, #ff9c6e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 13px; color: rgba(255,255,255,0.5);
+            line-height: 1.65; max-width: 320px; font-style: italic;
+            margin-bottom: 26px;
+        }
+
+        /* Scope strip */
+        .scope-strip {
+            display: flex;
+            gap: 6px; flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        .scope-tag {
+            font-size: 10px; font-weight: 600;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.6);
+            padding: 4px 10px; border-radius: 20px;
+        }
+
+        /* Quote bar */
+        .quote-bar {
+            border-top: 1px solid rgba(255,255,255,0.07);
+            background: rgba(240,90,26,0.06);
+            padding: 14px 22px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .q-mark {
+            font-size: 28px; color: #f05a1a;
+            line-height: 1; flex-shrink: 0;
+            font-family: Georgia, serif;
+            margin-top: -2px;
+        }
+        .q-body { flex: 1; }
+        .q-text {
+            font-size: 11.5px; font-style: italic;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.55;
+        }
+        .q-attr {
+            font-size: 10px; font-weight: 700;
+            color: #f05a1a; margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="africa-shape">
+        <div class="grid"></div>
+        <div class="continent"></div>
+        <svg class="svg-lines" xmlns="http://www.w3.org/2000/svg">
+            <line x1="175" y1="180" x2="240" y2="264" stroke="rgba(240,90,26,0.15)" stroke-width="1"/>
+            <line x1="240" y1="264" x2="193" y2="348" stroke="rgba(240,90,26,0.1)" stroke-width="1"/>
+            <line x1="175" y1="180" x2="277" y2="210" stroke="rgba(240,90,26,0.1)" stroke-width="1"/>
+            <line x1="152" y1="312" x2="240" y2="264" stroke="rgba(240,90,26,0.12)" stroke-width="1"/>
+        </svg>
+        <div class="node n1"></div>
+        <div class="node n2"></div>
+        <div class="node n3"></div>
+        <div class="node n4"></div>
+        <div class="node n5"></div>
+        <div class="shimmer"></div>
+    </div>
+
+    <div class="inner">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="kn-mark">
+                <div class="kn-k">K</div>
+                <div class="kn-word"><span class="w">Kanda</span><span class="o">News</span></div>
+            </div>
+            <div class="about-chip">About Us</div>
+        </div>
+
+        <!-- Hero -->
+        <div class="hero">
+            <div class="icon-halo">
+                <div class="icon-bubble">💡</div>
+                <div class="icon-bubble">🎓</div>
+                <div class="icon-bubble">📈</div>
+                <div class="icon-bubble">🌍</div>
+            </div>
+
+            <div class="eyebrow">
+                <div class="ey-line"></div>
+                KandaNews Africa
+                <div class="ey-line r"></div>
+            </div>
+
+            <h1 class="headline">
+                <span class="hl-1">Where Ideas</span>
+                <span class="hl-2">Shape the Future</span>
+            </h1>
+
+            <p class="subtitle">
+                A Digital Home for Africa's Thinkers,<br>Builders, and Future Leaders.
+            </p>
+
+            <div class="scope-strip">
+                <span class="scope-tag">🇺🇬 Uganda</span>
+                <span class="scope-tag">🇰🇪 Kenya</span>
+                <span class="scope-tag">🇳🇬 Nigeria</span>
+                <span class="scope-tag">🇿🇦 South Africa</span>
+            </div>
+        </div>
+
+        <!-- Footer quote -->
+        <div class="quote-bar">
+            <div class="q-mark">"</div>
+            <div class="q-body">
+                <div class="q-text">The future belongs to those who prepare for it today.</div>
+                <div class="q-attr">— Malcolm X</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

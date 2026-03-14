@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" data-category="inspiration">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You Are Part of the Journey - KandaNews Africa</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #0b0d1a;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #9B59B6 #151728;
+        }
+        .page-wrapper::-webkit-scrollbar { width: 6px; }
+        .page-wrapper::-webkit-scrollbar-track { background: #151728; }
+        .page-wrapper::-webkit-scrollbar-thumb { background: #9B59B6; border-radius: 3px; }
+
+        /* bg */
+        .bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+        .bg-orb-1 {
+            position: absolute;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(155,89,182,0.14) 0%, transparent 70%);
+            top: -80px; left: -80px;
+            animation: drift 10s ease-in-out infinite alternate;
+        }
+        .bg-orb-2 {
+            position: absolute;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(240,90,26,0.1) 0%, transparent 70%);
+            bottom: 40px; right: -40px;
+            animation: drift 13s ease-in-out infinite alternate-reverse;
+        }
+        @keyframes drift { from { transform: translate(0,0); } to { transform: translate(20px,-20px); } }
+
+        .inner { position: relative; z-index: 5; }
+
+        /* Header — full bleed */
+        .header {
+            padding: 28px 24px 24px;
+            border-bottom: 1px solid rgba(155,89,182,0.2);
+            position: relative;
+        }
+        .header::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, #9B59B6, transparent);
+        }
+        .kicker {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 3.5px; text-transform: uppercase;
+            color: #c39bd3; margin-bottom: 10px;
+        }
+        .title {
+            font-size: 30px; font-weight: 900; letter-spacing: -0.5px; line-height: 1.05;
+        }
+        .ht-1 { color: #fff; display: block; }
+        .ht-2 {
+            display: block;
+            background: linear-gradient(135deg, #9B59B6 0%, #c39bd3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 8px; line-height: 1.55; }
+
+        /* Opening */
+        .opening {
+            padding: 20px 24px 0;
+            font-size: 13.5px; color: rgba(255,255,255,0.65);
+            line-height: 1.7;
+        }
+
+        /* Builders list */
+        .builders-label {
+            padding: 18px 24px 12px;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .builders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 0 16px;
+        }
+
+        .builder-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(155,89,182,0.07);
+            border: 1px solid rgba(155,89,182,0.15);
+            border-radius: 10px;
+            opacity: 0;
+            transform: translateX(-16px);
+            transition: opacity 0.45s ease, transform 0.45s ease;
+        }
+        .builder-item.is-visible { opacity: 1; transform: translateX(0); }
+        .builder-item:nth-child(2) { transition-delay: 0.1s; }
+        .builder-item:nth-child(3) { transition-delay: 0.2s; }
+        .builder-item:nth-child(4) { transition-delay: 0.3s; }
+
+        .bi-accent {
+            width: 3px; height: 28px;
+            background: linear-gradient(180deg, #9B59B6, #c39bd3);
+            border-radius: 2px; flex-shrink: 0;
+        }
+        .bi-text { font-size: 13px; color: rgba(255,255,255,0.8); font-weight: 500; }
+
+        /* The YOU block */
+        .you-block {
+            margin: 16px 16px 0;
+            background: linear-gradient(135deg, rgba(155,89,182,0.18), rgba(155,89,182,0.06));
+            border: 1.5px solid rgba(155,89,182,0.3);
+            border-radius: 14px;
+            padding: 18px 20px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s ease 0.28s, transform 0.5s ease 0.28s;
+        }
+        .you-block.is-visible { opacity: 1; transform: translateY(0); }
+        .yb-pre { font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 8px; font-style: italic; }
+        .yb-main {
+            font-size: 16px; font-weight: 800; color: #fff; line-height: 1.5;
+        }
+        .yb-main em { color: #c39bd3; font-style: normal; }
+
+        /* Steve Jobs quote */
+        .jobs-quote {
+            margin: 12px 16px 20px;
+            background: linear-gradient(135deg, #9B59B6, #7d3c98);
+            border-radius: 14px;
+            padding: 18px 20px;
+            box-shadow: 0 8px 24px rgba(155,89,182,0.3);
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s ease 0.35s, transform 0.5s ease 0.35s;
+        }
+        .jobs-quote.is-visible { opacity: 1; transform: translateY(0); }
+        .jq-mark {
+            font-size: 32px; color: rgba(255,255,255,0.3);
+            font-family: Georgia, serif;
+            line-height: 1; margin-bottom: 8px; display: block;
+        }
+        .jq-text {
+            font-size: 13px; font-style: italic;
+            color: rgba(255,255,255,0.9); line-height: 1.6;
+            font-weight: 500;
+        }
+        .jq-attr {
+            font-size: 10px; font-weight: 700;
+            color: rgba(255,255,255,0.55); margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        [data-animate] {
+            opacity: 0; transform: translateY(18px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        [data-animate].is-visible { opacity: 1; transform: translateY(0); }
+        [data-animate][data-delay="1"] { transition-delay: 0.1s; }
+        [data-animate][data-delay="2"] { transition-delay: 0.2s; }
+        [data-animate][data-delay="3"] { transition-delay: 0.3s; }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="bg">
+        <div class="bg-orb-1"></div>
+        <div class="bg-orb-2"></div>
+    </div>
+    <div class="inner">
+
+        <div class="header">
+            <div class="kicker">Your Role</div>
+            <h1 class="title">
+                <span class="ht-1">You Are Part</span>
+                <span class="ht-2">of the Journey</span>
+            </h1>
+            <p class="sub">Africa's future will not be built by institutions alone. It will be built by individuals who decide to act.</p>
+        </div>
+
+        <p class="opening" data-animate>
+            Africa's future will not be built by institutions alone. It will be built by individuals who decide to think differently, act responsibly, and pursue ideas that create progress.
+        </p>
+
+        <div class="builders-label" data-animate data-delay="1">That individual could be:</div>
+
+        <div class="builders-list">
+            <div class="builder-item" data-animate>
+                <div class="bi-accent"></div>
+                <div class="bi-text">A student in a classroom</div>
+            </div>
+            <div class="builder-item" data-animate>
+                <div class="bi-accent"></div>
+                <div class="bi-text">A developer writing code</div>
+            </div>
+            <div class="builder-item" data-animate>
+                <div class="bi-accent"></div>
+                <div class="bi-text">An entrepreneur launching a startup</div>
+            </div>
+            <div class="builder-item" data-animate>
+                <div class="bi-accent"></div>
+                <div class="bi-text">A professional improving systems</div>
+            </div>
+        </div>
+
+        <div class="you-block" data-animate>
+            <div class="yb-pre">And that individual</div>
+            <div class="yb-main">
+                might be <em>you</em>.<br>
+                Your ideas. Your actions. Your choices <em>matter</em>.
+            </div>
+        </div>
+
+        <div class="jobs-quote" data-animate>
+            <span class="jq-mark">"</span>
+            <div class="jq-text">The people who are crazy enough to think they can change the world are the ones who do.</div>
+            <div class="jq-attr">— Steve Jobs</div>
+        </div>
+
+    </div>
+</div>
+<script>
+function initPage() {
+    document.querySelectorAll('[data-animate]').forEach(function(el, i) {
+        setTimeout(function() { el.classList.add('is-visible'); }, i * 110);
+    });
+}
+if (document.querySelector('.page-wrapper')) { setTimeout(initPage, 300); }
+</script>
+</body>
+</html>

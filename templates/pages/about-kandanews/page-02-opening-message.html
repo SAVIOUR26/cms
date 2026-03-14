@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" data-category="welcome">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A New Kind of Platform - KandaNews Africa</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #f05a1a #f1f1f1;
+        }
+        .page-wrapper::-webkit-scrollbar { width: 6px; }
+        .page-wrapper::-webkit-scrollbar-track { background: #f1f1f1; }
+        .page-wrapper::-webkit-scrollbar-thumb { background: #f05a1a; border-radius: 3px; }
+
+        /* ── Header banner ───────────────────── */
+        .banner {
+            background: linear-gradient(135deg, #060e1c 0%, #1e2b42 100%);
+            padding: 28px 28px 26px;
+            position: relative;
+            overflow: hidden;
+        }
+        .banner::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #f05a1a, #ff7a3d, #f05a1a);
+        }
+        .banner::before {
+            content: 'AFRICA';
+            position: absolute;
+            right: -10px; top: -8px;
+            font-size: 72px; font-weight: 900;
+            color: rgba(255,255,255,0.03);
+            letter-spacing: -2px;
+            pointer-events: none;
+        }
+        .banner-kicker {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: #f05a1a; margin-bottom: 10px;
+        }
+        .banner-title {
+            font-size: 26px; font-weight: 900;
+            color: #fff; line-height: 1.1; letter-spacing: -0.5px;
+        }
+        .banner-sub {
+            font-size: 12px; color: rgba(255,255,255,0.45);
+            margin-top: 8px; line-height: 1.5;
+        }
+
+        /* ── Body ────────────────────────────── */
+        .body {
+            padding: 26px 28px 0;
+        }
+
+        /* Paragraph blocks */
+        .para {
+            font-size: 13.5px; color: #2d3748;
+            line-height: 1.75; margin-bottom: 18px;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.55s ease, transform 0.55s ease;
+        }
+        .para.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* Moment callout */
+        .moment-callout {
+            background: linear-gradient(135deg, #fffbf9, #fff5f0);
+            border-left: 4px solid #f05a1a;
+            border-radius: 0 12px 12px 0;
+            padding: 16px 18px;
+            margin: 4px 0 20px;
+            opacity: 0;
+            transform: translateX(-14px);
+            transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+        }
+        .moment-callout.is-visible { opacity: 1; transform: translateX(0); }
+        .mc-text {
+            font-size: 13px; color: #374151;
+            line-height: 1.65; font-style: italic;
+        }
+
+        /* "lacks one thing" emphasis */
+        .lacks-block {
+            background: #060e1c;
+            border-radius: 12px;
+            padding: 20px 20px;
+            margin: 4px 0 20px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s ease 0.15s, transform 0.5s ease 0.15s;
+        }
+        .lacks-block.is-visible { opacity: 1; transform: translateY(0); }
+        .lacks-intro {
+            font-size: 11px; font-weight: 600;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+        .lacks-statement {
+            font-size: 15px; font-weight: 700;
+            color: #fff; line-height: 1.5;
+        }
+        .lacks-statement span {
+            color: #f05a1a;
+        }
+
+        /* Bold closing */
+        .closing {
+            background: linear-gradient(135deg, #f05a1a, #d94a0e);
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s ease 0.25s, transform 0.5s ease 0.25s;
+        }
+        .closing.is-visible { opacity: 1; transform: translateY(0); }
+        .closing-line {
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 8px;
+        }
+        .closing-text {
+            font-size: 15px; font-weight: 800;
+            color: #fff; line-height: 1.45;
+        }
+        .closing-sub {
+            font-size: 11.5px; color: rgba(255,255,255,0.72);
+            margin-top: 6px; font-style: italic;
+            line-height: 1.5;
+        }
+
+        [data-animate] {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        [data-animate].is-visible { opacity: 1; transform: translateY(0); }
+        [data-animate][data-delay="1"] { transition-delay: 0.1s; }
+        [data-animate][data-delay="2"] { transition-delay: 0.2s; }
+        [data-animate][data-delay="3"] { transition-delay: 0.3s; }
+        [data-animate][data-delay="4"] { transition-delay: 0.4s; }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+    <!-- Banner -->
+    <div class="banner">
+        <div class="banner-kicker">Opening Message</div>
+        <h2 class="banner-title">A New Kind of Platform<br>for Africa</h2>
+        <p class="banner-sub">Every generation faces a moment where it must decide what future to build.</p>
+    </div>
+
+    <!-- Body -->
+    <div class="body">
+
+        <p class="para" data-animate>
+            Every generation inherits a moment in history where it must decide what kind of future it wants to build. <strong>Africa stands at such a moment.</strong>
+        </p>
+
+        <div class="moment-callout" data-animate data-delay="1">
+            <div class="mc-text">
+                Across the continent, millions of young minds are studying, working, building businesses, and searching for opportunities to shape a better tomorrow.
+            </div>
+        </div>
+
+        <div class="lacks-block" data-animate data-delay="2">
+            <div class="lacks-intro">Yet many of these minds lack</div>
+            <div class="lacks-statement">
+                A platform that feeds their <span>curiosity</span>,
+                strengthens their <span>thinking</span>,
+                and connects them to ideas that
+                <span>inspire action</span>.
+            </div>
+        </div>
+
+        <div class="closing" data-animate data-delay="3">
+            <div class="closing-line">That is why</div>
+            <div class="closing-text">KandaNews Africa exists.</div>
+            <div class="closing-sub">
+                Not simply to report events &mdash; but to ignite minds.
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+function initPage() {
+    document.querySelectorAll('[data-animate]').forEach(function(el, i) {
+        setTimeout(function() { el.classList.add('is-visible'); }, i * 140);
+    });
+}
+if (document.querySelector('.page-wrapper')) { setTimeout(initPage, 300); }
+</script>
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" data-category="video" data-mb="{{DATA_MB}}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>{{VIDEO_TITLE}} — KandaNews Video</title>
+
+  <!--
+    KEP Video Template v1.0
+    data-category="video"
+    data-mb="{{DATA_MB}}"   ← estimated MB to stream (shown in data warning)
+
+    Editable placeholders:
+      {{VIDEO_TITLE}}       — clip title
+      {{VIDEO_SUBTITLE}}    — series / show name
+      {{VIDEO_DATE}}        — e.g. "March 14, 2026"
+      {{VIDEO_DURATION}}    — e.g. "4 min"
+      {{VIDEO_CATEGORY}}    — e.g. "Tech & Innovation"
+      {{VIDEO_SRC}}         — relative path to .mp4 inside bundle (or HTTPS URL)
+      {{VIDEO_POSTER}}      — relative path to poster/thumbnail image
+      {{VIDEO_DESCRIPTION}} — 2–3 sentence description shown below player
+      {{DATA_MB}}           — estimated streaming cost in MB (e.g. "45")
+      {{ACCENT_COLOR}}      — hex accent (default orange #f05a1a)
+  -->
+
+  <link rel="stylesheet" href="assets/vendor/fa.min.css">
+
+  <style>
+    :root {
+      --accent: {{ACCENT_COLOR}};
+      --navy:   #1e2b42;
+      --bg:     #0a0f1a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow-x: hidden;
+    }
+
+    .page-wrapper {
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    /* ── Data warning gate ─────────────────────────── */
+    #data-gate {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      backdrop-filter: blur(6px);
+    }
+
+    .gate-card {
+      background: var(--navy);
+      border: 1.5px solid var(--accent);
+      border-radius: 20px;
+      padding: 28px 24px;
+      text-align: center;
+      max-width: 320px;
+      width: 100%;
+    }
+
+    .gate-icon {
+      font-size: 44px;
+      margin-bottom: 16px;
+      color: var(--accent);
+    }
+
+    .gate-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .gate-body {
+      font-size: 13px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 24px;
+    }
+
+    .gate-body strong {
+      color: #fff;
+    }
+
+    .gate-data-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: #fff;
+    }
+
+    .gate-data-badge .fa-database { color: var(--accent); }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-play {
+      flex: 1;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 13px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: opacity 0.15s;
+    }
+
+    .btn-play:active { opacity: 0.85; }
+
+    .btn-skip {
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.55);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn-skip:active { opacity: 0.7; }
+
+    /* ── Header ────────────────────────────────────── */
+    .header {
+      padding: 20px 20px 14px;
+      flex-shrink: 0;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .video-title {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .video-meta {
+      display: flex;
+      gap: 14px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      flex-wrap: wrap;
+    }
+
+    .video-meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ── Video player ───────────────────────────────── */
+    .player-section {
+      flex-shrink: 0;
+      padding: 0 0 4px;
+      background: #000;
+    }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 */
+      background: #000;
+    }
+
+    video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* ── Content ────────────────────────────────────── */
+    .content {
+      padding: 20px 20px 28px;
+      flex: 1;
+    }
+
+    .description {
+      font-size: 14px;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 20px;
+    }
+
+    /* Category badge */
+    .category-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 20px;
+    }
+
+    /* Data tip */
+    .data-tip {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.6;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .data-tip .fa-wifi {
+      color: var(--accent);
+      font-size: 14px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ─────────────────────────────────────── */
+    .kn-footer {
+      text-align: center;
+      padding: 10px 20px 18px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+      flex-shrink: 0;
+    }
+
+    .kn-footer strong { color: var(--accent); }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
+  </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- ── Data Warning Gate (shown before playback) ── -->
+  <div id="data-gate">
+    <div class="gate-card">
+      <div class="gate-icon"><i class="fas fa-film"></i></div>
+      <div class="gate-title">Video Content</div>
+      <p class="gate-body">
+        This page includes a video clip.<br>
+        <strong>Streaming uses mobile data.</strong><br>
+        Connect to Wi-Fi to watch for free.
+      </p>
+      <div class="gate-data-badge">
+        <i class="fas fa-database"></i>
+        ~{{DATA_MB}} MB to stream
+      </div>
+      <div class="btn-row">
+        <button class="btn-play" id="btn-play-now" onclick="dismissGate(true)">
+          <i class="fas fa-play"></i> Play Now
+        </button>
+        <button class="btn-skip" onclick="dismissGate(false)">
+          Skip
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Header ── -->
+  <div class="header">
+    <div class="brand-row">
+      <i class="fas fa-video"></i>
+      KandaNews Video
+    </div>
+    <h1 class="video-title">{{VIDEO_TITLE}}</h1>
+    <div class="video-meta">
+      <span><i class="fas fa-play-circle"></i> {{VIDEO_SUBTITLE}}</span>
+      <span><i class="fas fa-clock"></i> {{VIDEO_DURATION}}</span>
+      <span><i class="fas fa-calendar-alt"></i> {{VIDEO_DATE}}</span>
+    </div>
+  </div>
+
+  <!-- ── Video Player ── -->
+  <div class="player-section">
+    <div class="video-container">
+      <video
+        id="kn-video"
+        preload="none"
+        controls
+        playsinline
+        poster="{{VIDEO_POSTER}}"
+        aria-label="{{VIDEO_TITLE}}">
+        <source src="{{VIDEO_SRC}}" type="video/mp4">
+        Your browser does not support the video element.
+      </video>
+    </div>
+  </div>
+
+  <!-- ── Content ── -->
+  <div class="content">
+    <span class="category-badge">
+      <i class="fas fa-tag"></i> {{VIDEO_CATEGORY}}
+    </span>
+
+    <p class="description">{{VIDEO_DESCRIPTION}}</p>
+
+    <div class="data-tip">
+      <i class="fas fa-wifi"></i>
+      <div>
+        Tip: Stream this video on Wi-Fi to save your mobile data.
+        Estimated size: <strong>~{{DATA_MB}} MB</strong>.
+        The video is also available offline if you've downloaded this edition.
+      </div>
+    </div>
+  </div>
+
+  <div class="kn-footer">
+    <strong>KandaNews Africa</strong> · Tap to Know, Tap to Grow
+  </div>
+
+</div>
+
+<script>
+  function dismissGate(shouldPlay) {
+    document.getElementById('data-gate').style.display = 'none';
+    if (shouldPlay) {
+      var v = document.getElementById('kn-video');
+      v.preload = 'auto';
+      v.play().catch(function() {
+        // Autoplay may be blocked; controls are visible so user can tap play
+      });
+    }
+  }
+
+  // If already on Wi-Fi (no way to detect reliably in browser), skip gate
+  // after 3 seconds — user can still cancel playback via the player controls.
+  // We intentionally DO NOT auto-dismiss; Africa users value data awareness.
+</script>
+</body>
+</html>

@@ -168,6 +168,7 @@ try {
     $allThumbs = '';
     $firstPageCSS  = '';   // CSS for cover.html
     $firstPageBody = '';   // Body for cover.html
+    $manifestPages = [];   // P3: manifest page list
 
     foreach ($pages as $idx => $page) {
         $filename = $page['filename'] ?? '';
@@ -179,7 +180,14 @@ try {
             throw new Exception("File not found: " . basename($filename));
         }
 
-        $parts = extractParts(file_get_contents($filename));
+        $rawHtml = file_get_contents($filename);
+        $parts   = extractParts($rawHtml);
+
+        // Detect page type from data-category attribute on <html> tag
+        $pageType = 'article';
+        if (preg_match('/<html[^>]+data-category=["\']([^"\']+)["\']/', $rawHtml, $tm)) {
+            $pageType = trim($tm[1]);
+        }
 
         // Scope CSS with page class
         $scopedCSS = scopeCSS($parts['css'], "page-{$idx}");
@@ -191,11 +199,18 @@ try {
             $firstPageBody = $parts['body'];
         }
 
-        // Main slide - keep body exactly as template designed it
+        // Main slide
         $allSlides .= "<div class=\"swiper-slide page-{$idx}\">{$parts['body']}</div>\n";
 
-        // Thumbnail - same content, smaller
+        // Thumbnail
         $allThumbs .= "<div class=\"swiper-slide\"><div class=\"thumb-page page-{$idx}\">{$parts['body']}</div><span class=\"thumb-num\">" . ($idx + 1) . "</span></div>\n";
+
+        // P3: Build manifest page entry
+        $manifestPages[] = [
+            'n'     => $idx + 1,
+            'type'  => $pageType,
+            'title' => $page['title'] ?? ucfirst($pageType) . ' ' . ($idx + 1),
+        ];
     }
     
     $total = count($pages);
@@ -724,59 +739,81 @@ console.log('KandaNews - {$total} pages loaded');
 </html>
 HTML;
 
-    // Output directory - use date if provided, otherwise use sanitized title
-    $dirName = ($includeDate && $date) ? $date : str_replace(' ', '_', strtolower($title));
+    // ── Output directory ──────────────────────────────────────────────────────
+    $dirName   = ($includeDate && $date) ? $date : str_replace(' ', '_', strtolower($title));
     $outputDir = '../output/' . $dirName . '/';
     if (!is_dir($outputDir)) mkdir($outputDir, 0755, true);
-    
+
+    // ── Write index.html ─────────────────────────────────────────────────────
     file_put_contents($outputDir . 'index.html', $html);
-    
-    // Copy assets to output folder
-    if (file_exists('../assets/turn.mp3')) {
-        copy('../assets/turn.mp3', $outputDir . 'turn.mp3');
+
+    // ── P1: Copy assets/vendor into edition output (offline-ready bundle) ────
+    $assetsDest  = $outputDir . 'assets/';
+    $vendorSrc   = '../assets/vendor/';
+    $vendorDest  = $assetsDest . 'vendor/';
+    $webfontDest = $vendorDest . 'webfonts/';
+
+    foreach ([$assetsDest, $vendorDest, $webfontDest] as $d) {
+        if (!is_dir($d)) mkdir($d, 0755, true);
     }
-    
-    // Copy logo
-    if (file_exists('../assets/appLogoIcon.png')) {
-        copy('../assets/appLogoIcon.png', $outputDir . 'appLogoIcon.png');
-    } elseif (file_exists('assets/appLogoIcon.png')) {
-        copy('assets/appLogoIcon.png', $outputDir . 'appLogoIcon.png');
+
+    // Swiper
+    foreach (['swiper.min.css', 'swiper.min.js', 'fa.min.css'] as $f) {
+        if (file_exists($vendorSrc . $f)) copy($vendorSrc . $f, $vendorDest . $f);
     }
-    
-    // Create ZIP with proper name
-    // Create ZIP with proper name
-    $zipName = str_replace(' ', '_', $title);
-    if ($includeDate && $date) {
-        $zipName .= '_' . $date;
+    // FontAwesome webfonts
+    foreach (glob($vendorSrc . 'webfonts/*.woff2') ?: [] as $wf) {
+        copy($wf, $webfontDest . basename($wf));
     }
-    $zipName .= '.zip';
-    $zipFile = $outputDir . $zipName;
-    $zip = new ZipArchive();
-    
-    if ($zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
-        $zip->addFile($outputDir . 'index.html', 'index.html');
-        
-        if (file_exists($outputDir . 'turn.mp3')) {
-            $zip->addFile($outputDir . 'turn.mp3', 'turn.mp3');
-        }
-        
-        if (file_exists($outputDir . 'appLogoIcon.png')) {
-            $zip->addFile($outputDir . 'appLogoIcon.png', 'appLogoIcon.png');
-        }
-        
-        $zip->close();
+    // Sound + logo
+    if (file_exists('../assets/turn.mp3'))      copy('../assets/turn.mp3',      $assetsDest . 'turn.mp3');
+    if (file_exists('../assets/appLogoIcon.png')) copy('../assets/appLogoIcon.png', $assetsDest . 'appLogoIcon.png');
+
+    // ── P3: Write manifest.json ───────────────────────────────────────────────
+    $zipName     = str_replace(' ', '_', $title) . ($includeDate && $date ? '_' . $date : '') . '.zip';
+    $bundleSizeKb = 0;
+    foreach (['index.html', 'assets/vendor/swiper.min.js', 'assets/vendor/swiper.min.css',
+              'assets/vendor/fa.min.css'] as $f) {
+        if (file_exists($outputDir . $f)) $bundleSizeKb += (int) ceil(filesize($outputDir . $f) / 1024);
     }
-    
-    // ── Write standalone cover.html (first page only, no JS/Swiper) ──
+
+    $manifest = [
+        'schema'        => '1.0',
+        'id'            => 'kn-' . ($input['country'] ?? 'ug') . '-' . ($date ?: date('Y-m-d')),
+        'title'         => $title,
+        'display_title' => $displayText,
+        'country'       => $input['country'] ?? 'ug',
+        'edition_date'  => $date ?: date('Y-m-d'),
+        'edition_type'  => $input['edition_type'] ?? 'daily',
+        'generated_at'  => gmdate('Y-m-d\TH:i:s\Z'),
+        'page_count'    => $total,
+        'bundle_size_kb'=> $bundleSizeKb,
+        'viewer'        => 'index.html',
+        'cover'         => 'cover.html',
+        'zip'           => $zipName,
+        'assets'        => [
+            'swiper_css'  => 'assets/vendor/swiper.min.css',
+            'swiper_js'   => 'assets/vendor/swiper.min.js',
+            'fa_css'      => 'assets/vendor/fa.min.css',
+            'sound'       => 'assets/turn.mp3',
+            'logo'        => 'assets/appLogoIcon.png',
+        ],
+        'pages' => $manifestPages,
+    ];
+    file_put_contents($outputDir . 'manifest.json',
+        json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+    // ── Standalone cover.html (responsive, no Swiper) ────────────────────────
     $coverHtml = <<<COVERPAGE
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=461, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { width: 461px; height: 600px; overflow: hidden; background: #1e2b42; }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100vw; height: 100vh; overflow: hidden; background: #1e2b42; }
+.page-0 .page-wrapper { width: 100vw !important; height: 100vh !important; max-width: 100vw !important; }
 {$firstPageCSS}
 </style>
 </head>
@@ -786,6 +823,28 @@ html, body { width: 461px; height: 600px; overflow: hidden; background: #1e2b42;
 </html>
 COVERPAGE;
     file_put_contents($outputDir . 'cover.html', $coverHtml);
+
+    // ── ZIP bundle (self-contained for offline reading) ───────────────────────
+    $zipFile = $outputDir . $zipName;
+    $zip = new ZipArchive();
+    if ($zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+        $zip->addFile($outputDir . 'index.html',    'index.html');
+        $zip->addFile($outputDir . 'manifest.json', 'manifest.json');
+        $zip->addFile($outputDir . 'cover.html',    'cover.html');
+
+        // Vendor assets
+        foreach (['swiper.min.css', 'swiper.min.js', 'fa.min.css'] as $f) {
+            if (file_exists($vendorDest . $f))
+                $zip->addFile($vendorDest . $f, 'assets/vendor/' . $f);
+        }
+        foreach (glob($webfontDest . '*.woff2') ?: [] as $wf) {
+            $zip->addFile($wf, 'assets/vendor/webfonts/' . basename($wf));
+        }
+        if (file_exists($assetsDest . 'turn.mp3'))      $zip->addFile($assetsDest . 'turn.mp3',      'assets/turn.mp3');
+        if (file_exists($assetsDest . 'appLogoIcon.png')) $zip->addFile($assetsDest . 'appLogoIcon.png', 'assets/appLogoIcon.png');
+
+        $zip->close();
+    }
 
     // ── Auto-register in API database as draft ──
     $country     = $input['country'] ?? 'ug';
@@ -834,13 +893,17 @@ COVERPAGE;
         'description'  => $description,
     ]);
 
+    $manifestUrl = $cmsBaseUrl . '/output/' . $dirName . '/manifest.json';
+
     echo json_encode([
-        'success' => true,
-        'message' => 'Generated successfully' . ($editionId ? ' (registered as draft #' . $editionId . ')' : ''),
-        'pages' => $total,
-        'zip' => $zipName,
-        'edition_id' => $editionId,
-        'status' => 'draft',
+        'success'      => true,
+        'message'      => 'Generated successfully' . ($editionId ? ' (registered as draft #' . $editionId . ')' : ''),
+        'pages'        => $total,
+        'zip'          => $zipName,
+        'edition_id'   => $editionId,
+        'manifest_url' => $manifestUrl,
+        'bundle_size_kb' => $bundleSizeKb,
+        'status'       => 'draft',
     ]);
 
 } catch (Exception $e) {

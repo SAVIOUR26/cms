@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 import '../config/api.dart';
 import '../models/edition.dart';
 import 'api_service.dart';
@@ -120,6 +122,30 @@ class EditionService {
       if (response['ok'] == true && response['data']['found'] == true) {
         return Edition.fromJson(response['data']['edition']);
       }
+    } catch (_) {}
+    return null;
+  }
+
+  // ── P4: KEP manifest ────────────────────────────────────────────────────────
+
+  /// Fetch the KEP manifest.json for an edition.
+  /// Derives the manifest URL from the html_url by replacing 'index.html'.
+  /// Returns null if unavailable or the edition predates KEP.
+  Future<Map<String, dynamic>?> fetchManifest(String htmlUrl) async {
+    try {
+      final manifestUrl = htmlUrl.endsWith('index.html')
+          ? '${htmlUrl.substring(0, htmlUrl.length - 'index.html'.length)}manifest.json'
+          : null;
+      if (manifestUrl == null) return null;
+
+      final res = await Dio().get<Map<String, dynamic>>(
+        manifestUrl,
+        options: Options(
+          receiveTimeout: const Duration(seconds: 10),
+          sendTimeout: const Duration(seconds: 10),
+        ),
+      );
+      if (res.statusCode == 200 && res.data != null) return res.data;
     } catch (_) {}
     return null;
   }

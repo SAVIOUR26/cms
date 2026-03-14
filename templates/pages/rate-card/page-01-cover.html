@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" data-category="rate_card">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advertising Rate Card 2025 - KandaNews Africa</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #0b1525;
+            color: #fff;
+            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* ── Background ─────────────────────── */
+        .bg {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(240,90,26,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(240,90,26,0.05) 1px, transparent 1px);
+            background-size: 46px 46px;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+        }
+        .orb-1 {
+            width: 280px; height: 280px;
+            background: radial-gradient(circle, rgba(240,90,26,0.18) 0%, transparent 70%);
+            top: -80px; right: -80px;
+            animation: drift 10s ease-in-out infinite alternate;
+        }
+        .orb-2 {
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(240,90,26,0.10) 0%, transparent 70%);
+            bottom: 60px; left: -60px;
+            animation: drift 14s ease-in-out infinite alternate-reverse;
+        }
+        .orb-3 {
+            width: 100px; height: 100px;
+            background: radial-gradient(circle, rgba(255,122,61,0.2) 0%, transparent 70%);
+            top: 50%; left: 40%;
+            animation: drift 7s ease-in-out infinite alternate;
+        }
+        @keyframes drift {
+            from { transform: translate(0,0); }
+            to   { transform: translate(20px, -20px); }
+        }
+
+        /* ── Shine sweep ─────────────────────── */
+        .shine {
+            position: absolute;
+            top: 0; left: 0;
+            width: 60px; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+            animation: sweep 4s ease-in-out infinite;
+            z-index: 2;
+        }
+        @keyframes sweep {
+            0%   { left: -60px; }
+            100% { left: 461px; }
+        }
+
+        /* ── Layout ──────────────────────────── */
+        .inner {
+            position: relative;
+            z-index: 10;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 24px;
+            border-bottom: 1px solid rgba(240,90,26,0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+        .logo-k {
+            width: 34px; height: 34px;
+            background: linear-gradient(135deg, #f05a1a, #ff7a3d);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; font-weight: 900; color: #fff;
+            box-shadow: 0 4px 14px rgba(240,90,26,0.45);
+        }
+        .logo-text {
+            font-size: 17px; font-weight: 800; letter-spacing: -0.5px;
+        }
+        .logo-text .w { color: #fff; }
+        .logo-text .o { color: #f05a1a; }
+
+        .yr-badge {
+            border: 1px solid rgba(240,90,26,0.35);
+            background: rgba(240,90,26,0.1);
+            color: #f05a1a;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        /* Hero */
+        .hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 28px 24px 20px;
+            text-align: center;
+        }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .eyebrow-line {
+            height: 1px;
+            width: 28px;
+            background: linear-gradient(90deg, transparent, #f05a1a);
+        }
+        .eyebrow-line.r { background: linear-gradient(90deg, #f05a1a, transparent); }
+        .eyebrow-text {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 3.5px; text-transform: uppercase;
+            color: #f05a1a;
+        }
+
+        .headline {
+            font-size: 42px; font-weight: 900;
+            line-height: 1.0; letter-spacing: -1.5px;
+            margin-bottom: 8px;
+        }
+        .hl-white { color: #fff; display: block; }
+        .hl-orange {
+            background: linear-gradient(135deg, #f05a1a 0%, #ff7a3d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+
+        .tagline {
+            font-size: 12.5px;
+            color: rgba(255,255,255,0.55);
+            line-height: 1.65;
+            max-width: 320px;
+            margin: 12px auto 26px;
+            font-style: italic;
+        }
+
+        /* Stats strip */
+        .stats {
+            display: flex;
+            width: 100%;
+            border: 1px solid rgba(240,90,26,0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 22px;
+        }
+        .stat {
+            flex: 1;
+            text-align: center;
+            padding: 13px 6px;
+            background: rgba(255,255,255,0.025);
+            border-right: 1px solid rgba(240,90,26,0.12);
+        }
+        .stat:last-child { border-right: none; }
+        .stat-n {
+            font-size: 18px; font-weight: 800;
+            color: #f05a1a; line-height: 1;
+            margin-bottom: 4px;
+        }
+        .stat-l {
+            font-size: 8.5px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* Inside box */
+        .inside {
+            width: 100%;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 12px;
+            padding: 14px 16px;
+        }
+        .inside-lbl {
+            font-size: 8.5px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: rgba(255,255,255,0.35);
+            margin-bottom: 10px;
+        }
+        .pills {
+            display: flex; flex-wrap: wrap; gap: 6px;
+        }
+        .pill {
+            background: rgba(240,90,26,0.1);
+            border: 1px solid rgba(240,90,26,0.22);
+            color: rgba(255,255,255,0.72);
+            font-size: 10px; font-weight: 600;
+            padding: 5px 11px;
+            border-radius: 20px;
+        }
+
+        /* Bottom bar */
+        .bottom-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background: rgba(240,90,26,0.07);
+            border-top: 1px solid rgba(240,90,26,0.18);
+        }
+        .flag-tag {
+            font-size: 11px; font-weight: 600;
+            color: rgba(255,255,255,0.65);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .live {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 10px; font-weight: 700; color: #22c55e;
+        }
+        .dot {
+            width: 7px; height: 7px;
+            background: #22c55e; border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%,100% { transform: scale(1); opacity: 1; }
+            50%      { transform: scale(1.5); opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="bg">
+        <div class="grid"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="shine"></div>
+    </div>
+
+    <div class="inner">
+        <!-- Top bar -->
+        <div class="top-bar">
+            <div class="logo">
+                <div class="logo-k">K</div>
+                <div class="logo-text">
+                    <span class="w">Kanda</span><span class="o">News</span>
+                </div>
+            </div>
+            <div class="yr-badge">2025 &middot; UG</div>
+        </div>
+
+        <!-- Hero -->
+        <div class="hero">
+            <div class="eyebrow">
+                <div class="eyebrow-line"></div>
+                <div class="eyebrow-text">Advertising Rate Card</div>
+                <div class="eyebrow-line r"></div>
+            </div>
+
+            <h1 class="headline">
+                <span class="hl-white">Your Brand.</span>
+                <span class="hl-orange">Right in Their Pocket.</span>
+            </h1>
+
+            <p class="tagline">
+                Advertise Smarter, Not Harder &mdash;<br>
+                Reach Uganda's Future Today.
+            </p>
+
+            <!-- Stats strip -->
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-n">8</div>
+                    <div class="stat-l">Ad Formats</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-n">10K+</div>
+                    <div class="stat-l">Subscribers</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-n">20%</div>
+                    <div class="stat-l">Monthly Disc.</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-n">24h</div>
+                    <div class="stat-l">Go Live</div>
+                </div>
+            </div>
+
+            <!-- Inside preview -->
+            <div class="inside">
+                <div class="inside-lbl">Inside This Rate Card</div>
+                <div class="pills">
+                    <span class="pill">📊 Our Audience</span>
+                    <span class="pill">🖼 Ad Formats</span>
+                    <span class="pill">💰 Pricing</span>
+                    <span class="pill">🎯 Packages</span>
+                    <span class="pill">✅ Benefits</span>
+                    <span class="pill">📞 Book Now</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="bottom-bar">
+            <div class="flag-tag">🇺🇬 Uganda Edition</div>
+            <div class="live">
+                <div class="dot"></div>
+                Platform Active
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

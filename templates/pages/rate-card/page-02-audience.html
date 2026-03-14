@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en" data-category="rate_card">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Who You'll Reach - KandaNews Africa</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #f05a1a #f1f1f1;
+        }
+        .page-wrapper::-webkit-scrollbar { width: 6px; }
+        .page-wrapper::-webkit-scrollbar-track { background: #f1f1f1; }
+        .page-wrapper::-webkit-scrollbar-thumb { background: #f05a1a; border-radius: 3px; }
+
+        /* ── Section header ───────────────── */
+        .sec-header {
+            background: linear-gradient(135deg, #0b1525 0%, #1e2b42 100%);
+            padding: 28px 24px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .sec-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #f05a1a, #ff7a3d, #f05a1a);
+        }
+        .sec-kicker {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: #f05a1a; margin-bottom: 8px;
+        }
+        .sec-title {
+            font-size: 26px; font-weight: 800;
+            color: #fff; line-height: 1.1;
+            letter-spacing: -0.5px;
+        }
+        .sec-sub {
+            font-size: 12.5px; color: rgba(255,255,255,0.55);
+            margin-top: 6px; line-height: 1.5;
+        }
+
+        /* ── Stats row ─────────────────────── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .stat-box {
+            text-align: center;
+            padding: 20px 10px;
+            border-right: 1px solid #f0f0f0;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .stat-box:last-child { border-right: none; }
+        .stat-box.is-visible { opacity: 1; transform: translateY(0); }
+        .stat-box:nth-child(2) { transition-delay: 0.1s; }
+        .stat-box:nth-child(3) { transition-delay: 0.2s; }
+
+        .sn {
+            font-size: 28px; font-weight: 900;
+            color: #f05a1a; line-height: 1;
+        }
+        .sl {
+            font-size: 10px; font-weight: 600;
+            color: #6c757d; margin-top: 5px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        /* ── Platform info ──────────────────── */
+        .platform-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: #fffbf9;
+            border-bottom: 1px solid #fde9de;
+        }
+        .plat-chip {
+            display: flex; align-items: center; gap: 5px;
+            font-size: 10.5px; font-weight: 600;
+            color: #c2410c;
+            background: #fde9de;
+            padding: 4px 10px; border-radius: 20px;
+        }
+
+        /* ── Audience profiles ──────────────── */
+        .profiles-section {
+            padding: 20px 24px;
+        }
+        .profiles-title {
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: #6c757d; margin-bottom: 14px;
+        }
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+        .profile-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+            border: 1px solid #eee;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .profile-card.is-visible { opacity: 1; transform: translateY(0); }
+        .profile-card:nth-child(2) { transition-delay: 0.12s; }
+        .profile-card:nth-child(3) { transition-delay: 0.24s; }
+
+        .profile-icon {
+            font-size: 26px; margin-bottom: 8px; display: block;
+        }
+        .profile-name {
+            font-size: 11px; font-weight: 700;
+            color: #1e2b42; margin-bottom: 4px;
+        }
+        .profile-share {
+            font-size: 18px; font-weight: 900;
+            color: #f05a1a; line-height: 1; margin-bottom: 2px;
+        }
+        .profile-desc {
+            font-size: 9.5px; color: #999; line-height: 1.4;
+        }
+
+        /* ── Reach bar ───────────────────────── */
+        .reach-section {
+            padding: 0 24px 20px;
+        }
+        .reach-label {
+            display: flex; justify-content: space-between;
+            align-items: center;
+            font-size: 11px; font-weight: 600;
+            color: #555; margin-bottom: 6px;
+        }
+        .reach-pct { color: #f05a1a; font-weight: 700; }
+        .bar-track {
+            height: 8px; background: #f0f0f0;
+            border-radius: 4px; overflow: hidden;
+            margin-bottom: 12px;
+        }
+        .bar-fill {
+            height: 100%; border-radius: 4px; width: 0%;
+            transition: width 1.2s ease-out 0.3s;
+        }
+        .bar-orange  { background: linear-gradient(90deg, #f05a1a, #ff7a3d); }
+        .bar-blue    { background: linear-gradient(90deg, #3498db, #5dade2); }
+        .bar-green   { background: linear-gradient(90deg, #27ae60, #58d68d); }
+
+        /* ── Why now callout ─────────────────── */
+        .callout {
+            margin: 0 24px 20px;
+            background: linear-gradient(135deg, #1e2b42, #2a3f5f);
+            border-radius: 12px;
+            padding: 18px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s ease 0.3s, transform 0.5s ease 0.3s;
+        }
+        .callout.is-visible { opacity: 1; transform: translateY(0); }
+        .callout-icon { font-size: 30px; flex-shrink: 0; }
+        .callout-text {
+            font-size: 12px; color: rgba(255,255,255,0.82);
+            line-height: 1.55;
+        }
+        .callout-text strong { color: #ff7a3d; }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+    <!-- Header -->
+    <div class="sec-header">
+        <div class="sec-kicker">Your Audience</div>
+        <h2 class="sec-title">Who You'll Reach</h2>
+        <p class="sec-sub">Verified subscribers. Active daily. Uganda's rising generation.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat-box" data-animate>
+            <div class="sn" data-count="10000" data-suffix="+">0</div>
+            <div class="sl">Subscribers</div>
+        </div>
+        <div class="stat-box" data-animate>
+            <div class="sn" data-count="4" data-suffix="">0</div>
+            <div class="sl">Countries</div>
+        </div>
+        <div class="stat-box" data-animate>
+            <div class="sn" data-count="78" data-suffix="%">0</div>
+            <div class="sl">Daily Active</div>
+        </div>
+    </div>
+
+    <!-- Platform chips -->
+    <div class="platform-bar">
+        <div class="plat-chip">📱 Digital Flipbook</div>
+        <div class="plat-chip">🔗 Click-Enabled Ads</div>
+        <div class="plat-chip">✅ Verified Users</div>
+    </div>
+
+    <!-- Audience profiles -->
+    <div class="profiles-section">
+        <div class="profiles-title">Audience Breakdown</div>
+        <div class="profiles-grid">
+            <div class="profile-card" data-animate>
+                <span class="profile-icon">🎓</span>
+                <div class="profile-name">Students</div>
+                <div class="profile-share" data-count="45" data-suffix="%">0</div>
+                <div class="profile-desc">University & College, 18–24 yrs</div>
+            </div>
+            <div class="profile-card" data-animate>
+                <span class="profile-icon">💼</span>
+                <div class="profile-name">Professionals</div>
+                <div class="profile-share" data-count="32" data-suffix="%">0</div>
+                <div class="profile-desc">Young workforce, 24–35 yrs</div>
+            </div>
+            <div class="profile-card" data-animate>
+                <span class="profile-icon">🚀</span>
+                <div class="profile-name">Entrepreneurs</div>
+                <div class="profile-share" data-count="23" data-suffix="%">0</div>
+                <div class="profile-desc">Founders & hustlers, all ages</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reach bars -->
+    <div class="reach-section">
+        <div class="reach-label">
+            <span>🇺🇬 Uganda</span><span class="reach-pct">60%</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill bar-orange" data-fill="60%"></div></div>
+
+        <div class="reach-label">
+            <span>🇰🇪 Kenya</span><span class="reach-pct">18%</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill bar-blue" data-fill="18%"></div></div>
+
+        <div class="reach-label">
+            <span>🇳🇬 Nigeria &amp; 🇿🇦 South Africa</span><span class="reach-pct">22%</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill bar-green" data-fill="22%"></div></div>
+    </div>
+
+    <!-- Callout -->
+    <div class="callout" data-animate>
+        <div class="callout-icon">🎯</div>
+        <div class="callout-text">
+            Your ad reaches <strong>young, digitally-active Africans</strong> who read, click, and buy.
+            Every impression is a verified subscriber &mdash; not a random scroll.
+        </div>
+    </div>
+
+</div>
+<script>
+function countUp(el, start, end, suffix) {
+    var duration = 1400;
+    var startTime = performance.now();
+    function update(now) {
+        var p = Math.min((now - startTime) / duration, 1);
+        var e = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(start + (end - start) * e).toLocaleString() + suffix;
+        if (p < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+}
+
+function initPage() {
+    document.querySelectorAll('[data-animate]').forEach(function(el, i) {
+        setTimeout(function() { el.classList.add('is-visible'); }, i * 130);
+    });
+    document.querySelectorAll('[data-count]').forEach(function(el) {
+        countUp(el, 0, parseInt(el.dataset.count), el.dataset.suffix || '');
+    });
+    document.querySelectorAll('[data-fill]').forEach(function(el) {
+        el.style.width = el.dataset.fill;
+    });
+}
+
+if (document.querySelector('.page-wrapper')) {
+    setTimeout(initPage, 300);
+}
+</script>
+</body>
+</html>

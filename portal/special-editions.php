@@ -18,15 +18,36 @@ $page_section = 'content';
 $db           = portal_db();
 $countries    = portal_countries();
 
-$categories = [
-    'university'      => ['label' => 'University',        'icon' => 'fas fa-graduation-cap', 'color' => '#0369a1'],
-    'corporate'       => ['label' => 'Corporate',         'icon' => 'fas fa-briefcase',      'color' => '#15803d'],
-    'entrepreneurship'=> ['label' => 'Entrepreneurship',  'icon' => 'fas fa-rocket',         'color' => '#c2410c'],
-    'campaigns'       => ['label' => 'Campaigns',         'icon' => 'fas fa-bullhorn',       'color' => '#7c3aed'],
-    'jobs_careers'    => ['label' => 'Jobs & Careers',    'icon' => 'fas fa-user-tie',       'color' => '#0f766e'],
-    'podcasts'        => ['label' => 'Podcasts',          'icon' => 'fas fa-podcast',        'color' => '#be185d'],
-    'episodes'        => ['label' => 'Episodes',          'icon' => 'fas fa-play-circle',    'color' => '#d97706'],
-];
+// Load categories from DB — single source of truth shared with the app API
+$categories = [];
+try {
+    $catRows = $db->query("
+        SELECT slug, label, icon_name, color_hex
+        FROM edition_categories
+        WHERE is_active = 1 AND edition_type = 'special'
+        ORDER BY sort_order ASC, id ASC
+    ")->fetchAll();
+    foreach ($catRows as $row) {
+        // Map DB icon_name (Material/Flutter name) to a FontAwesome equivalent for the portal UI
+        $faIconMap = [
+            'school'            => 'fas fa-graduation-cap',
+            'business_center'   => 'fas fa-briefcase',
+            'rocket_launch'     => 'fas fa-rocket',
+            'campaign'          => 'fas fa-bullhorn',
+            'work'              => 'fas fa-user-tie',
+            'mic'               => 'fas fa-podcast',
+            'play_circle'       => 'fas fa-play-circle',
+            'star'              => 'fas fa-star',
+        ];
+        $categories[$row['slug']] = [
+            'label' => $row['label'],
+            'icon'  => $faIconMap[$row['icon_name']] ?? 'fas fa-folder',
+            'color' => $row['color_hex'],
+        ];
+    }
+} catch (PDOException $e) {
+    $categories = []; // Degrade gracefully — table view will still work
+}
 
 // ── Handle POST actions ───────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -93,7 +114,7 @@ try {
 
     $stmt = $db->prepare("
         SELECT id, title, slug, country, edition_date, category, status, cover_image,
-               is_free, page_count, html_url, created_at
+               is_free, page_count, html_url, card_config, created_at
         FROM editions
         WHERE $where
         ORDER BY edition_date DESC, created_at DESC
@@ -229,9 +250,20 @@ require_once __DIR__ . '/includes/header.php';
                     </td>
                     <td>
                         <strong style="color:var(--navy);font-size:13px;"><?php echo htmlspecialchars($ed['title']); ?></strong>
-                        <?php if ($ed['page_count'] > 0): ?>
-                        <div style="font-size:11px;color:#9ca3af;margin-top:1px;"><?php echo $ed['page_count']; ?> pages</div>
-                        <?php endif; ?>
+                        <div style="display:flex;align-items:center;gap:6px;margin-top:3px;flex-wrap:wrap;">
+                            <?php if ($ed['page_count'] > 0): ?>
+                            <span style="font-size:11px;color:#9ca3af;"><?php echo $ed['page_count']; ?> pages</span>
+                            <?php endif; ?>
+                            <?php if (!empty($ed['card_config'])): ?>
+                            <span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;color:#059669;background:#dcfce7;padding:1px 6px;border-radius:8px;">
+                                <i class="fas fa-palette" style="font-size:8px;"></i> Card Designed
+                            </span>
+                            <?php else: ?>
+                            <span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;color:#d97706;background:#fef3c7;padding:1px 6px;border-radius:8px;">
+                                <i class="fas fa-exclamation-triangle" style="font-size:8px;"></i> No Card Design
+                            </span>
+                            <?php endif; ?>
+                        </div>
                     </td>
                     <td>
                         <?php if (!empty($ed['category']) && isset($categories[$ed['category']])): ?>
@@ -258,6 +290,13 @@ require_once __DIR__ . '/includes/header.php';
                         <span class="badge badge-<?php echo $ed['status']; ?>"><?php echo $ed['status']; ?></span>
                     </td>
                     <td style="text-align:right;white-space:nowrap;">
+                        <!-- Design Card (SDUI Builder) -->
+                        <a href="<?php echo portal_url('edition-sdui.php?id=' . $ed['id']); ?>"
+                           class="btn btn-sm <?php echo empty($ed['card_config']) ? 'btn-warning' : 'btn-ghost'; ?>"
+                           title="Design the app card appearance">
+                            <i class="fas fa-palette"></i>
+                        </a>
+
                         <!-- Preview -->
                         <?php if (!empty($ed['html_url'])): ?>
                         <a href="<?php echo htmlspecialchars($ed['html_url']); ?>"

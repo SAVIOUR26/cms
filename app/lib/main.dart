@@ -11,6 +11,7 @@ import 'screens/home/archives_screen.dart';
 import 'screens/home/special_editions_screen.dart';
 import 'screens/home/today_edition_screen.dart';
 import 'screens/home/polls_events_screen.dart';
+import 'screens/home/advertise_editorial_screen.dart';
 import 'screens/reader/reader_screen.dart';
 import 'screens/subscription/plans_screen.dart';
 import 'screens/subscription/payment_screen.dart';
@@ -63,6 +64,7 @@ final _router = GoRouter(
     ),
     GoRoute(path: '/today-edition', builder: (_, __) => const TodayEditionScreen()),
     GoRoute(path: '/polls-events', builder: (_, __) => const PollsEventsScreen()),
+    GoRoute(path: '/advertise', builder: (_, __) => const AdvertiseEditorialScreen()),
     GoRoute(path: '/special-editions', builder: (_, __) => const SpecialEditionsScreen()),
     GoRoute(path: '/subscribe', builder: (_, __) => const PlansScreen()),
     GoRoute(

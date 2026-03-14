@@ -68,7 +68,7 @@ function editions_list(?array $user): void {
     $fetchParams = array_merge($params, [$perPage, $offset]);
     $stmt = $pdo->prepare("
         SELECT id, title, slug, country, edition_date, cover_image, page_count,
-               is_free, theme, html_url, zip_url, edition_type, category, created_at
+               is_free, theme, html_url, zip_url, edition_type, category, card_config, created_at
         FROM editions
         WHERE $where
         ORDER BY edition_date DESC
@@ -94,6 +94,10 @@ function editions_list(?array $user): void {
         $ed['id'] = (int) $ed['id'];
         $ed['page_count'] = (int) $ed['page_count'];
         $ed['is_free'] = (bool) $ed['is_free'];
+        // Decode card_config JSON for special editions; null for daily
+        $ed['card_config'] = !empty($ed['card_config'])
+            ? json_decode($ed['card_config'], true)
+            : null;
     }
 
     json_success([
@@ -228,6 +232,7 @@ function editions_by_date(string $date, ?array $user): void {
     $edition['page_count'] = (int) $edition['page_count'];
     $edition['is_free']    = (bool) $edition['is_free'];
     $edition['accessible'] = $hasAccess;
+    $edition['card_config'] = null; // Daily editions never have card_config
 
     json_success(['found' => true, 'date' => $date, 'edition' => $edition]);
 }
@@ -287,7 +292,8 @@ function editions_detail(int $id, ?array $user): void {
 
     $stmt = $pdo->prepare("
         SELECT id, title, slug, country, edition_date, cover_image, page_count,
-               is_free, theme, description, html_url, zip_url, edition_type, created_at
+               is_free, theme, description, html_url, zip_url, edition_type, category,
+               card_config, created_at
         FROM editions WHERE id = ? AND status = 'published'
     ");
     $stmt->execute([$id]);
@@ -298,6 +304,9 @@ function editions_detail(int $id, ?array $user): void {
     $edition['id'] = (int) $edition['id'];
     $edition['page_count'] = (int) $edition['page_count'];
     $edition['is_free'] = (bool) $edition['is_free'];
+    $edition['card_config'] = !empty($edition['card_config'])
+        ? json_decode($edition['card_config'], true)
+        : null;
 
     // Access check
     $hasAccess = (bool) $edition['is_free'];

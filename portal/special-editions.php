@@ -93,7 +93,7 @@ try {
 
     $stmt = $db->prepare("
         SELECT id, title, slug, country, edition_date, category, status, cover_image,
-               is_free, page_count, html_url, created_at
+               is_free, page_count, html_url, card_config, created_at
         FROM editions
         WHERE $where
         ORDER BY edition_date DESC, created_at DESC
@@ -229,9 +229,20 @@ require_once __DIR__ . '/includes/header.php';
                     </td>
                     <td>
                         <strong style="color:var(--navy);font-size:13px;"><?php echo htmlspecialchars($ed['title']); ?></strong>
-                        <?php if ($ed['page_count'] > 0): ?>
-                        <div style="font-size:11px;color:#9ca3af;margin-top:1px;"><?php echo $ed['page_count']; ?> pages</div>
-                        <?php endif; ?>
+                        <div style="display:flex;align-items:center;gap:6px;margin-top:3px;flex-wrap:wrap;">
+                            <?php if ($ed['page_count'] > 0): ?>
+                            <span style="font-size:11px;color:#9ca3af;"><?php echo $ed['page_count']; ?> pages</span>
+                            <?php endif; ?>
+                            <?php if (!empty($ed['card_config'])): ?>
+                            <span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;color:#059669;background:#dcfce7;padding:1px 6px;border-radius:8px;">
+                                <i class="fas fa-palette" style="font-size:8px;"></i> Card Designed
+                            </span>
+                            <?php else: ?>
+                            <span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;color:#d97706;background:#fef3c7;padding:1px 6px;border-radius:8px;">
+                                <i class="fas fa-exclamation-triangle" style="font-size:8px;"></i> No Card Design
+                            </span>
+                            <?php endif; ?>
+                        </div>
                     </td>
                     <td>
                         <?php if (!empty($ed['category']) && isset($categories[$ed['category']])): ?>
@@ -258,6 +269,13 @@ require_once __DIR__ . '/includes/header.php';
                         <span class="badge badge-<?php echo $ed['status']; ?>"><?php echo $ed['status']; ?></span>
                     </td>
                     <td style="text-align:right;white-space:nowrap;">
+                        <!-- Design Card (SDUI Builder) -->
+                        <a href="<?php echo portal_url('edition-sdui.php?id=' . $ed['id']); ?>"
+                           class="btn btn-sm <?php echo empty($ed['card_config']) ? 'btn-warning' : 'btn-ghost'; ?>"
+                           title="Design the app card appearance">
+                            <i class="fas fa-palette"></i>
+                        </a>
+
                         <!-- Preview -->
                         <?php if (!empty($ed['html_url'])): ?>
                         <a href="<?php echo htmlspecialchars($ed['html_url']); ?>"

@@ -1,0 +1,28 @@
+{
+  "slug": "YYYY-MM-DD-xx-type",
+  "title": "KandaNews Africa — [Edition Title]",
+  "date": "Month DD, YYYY",
+  "issue_number": "001",
+  "volume": "Vol. 1",
+  "edition_type": "daily",
+  "country": "Uganda",
+  "country_code": "UG",
+  "country_flag": "🇺🇬",
+  "theme": "default",
+  "tagline": "Know more. Grow more. Do more.",
+  "cover_headline": "Your bold 5-7 word cover headline here",
+  "cover_subheadline": "One sentence that draws them in. Make it count.",
+  "pages": [
+    "cover",
+    "welcome",
+    "trending",
+    "did-you-know",
+    "success-story",
+    "mental-health",
+    "inspiration",
+    "careers",
+    "entertainment",
+    "community",
+    "back-cover"
+  ]
+}

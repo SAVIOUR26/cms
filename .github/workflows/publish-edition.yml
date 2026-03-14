@@ -1,0 +1,104 @@
+name: Publish Edition
+
+# Fires when Claude pushes new built pages to the branch
+on:
+  push:
+    branches:
+      - main
+      - 'claude/**'
+    paths:
+      - 'templates/pages/**'
+
+jobs:
+  build-and-deploy:
+    name: Bundle flipbook and deploy to server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Detect which edition was pushed
+        id: detect
+        run: |
+          # Find the edition slug from the changed paths
+          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} \
+            | grep 'templates/pages/' \
+            | awk -F'/' '{print $3}' \
+            | sort -u \
+            | head -1)
+          echo "slug=$CHANGED" >> $GITHUB_OUTPUT
+          echo "Detected edition: $CHANGED"
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mysqli, pdo_mysql, mbstring
+          ini-values: post_max_size=50M, upload_max_filesize=50M
+
+      - name: Generate flipbook HTML
+        env:
+          EDITION_SLUG: ${{ steps.detect.outputs.slug }}
+          DB_HOST: ${{ secrets.API_DB_HOST }}
+          DB_NAME: ${{ secrets.API_DB_NAME }}
+          DB_USER: ${{ secrets.API_DB_USER }}
+          DB_PASS: ${{ secrets.API_DB_PASS }}
+          CMS_BASE_URL: ${{ secrets.CMS_BASE_URL }}
+        run: |
+          if [ -z "$EDITION_SLUG" ]; then
+            echo "No edition slug detected — skipping generation"
+            exit 0
+          fi
+          echo "Generating flipbook for: $EDITION_SLUG"
+          php api/generate-edition.php \
+            --slug="$EDITION_SLUG" \
+            --pages-dir="templates/pages/$EDITION_SLUG" \
+            --output-dir="output/$EDITION_SLUG"
+
+      - name: Deploy output to server
+        if: ${{ steps.detect.outputs.slug != '' }}
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          EDITION_SLUG: ${{ steps.detect.outputs.slug }}
+        run: |
+          # Write SSH key
+          mkdir -p ~/.ssh
+          echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+
+          # Sync the generated edition output to server
+          rsync -avz --progress \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            output/$EDITION_SLUG/ \
+            $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/output/$EDITION_SLUG/
+
+          echo "Deployed: $EDITION_SLUG"
+
+      - name: Notify portal — edition ready for review
+        if: ${{ steps.detect.outputs.slug != '' }}
+        env:
+          PORTAL_WEBHOOK: ${{ secrets.PORTAL_WEBHOOK_URL }}
+          EDITION_SLUG: ${{ steps.detect.outputs.slug }}
+        run: |
+          curl -s -X POST "$PORTAL_WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"event\": \"edition.built\",
+              \"slug\": \"$EDITION_SLUG\",
+              \"status\": \"draft\",
+              \"built_at\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",
+              \"built_by\": \"github-actions\"
+            }"
+
+      - name: Summary
+        if: ${{ steps.detect.outputs.slug != '' }}
+        run: |
+          echo "## Edition Build Complete" >> $GITHUB_STEP_SUMMARY
+          echo "**Slug:** ${{ steps.detect.outputs.slug }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** Draft — awaiting portal review" >> $GITHUB_STEP_SUMMARY
+          echo "**Next step:** Log into the portal and publish the edition" >> $GITHUB_STEP_SUMMARY

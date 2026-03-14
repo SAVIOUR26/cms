@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/auth_provider.dart';
 import '../theme/kn_theme.dart';
+import 'invite_bottom_sheet.dart';
 
 /// App sidebar / navigation drawer.
 /// Set [embedded] to true for desktop permanent sidebar mode.
@@ -141,6 +142,14 @@ class KnDrawer extends ConsumerWidget {
                 onTap: () {
                   if (!embedded) Navigator.pop(context);
                   context.push('/settings');
+                },
+              ),
+              _DrawerItem(
+                icon: Icons.card_giftcard_outlined,
+                label: 'Invite Friends',
+                onTap: () {
+                  if (!embedded) Navigator.pop(context);
+                  InviteBottomSheet.show(context);
                 },
               ),
             ],

@@ -276,6 +276,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 // Quote is always the first slide; banners follow in sort_order.
                 _InfoCarousel(country: country),
 
+                const SizedBox(height: 32),
+
+                // Copyright footer
+                _CopyrightFooter(),
+
                 const SizedBox(height: 24),
               ],
             ),
@@ -442,6 +447,53 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Copyright Footer
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _CopyrightFooter extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final year = DateTime.now().year;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            const Expanded(child: Divider(color: Color(0x22000000), thickness: 1)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Icon(Icons.circle, size: 4, color: KnColors.orange),
+            ),
+            const Expanded(child: Divider(color: Color(0x22000000), thickness: 1)),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Text(
+          '© $year KandaNews Africa Co.',
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            color: KnColors.navy,
+            letterSpacing: 0.4,
+          ),
+        ),
+        const SizedBox(height: 3),
+        const Text(
+          'All rights reserved.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 11,
+            color: KnColors.textMuted,
+            letterSpacing: 0.2,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Info Carousel
 //
 // Combines the Quote of the Day (always first) with server-driven home banners.
@@ -506,6 +558,7 @@ class _InfoCarouselState extends ConsumerState<_InfoCarousel> {
         decoration: BoxDecoration(
           gradient: KnColors.primaryGradient,
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: KnColors.orange, width: 1.5),
         ),
       );
     }
@@ -559,6 +612,7 @@ class _InfoCarouselState extends ConsumerState<_InfoCarousel> {
       decoration: BoxDecoration(
         gradient: KnColors.primaryGradient,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: KnColors.orange, width: 1.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -618,6 +672,7 @@ class _InfoCarouselState extends ConsumerState<_InfoCarousel> {
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: KnColors.orange, width: 1.5),
         ),
         child: Row(
           children: [
@@ -722,6 +777,7 @@ class _InfoCarouselState extends ConsumerState<_InfoCarousel> {
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: KnColors.orange, width: 1.5),
         ),
         child: Row(
           children: [

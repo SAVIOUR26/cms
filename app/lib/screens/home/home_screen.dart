@@ -260,8 +260,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           onTap: () => context.push('/polls-events'),
                         ),
                         DashboardTile(
-                          icon: Icons.campaign,
-                          label: 'Advertise',
+                          icon: Icons.newspaper_outlined,
+                          label: 'Media',
                           color: const Color(0xFFEF4444),
                           onTap: () => context.push('/advertise'),
                         ),

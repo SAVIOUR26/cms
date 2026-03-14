@@ -10,6 +10,7 @@ import '../../providers/edition_provider.dart';
 import '../../providers/subscription_provider.dart';
 import '../../theme/kn_theme.dart';
 import '../../widgets/dashboard_tile.dart';
+import '../../widgets/invite_bottom_sheet.dart';
 import '../../widgets/kn_drawer.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -495,10 +496,11 @@ class _InfoCarouselState extends ConsumerState<_InfoCarousel> {
     final banners = ref.watch(homeBannersProvider(widget.country)).valueOrNull ?? [];
 
     final hasQuote = quote != null;
-    final total = (hasQuote ? 1 : 0) + banners.length;
+    // +1 for the always-present invite slide at the end
+    final total = (hasQuote ? 1 : 0) + banners.length + 1;
 
     // Still loading — show a ghost card so layout doesn't jump
-    if (total == 0) {
+    if (total == 1) {
       return Container(
         height: 148,
         decoration: BoxDecoration(
@@ -529,6 +531,10 @@ class _InfoCarouselState extends ConsumerState<_InfoCarousel> {
             itemBuilder: (ctx, i) {
               if (hasQuote && i == 0) {
                 return _buildQuoteSlide(quote!);
+              }
+              // Last slide is always the invite banner
+              if (i == total - 1) {
+                return _buildInviteSlide(ctx);
               }
               final banner = banners[hasQuote ? i - 1 : i];
               return _buildBannerSlide(ctx, banner);
@@ -592,6 +598,97 @@ class _InfoCarouselState extends ConsumerState<_InfoCarousel> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // ── Invite slide (always last) ───────────────────────────────────────────
+
+  Widget _buildInviteSlide(BuildContext context) {
+    return GestureDetector(
+      onTap: () => InviteBottomSheet.show(context),
+      child: Container(
+        width: double.infinity,
+        margin: const EdgeInsets.symmetric(horizontal: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF7C3AED), Color(0xFF4F46E5)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: Colors.white.withAlpha(25),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.card_giftcard_outlined,
+                color: Colors.white,
+                size: 26,
+              ),
+            ),
+            const SizedBox(width: 14),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Invite Friends',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Share KandaNews and grow the community across Africa',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 12,
+                      height: 1.4,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Color(0x33FFFFFF),
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      border: Border.fromBorderSide(
+                        BorderSide(color: Color(0x55FFFFFF), width: 1),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      child: Text(
+                        'Share Now',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(Icons.arrow_forward_ios,
+                color: Colors.white.withAlpha(179), size: 14),
+          ],
+        ),
       ),
     );
   }

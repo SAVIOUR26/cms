@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/subscription_provider.dart';
 import '../../theme/kn_theme.dart';
+import '../../widgets/invite_bottom_sheet.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -194,6 +195,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               label: 'View All Plans',
               subtitle: 'Daily, Weekly & Monthly options',
               onTap: () => context.push('/subscribe'),
+            ),
+          ]),
+
+          const SizedBox(height: 20),
+
+          // ── Referral ──────────────────────────────────
+          _SectionHeader(label: 'Referral'),
+          _SettingsCard(children: [
+            _NavTile(
+              icon: Icons.card_giftcard_outlined,
+              label: 'Invite Friends',
+              subtitle: 'Share KandaNews with your network',
+              iconColor: KnColors.orange,
+              onTap: () => InviteBottomSheet.show(context),
             ),
           ]),
 

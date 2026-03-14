@@ -45,6 +45,9 @@ dependencies:
   # Calendar (archives screen)
   table_calendar: ^3.1.2
 
+  # Offline edition ZIP extraction
+  archive: ^3.6.0
+
   # Icons
   cupertino_icons: ^1.0.8
   font_awesome_flutter: ^10.7.0

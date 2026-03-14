@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en" data-category="podcast">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>{{PODCAST_TITLE}} — KandaNews Podcast</title>
+
+  <!--
+    KEP Audio Template v1.0
+    data-category="podcast"
+
+    Editable placeholders (replace before bundling):
+      {{PODCAST_TITLE}}      — episode title
+      {{PODCAST_SUBTITLE}}   — guest name / show name
+      {{PODCAST_DATE}}       — e.g. "March 14, 2026"
+      {{PODCAST_DURATION}}   — e.g. "28 min"
+      {{PODCAST_CATEGORY}}   — e.g. "Business & Leadership"
+      {{AUDIO_SRC}}          — relative path to the .mp3 / .ogg file inside the bundle
+      {{PODCAST_DESCRIPTION}} — 2–3 sentence episode description
+      {{INSIGHT_1}} … {{INSIGHT_3}} — key takeaway bullets
+      {{QUOTE_TEXT}}         — pull-quote for the episode
+      {{EXTERNAL_URL}}       — full episode on podcast platform (optional)
+      {{SHOW_LOGO_EMOJI}}    — emoji used as show logo (default 🎙️)
+      {{ACCENT_COLOR}}       — hex accent e.g. #667eea (default orange)
+  -->
+
+  <link rel="stylesheet" href="assets/vendor/fa.min.css">
+
+  <style>
+    :root {
+      --accent: {{ACCENT_COLOR}};
+      --navy:   #1e2b42;
+      --bg:     #0f1826;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── Page wrapper fills whatever size the Swiper slide gives it ── */
+    .page-wrapper {
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    /* ── Hero header ─────────────────────────────────── */
+    .hero {
+      background: linear-gradient(160deg, var(--navy) 0%, #11233a 100%);
+      padding: 36px 24px 28px;
+      text-align: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent);
+      opacity: 0.7;
+    }
+
+    .show-logo {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, var(--accent), #ff9155);
+      border-radius: 20px;
+      font-size: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.4);
+    }
+
+    .brand {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .episode-title {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .episode-meta {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+      flex-wrap: wrap;
+    }
+
+    .episode-meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ── Audio player ───────────────────────────────── */
+    .player-section {
+      padding: 24px 20px 20px;
+      flex-shrink: 0;
+    }
+
+    .player-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 20px 20px 16px;
+    }
+
+    audio {
+      width: 100%;
+      height: 44px;
+      border-radius: 10px;
+      accent-color: var(--accent);
+      outline: none;
+    }
+
+    /* Chromium/Chrome styled audio controls inherit accent-color but we
+       also style the container so it never feels bare on fallback. */
+    audio::-webkit-media-controls-panel {
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+    }
+
+    .player-hint {
+      text-align: center;
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      margin-top: 10px;
+    }
+
+    /* ── Content body ───────────────────────────────── */
+    .content {
+      padding: 0 20px 32px;
+      flex: 1;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .description {
+      font-size: 14px;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 24px;
+    }
+
+    /* Insights */
+    .insights {
+      background: rgba(255,255,255,0.04);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 14px 14px 0;
+      padding: 18px 18px 10px;
+      margin-bottom: 24px;
+    }
+
+    .insight-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 14px;
+      align-items: flex-start;
+    }
+
+    .insight-dot {
+      width: 24px;
+      height: 24px;
+      background: var(--accent);
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      margin-top: 1px;
+    }
+
+    .insight-text {
+      font-size: 13px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.78);
+    }
+
+    /* Pull-quote */
+    .pullquote {
+      background: linear-gradient(135deg, var(--accent) 0%, #ff9155 100%);
+      border-radius: 16px;
+      padding: 20px 20px 18px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .pullquote::before {
+      content: '\201C';
+      position: absolute;
+      top: 8px;
+      left: 16px;
+      font-size: 52px;
+      font-weight: 900;
+      color: rgba(0,0,0,0.15);
+      line-height: 1;
+    }
+
+    .pullquote-text {
+      font-size: 15px;
+      font-style: italic;
+      font-weight: 600;
+      line-height: 1.6;
+      color: #fff;
+      padding-left: 24px;
+    }
+
+    /* External link CTA */
+    .cta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 16px 20px;
+      text-decoration: none;
+      color: #fff;
+      transition: background 0.2s;
+    }
+
+    .cta-bar:active { background: rgba(255,255,255,0.12); }
+
+    .cta-bar .fa-play-circle {
+      font-size: 26px;
+      color: var(--accent);
+    }
+
+    .cta-bar-text .cta-title {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .cta-bar-text .cta-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+    }
+
+    /* ── Kanda watermark footer ─────────────────────── */
+    .kn-footer {
+      text-align: center;
+      padding: 12px 20px 20px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+      flex-shrink: 0;
+    }
+
+    .kn-footer strong {
+      color: var(--accent);
+    }
+
+    /* Scrollbar (Chrome/Android WebView) */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+  </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- ── Hero ── -->
+  <div class="hero">
+    <div class="show-logo">{{SHOW_LOGO_EMOJI}}</div>
+    <div class="brand">KandaNews Podcast</div>
+    <h1 class="episode-title">{{PODCAST_TITLE}}</h1>
+    <div class="episode-meta">
+      <span><i class="fas fa-user"></i> {{PODCAST_SUBTITLE}}</span>
+      <span><i class="fas fa-clock"></i> {{PODCAST_DURATION}}</span>
+      <span><i class="fas fa-calendar-alt"></i> {{PODCAST_DATE}}</span>
+    </div>
+  </div>
+
+  <!-- ── Audio Player ── -->
+  <div class="player-section">
+    <div class="player-card">
+      <audio
+        controls
+        preload="metadata"
+        src="{{AUDIO_SRC}}"
+        aria-label="{{PODCAST_TITLE}}">
+        Your browser does not support the audio element.
+      </audio>
+      <div class="player-hint">
+        <i class="fas fa-headphones"></i> Use headphones for the best experience
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Content ── -->
+  <div class="content">
+
+    <div class="section-label">Episode Overview</div>
+    <p class="description">{{PODCAST_DESCRIPTION}}</p>
+
+    <div class="section-label">Key Takeaways</div>
+    <div class="insights">
+      <div class="insight-item">
+        <div class="insight-dot">1</div>
+        <div class="insight-text">{{INSIGHT_1}}</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-dot">2</div>
+        <div class="insight-text">{{INSIGHT_2}}</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-dot">3</div>
+        <div class="insight-text">{{INSIGHT_3}}</div>
+      </div>
+    </div>
+
+    <div class="pullquote">
+      <div class="pullquote-text">{{QUOTE_TEXT}}</div>
+    </div>
+
+    <!-- Full episode link (hidden if no external URL) -->
+    <a class="cta-bar" href="{{EXTERNAL_URL}}" target="_blank" rel="noopener">
+      <i class="fas fa-play-circle"></i>
+      <div class="cta-bar-text">
+        <div class="cta-title">Listen on full platform</div>
+        <div class="cta-sub">Opens in browser</div>
+      </div>
+      <i class="fas fa-external-link-alt" style="margin-left:auto;font-size:13px;opacity:0.4;"></i>
+    </a>
+
+  </div>
+
+  <div class="kn-footer">
+    <strong>KandaNews Africa</strong> · Tap to Know, Tap to Grow
+  </div>
+
+</div>
+</body>
+</html>

@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../models/kanda_event.dart';
+import '../webview/kn_webview_screen.dart';
 import '../../models/poll.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/content_provider.dart';
@@ -582,14 +582,14 @@ class _EventCard extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      onPressed: () async {
-                        final uri = Uri.tryParse(event.registrationUrl!);
-                        if (uri != null && await canLaunchUrl(uri)) {
-                          await launchUrl(uri,
-                              mode: LaunchMode.externalApplication);
-                        }
+                      onPressed: () {
+                        KnWebViewScreen.push(
+                          context,
+                          event.registrationUrl!,
+                          title: event.title,
+                        );
                       },
-                      icon: const Icon(Icons.open_in_new, size: 16),
+                      icon: const Icon(Icons.open_in_browser, size: 16),
                       label: const Text('Register / Learn More',
                           style: TextStyle(
                               fontSize: 13, fontWeight: FontWeight.w700)),

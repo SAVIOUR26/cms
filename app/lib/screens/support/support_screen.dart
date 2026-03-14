@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../theme/kn_theme.dart';
+import '../webview/kn_webview_screen.dart';
 
 class SupportScreen extends StatelessWidget {
   const SupportScreen({super.key});
@@ -92,7 +93,7 @@ class SupportScreen extends StatelessWidget {
               label: 'Website',
               value: 'kandanews.africa',
               color: KnColors.orange,
-              onTap: () => _launchUrl(_website),
+              onTap: () => _launchUrl(_website, title: 'KandaNews Africa', ctx: context),
             ),
 
             const SizedBox(height: 24),
@@ -163,10 +164,16 @@ class SupportScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _launchUrl(String url) async {
+  Future<void> _launchUrl(String url, {String title = '', BuildContext? ctx}) async {
     final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
+    if (uri.scheme == 'mailto' ||
+        uri.scheme == 'tel' ||
+        uri.host.contains('wa.me')) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      if (ctx != null && ctx.mounted) {
+        KnWebViewScreen.push(ctx, url, title: title);
+      }
     }
   }
 

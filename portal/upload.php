@@ -31,6 +31,22 @@ if (!is_dir($output_dir)) @mkdir($output_dir, 0755, true);
 $_preType     = in_array($_GET['type'] ?? '', ['daily', 'special', 'rate_card']) ? $_GET['type'] : '';
 $_preCategory = $_GET['category'] ?? '';
 
+// ── Load special-edition categories from DB (single source of truth)
+$specialCategories = [];
+try {
+    $catRows = $db->query("
+        SELECT slug, label, icon_name, color_hex
+        FROM edition_categories
+        WHERE is_active = 1 AND edition_type = 'special'
+        ORDER BY sort_order ASC, id ASC
+    ")->fetchAll();
+    foreach ($catRows as $row) {
+        $specialCategories[$row['slug']] = $row;
+    }
+} catch (PDOException $e) {
+    // Fall back to empty — validation will catch any bad slug submitted
+}
+
 // ── Handle form submission ───────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!portal_verify_csrf()) {
@@ -52,8 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($title === '')        $errors[] = 'Title is required.';
         if ($edition_date === '') $errors[] = 'Edition date is required.';
         if (!in_array($edition_type, ['daily', 'special', 'rate_card'])) $errors[] = 'Invalid edition type.';
-        $valid_cats = [null, 'university', 'corporate', 'entrepreneurship', 'campaigns', 'jobs_careers', 'podcasts', 'episodes'];
-        if ($category !== null && !in_array($category, $valid_cats)) $errors[] = 'Invalid category.';
+        $valid_cat_slugs = array_keys($specialCategories);
+        if ($category !== null && !in_array($category, $valid_cat_slugs)) $errors[] = 'Invalid category.';
         if (!in_array($status, ['draft', 'published', 'archived'])) $errors[] = 'Invalid status.';
         if (!array_key_exists(strtoupper($country), $countries)) $errors[] = 'Invalid country.';
 
@@ -188,7 +204,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $new_id = $db->lastInsertId();
                 portal_flash('success', 'Edition "' . $title . '" uploaded successfully!');
-                header('Location: ' . portal_url('editions.php'));
+                $redirect = ($edition_type === 'special')
+                    ? portal_url('special-editions.php')
+                    : portal_url('editions.php');
+                header('Location: ' . $redirect);
                 exit;
             } catch (PDOException $e) {
                 $errors[] = 'Database error: ' . $e->getMessage();
@@ -278,13 +297,13 @@ require_once __DIR__ . '/includes/header.php';
                 <label for="category">Category (for Special Editions)</label>
                 <select id="category" name="category" class="form-control">
                     <option value="">— None —</option>
-                    <option value="university" <?php echo ($_POST['category'] ?? $_preCategory) === 'university' ? 'selected' : ''; ?>>University</option>
-                    <option value="corporate" <?php echo ($_POST['category'] ?? $_preCategory) === 'corporate' ? 'selected' : ''; ?>>Corporate</option>
-                    <option value="entrepreneurship" <?php echo ($_POST['category'] ?? $_preCategory) === 'entrepreneurship' ? 'selected' : ''; ?>>Entrepreneurship</option>
-                    <option value="campaigns" <?php echo ($_POST['category'] ?? $_preCategory) === 'campaigns' ? 'selected' : ''; ?>>Campaigns</option>
-                    <option value="jobs_careers" <?php echo ($_POST['category'] ?? $_preCategory) === 'jobs_careers' ? 'selected' : ''; ?>>Jobs &amp; Careers</option>
-                    <option value="podcasts" <?php echo ($_POST['category'] ?? $_preCategory) === 'podcasts' ? 'selected' : ''; ?>>Podcasts</option>
-                    <option value="episodes" <?php echo ($_POST['category'] ?? $_preCategory) === 'episodes' ? 'selected' : ''; ?>>Episodes</option>
+                    <?php foreach ($specialCategories as $slug => $cat):
+                        $sel = (($_POST['category'] ?? $_preCategory) === $slug) ? 'selected' : '';
+                    ?>
+                    <option value="<?php echo htmlspecialchars($slug); ?>" <?php echo $sel; ?>>
+                        <?php echo htmlspecialchars($cat['label']); ?>
+                    </option>
+                    <?php endforeach; ?>
                 </select>
                 <div class="form-hint">Categorize special editions so they appear in the correct app section.</div>
             </div>

@@ -17,7 +17,7 @@ function route_categories(string $action, string $method): void {
     $pdo  = db();
     $stmt = $pdo->prepare("
         SELECT id, slug, label, description, icon_name, color_hex,
-               edition_type, sort_order
+               accent_color_hex, gradient_angle, edition_type, sort_order
         FROM   edition_categories
         WHERE  is_active = 1
           AND  (country IS NULL OR country = ?)

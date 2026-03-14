@@ -18,15 +18,36 @@ $page_section = 'content';
 $db           = portal_db();
 $countries    = portal_countries();
 
-$categories = [
-    'university'      => ['label' => 'University',        'icon' => 'fas fa-graduation-cap', 'color' => '#0369a1'],
-    'corporate'       => ['label' => 'Corporate',         'icon' => 'fas fa-briefcase',      'color' => '#15803d'],
-    'entrepreneurship'=> ['label' => 'Entrepreneurship',  'icon' => 'fas fa-rocket',         'color' => '#c2410c'],
-    'campaigns'       => ['label' => 'Campaigns',         'icon' => 'fas fa-bullhorn',       'color' => '#7c3aed'],
-    'jobs_careers'    => ['label' => 'Jobs & Careers',    'icon' => 'fas fa-user-tie',       'color' => '#0f766e'],
-    'podcasts'        => ['label' => 'Podcasts',          'icon' => 'fas fa-podcast',        'color' => '#be185d'],
-    'episodes'        => ['label' => 'Episodes',          'icon' => 'fas fa-play-circle',    'color' => '#d97706'],
-];
+// Load categories from DB — single source of truth shared with the app API
+$categories = [];
+try {
+    $catRows = $db->query("
+        SELECT slug, label, icon_name, color_hex
+        FROM edition_categories
+        WHERE is_active = 1 AND edition_type = 'special'
+        ORDER BY sort_order ASC, id ASC
+    ")->fetchAll();
+    foreach ($catRows as $row) {
+        // Map DB icon_name (Material/Flutter name) to a FontAwesome equivalent for the portal UI
+        $faIconMap = [
+            'school'            => 'fas fa-graduation-cap',
+            'business_center'   => 'fas fa-briefcase',
+            'rocket_launch'     => 'fas fa-rocket',
+            'campaign'          => 'fas fa-bullhorn',
+            'work'              => 'fas fa-user-tie',
+            'mic'               => 'fas fa-podcast',
+            'play_circle'       => 'fas fa-play-circle',
+            'star'              => 'fas fa-star',
+        ];
+        $categories[$row['slug']] = [
+            'label' => $row['label'],
+            'icon'  => $faIconMap[$row['icon_name']] ?? 'fas fa-folder',
+            'color' => $row['color_hex'],
+        ];
+    }
+} catch (PDOException $e) {
+    $categories = []; // Degrade gracefully — table view will still work
+}
 
 // ── Handle POST actions ───────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

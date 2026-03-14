@@ -207,8 +207,9 @@ $html = <<<HTML
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{$title}</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Assets are bundled locally — no CDN dependency for offline/Africa use -->
+<link rel="stylesheet" href="assets/vendor/swiper.min.css">
+<link rel="stylesheet" href="assets/vendor/fa.min.css">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -220,6 +221,29 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
+}
+
+/* ── P2: Responsive canvas — pages fill the screen natively ── */
+@media (max-width: 767px) {
+    .container, .viewer {
+        position: fixed !important;
+        inset: 0 !important;
+        padding: 0 !important;
+    }
+    .main-swiper {
+        width: 100vw !important;
+        height: 100vh !important;
+        max-width: 100vw !important;
+    }
+    .page-wrapper {
+        width: 100vw !important;
+        height: 100vh !important;
+        max-width: 100vw !important;
+        max-height: 100vh !important;
+    }
+    .header, .controls, .sidebar, #fs-prompt {
+        display: none !important;
+    }
 }
 
 .header {

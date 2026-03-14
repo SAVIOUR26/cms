@@ -62,6 +62,17 @@ class _ReaderScreenState extends State<ReaderScreen>
       height: 100vh !important;
       overflow: hidden !important;
       background: #1e2b42 !important;
+      display: block !important;
+    }
+    /* The .container flex wrapper — pin it to fill the full screen
+       so header/controls outside it cannot steal vertical space */
+    .container, .viewer {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      padding: 0 !important;
+      margin: 0 !important;
     }
     /* Swiper containers */
     .swiper, .main-swiper, .swiper-wrapper, .swiper-slide {
@@ -78,12 +89,13 @@ class _ReaderScreenState extends State<ReaderScreen>
       max-height: 100vh !important;
       box-sizing: border-box !important;
     }
-    /* Hide CMS-generated header bar and thumbnail sidebar —
-       navigation is handled by native swipe gestures */
-    .header, .thumbs, .page-counter-bar, .edition-header {
+    /* Hide all CMS chrome — app uses native swipe + floating close button */
+    .header, .thumbs, .page-counter-bar, .edition-header,
+    .controls, .sidebar, .kn-indicator,
+    #fs-prompt, .fullscreen-prompt {
       display: none !important;
     }
-    /* Ensure particles / backgrounds fill the new size */
+    /* Ensure animated backgrounds fill the new size */
     .particles, .shine, .bg-overlay {
       width: 100% !important;
       height: 100% !important;

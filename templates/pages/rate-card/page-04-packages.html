@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" data-category="rate_card">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Packages &amp; Benefits - KandaNews Africa</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #f05a1a #f1f1f1;
+        }
+        .page-wrapper::-webkit-scrollbar { width: 6px; }
+        .page-wrapper::-webkit-scrollbar-track { background: #f1f1f1; }
+        .page-wrapper::-webkit-scrollbar-thumb { background: #f05a1a; border-radius: 3px; }
+
+        /* ── Header ──────────────────────────── */
+        .sec-header {
+            background: linear-gradient(135deg, #0b1525 0%, #1e2b42 100%);
+            padding: 24px 24px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .sec-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #f05a1a, #ff7a3d, #f05a1a);
+        }
+        .sec-header::before {
+            content: '🎯';
+            position: absolute;
+            right: 18px; top: 14px;
+            font-size: 52px; opacity: 0.1;
+        }
+        .sec-kicker {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: #f05a1a; margin-bottom: 6px;
+        }
+        .sec-title {
+            font-size: 24px; font-weight: 800;
+            color: #fff; line-height: 1.1; letter-spacing: -0.5px;
+        }
+        .sec-sub {
+            font-size: 11.5px; color: rgba(255,255,255,0.5); margin-top: 5px;
+        }
+
+        /* ── Section label ───────────────────── */
+        .section-lbl {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: #9ca3af;
+            padding: 18px 24px 10px;
+        }
+
+        /* ── Package cards ────────────────────── */
+        .packages-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 0 16px 4px;
+        }
+
+        .pkg-card {
+            border-radius: 14px;
+            padding: 20px 16px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .pkg-card.is-visible { opacity: 1; transform: translateY(0); }
+        .pkg-card:nth-child(2) { transition-delay: 0.15s; }
+
+        .pkg-card.weekly {
+            background: linear-gradient(135deg, #1e2b42, #2e4268);
+            border: 1px solid rgba(240,90,26,0.25);
+        }
+        .pkg-card.monthly {
+            background: linear-gradient(135deg, #f05a1a, #d94a0e);
+            border: none;
+            box-shadow: 0 8px 24px rgba(240,90,26,0.35);
+        }
+
+        .pkg-badge {
+            display: inline-block;
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            padding: 3px 8px; border-radius: 20px;
+            margin-bottom: 12px;
+        }
+        .weekly .pkg-badge {
+            background: rgba(240,90,26,0.18); color: #f05a1a;
+        }
+        .monthly .pkg-badge {
+            background: rgba(255,255,255,0.2); color: #fff;
+        }
+
+        .pkg-name {
+            font-size: 13px; font-weight: 700; margin-bottom: 4px;
+        }
+        .weekly .pkg-name { color: #fff; }
+        .monthly .pkg-name { color: #fff; }
+
+        .pkg-days {
+            font-size: 10px; margin-bottom: 14px;
+        }
+        .weekly .pkg-days { color: rgba(255,255,255,0.5); }
+        .monthly .pkg-days { color: rgba(255,255,255,0.65); }
+
+        .pkg-disc {
+            font-size: 38px; font-weight: 900;
+            line-height: 1; margin-bottom: 6px;
+        }
+        .weekly .pkg-disc { color: #ff7a3d; }
+        .monthly .pkg-disc { color: #fff; }
+
+        .pkg-off {
+            font-size: 13px; font-weight: 700;
+        }
+        .weekly .pkg-off { color: rgba(255,255,255,0.7); }
+        .monthly .pkg-off { color: rgba(255,255,255,0.8); }
+
+        .pkg-condition {
+            margin-top: 12px;
+            font-size: 10px; padding: 6px 10px;
+            border-radius: 8px;
+        }
+        .weekly .pkg-condition {
+            background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.5);
+        }
+        .monthly .pkg-condition {
+            background: rgba(0,0,0,0.12); color: rgba(255,255,255,0.7);
+        }
+
+        .popular-tag {
+            position: absolute;
+            top: 12px; right: 12px;
+            background: #fff;
+            color: #c2410c;
+            font-size: 8.5px; font-weight: 800;
+            letter-spacing: 1px; text-transform: uppercase;
+            padding: 3px 8px; border-radius: 20px;
+        }
+
+        /* ── Divider ──────────────────────────── */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 24px 0;
+        }
+        .div-line {
+            flex: 1; height: 1px; background: #f0f0f0;
+        }
+        .div-text {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: #9ca3af;
+        }
+
+        /* ── Benefits ─────────────────────────── */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 14px 16px 4px;
+        }
+
+        .benefit {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 12px 10px;
+            border: 1px solid #eee;
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.45s ease, transform 0.45s ease;
+        }
+        .benefit.is-visible { opacity: 1; transform: translateY(0); }
+        .benefit:nth-child(2) { transition-delay: 0.08s; }
+        .benefit:nth-child(3) { transition-delay: 0.16s; }
+        .benefit:nth-child(4) { transition-delay: 0.24s; }
+        .benefit:nth-child(5) { transition-delay: 0.32s; }
+
+        .benefit-icon {
+            font-size: 18px; flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .benefit-text {
+            font-size: 10.5px; color: #374151;
+            line-height: 1.45; font-weight: 500;
+        }
+
+        /* ── Free design callout ─────────────── */
+        .design-callout {
+            margin: 12px 16px 20px;
+            background: linear-gradient(135deg, #fffbf9, #fff7f3);
+            border: 1.5px solid #fde9de;
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.5s ease 0.35s, transform 0.5s ease 0.35s;
+        }
+        .design-callout.is-visible { opacity: 1; transform: translateY(0); }
+        .design-callout-icon { font-size: 28px; flex-shrink: 0; }
+        .design-callout-body {
+            font-size: 11.5px; color: #374151; line-height: 1.5;
+        }
+        .design-callout-body strong { color: #c2410c; }
+
+        [data-animate] {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        [data-animate].is-visible { opacity: 1; transform: translateY(0); }
+        [data-animate][data-delay="1"] { transition-delay: 0.1s; }
+        [data-animate][data-delay="2"] { transition-delay: 0.2s; }
+        [data-animate][data-delay="3"] { transition-delay: 0.3s; }
+        [data-animate][data-delay="4"] { transition-delay: 0.4s; }
+        [data-animate][data-delay="5"] { transition-delay: 0.5s; }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+    <!-- Header -->
+    <div class="sec-header">
+        <div class="sec-kicker">Discount Packages</div>
+        <h2 class="sec-title">Save More. Reach More.</h2>
+        <p class="sec-sub">Pre-book and save. The longer you run, the less you pay.</p>
+    </div>
+
+    <!-- Section label -->
+    <div class="section-lbl">Booking Packages</div>
+
+    <!-- Packages -->
+    <div class="packages-row">
+
+        <div class="pkg-card weekly" data-animate>
+            <div class="pkg-badge">Weekly</div>
+            <div class="pkg-name">7-Day Run</div>
+            <div class="pkg-days">Pre-booked &amp; prepaid</div>
+            <div class="pkg-disc" data-count="10" data-suffix="%">0%</div>
+            <div class="pkg-off">Discount off total</div>
+            <div class="pkg-condition">Book 7 days in advance</div>
+        </div>
+
+        <div class="pkg-card monthly" data-animate>
+            <div class="popular-tag">Best Value</div>
+            <div class="pkg-badge">Monthly</div>
+            <div class="pkg-name">30-Day Run</div>
+            <div class="pkg-days">Pre-booked &amp; prepaid</div>
+            <div class="pkg-disc" data-count="20" data-suffix="%">0%</div>
+            <div class="pkg-off">Discount off total</div>
+            <div class="pkg-condition">Book 30 days in advance</div>
+        </div>
+
+    </div>
+
+    <!-- Benefits divider -->
+    <div class="divider" data-animate>
+        <div class="div-line"></div>
+        <div class="div-text">Advertiser Benefits</div>
+        <div class="div-line"></div>
+    </div>
+
+    <!-- Benefits grid -->
+    <div class="benefits-grid">
+        <div class="benefit" data-animate>
+            <div class="benefit-icon">🎯</div>
+            <div class="benefit-text">Direct to verified subscribers only</div>
+        </div>
+        <div class="benefit" data-animate data-delay="1">
+            <div class="benefit-icon">🔗</div>
+            <div class="benefit-text">Clickable links to your website or store</div>
+        </div>
+        <div class="benefit" data-animate data-delay="2">
+            <div class="benefit-icon">📊</div>
+            <div class="benefit-text">Built-in engagement metrics &amp; click tracking</div>
+        </div>
+        <div class="benefit" data-animate data-delay="3">
+            <div class="benefit-icon">🛒</div>
+            <div class="benefit-text">Smart cart integration for product ads</div>
+        </div>
+        <div class="benefit" data-animate data-delay="4">
+            <div class="benefit-icon">👤</div>
+            <div class="benefit-text">Dedicated ad manager &amp; performance reports</div>
+        </div>
+    </div>
+
+    <!-- Free design callout -->
+    <div class="design-callout" data-animate>
+        <div class="design-callout-icon">🎨</div>
+        <div class="design-callout-body">
+            <strong>Free Design Support</strong> &mdash; We create your graphics,
+            layout and formatting at no extra cost for full-page and native content ads.
+        </div>
+    </div>
+
+</div>
+<script>
+function countUp(el, start, end, suffix) {
+    var duration = 1300;
+    var startTime = performance.now();
+    function update(now) {
+        var p = Math.min((now - startTime) / duration, 1);
+        var e = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(start + (end - start) * e) + suffix;
+        if (p < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+}
+
+function initPage() {
+    document.querySelectorAll('[data-animate]').forEach(function(el, i) {
+        setTimeout(function() { el.classList.add('is-visible'); }, i * 100);
+    });
+    document.querySelectorAll('[data-count]').forEach(function(el) {
+        setTimeout(function() {
+            countUp(el, 0, parseInt(el.dataset.count), el.dataset.suffix || '');
+        }, 400);
+    });
+}
+
+if (document.querySelector('.page-wrapper')) {
+    setTimeout(initPage, 300);
+}
+</script>
+</body>
+</html>

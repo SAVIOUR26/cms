@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" data-category="rate_card">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Now - KandaNews Africa</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .page-wrapper {
+            width: 461px;
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #0b1525;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #f05a1a #1e2b42;
+        }
+        .page-wrapper::-webkit-scrollbar { width: 6px; }
+        .page-wrapper::-webkit-scrollbar-track { background: #1e2b42; }
+        .page-wrapper::-webkit-scrollbar-thumb { background: #f05a1a; border-radius: 3px; }
+
+        /* ── Background grid ──────────────────── */
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(240,90,26,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(240,90,26,0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        /* ── Layout ──────────────────────────── */
+        .inner {
+            position: relative;
+            z-index: 5;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Top hero ─────────────────────────── */
+        .hero {
+            padding: 30px 24px 24px;
+            text-align: center;
+            border-bottom: 1px solid rgba(240,90,26,0.15);
+        }
+        .hero-icon {
+            font-size: 44px;
+            display: block;
+            margin-bottom: 12px;
+            animation: rock 3s ease-in-out infinite;
+        }
+        @keyframes rock {
+            0%,100% { transform: rotate(-5deg); }
+            50%      { transform: rotate(5deg);  }
+        }
+        .hero-kicker {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: #f05a1a; margin-bottom: 8px;
+        }
+        .hero-title {
+            font-size: 28px; font-weight: 900;
+            line-height: 1.0; letter-spacing: -0.5px;
+            color: #fff;
+        }
+        .hero-title span {
+            background: linear-gradient(135deg, #f05a1a, #ff7a3d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-sub {
+            font-size: 12px; color: rgba(255,255,255,0.45);
+            margin-top: 8px; line-height: 1.6;
+        }
+
+        /* ── Contact cards ────────────────────── */
+        .contacts {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 20px 16px 4px;
+        }
+
+        .contact-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 14px 16px;
+            opacity: 0;
+            transform: translateX(-14px);
+            transition: opacity 0.45s ease, transform 0.45s ease;
+        }
+        .contact-card.is-visible { opacity: 1; transform: translateX(0); }
+        .contact-card:nth-child(2) { transition-delay: 0.1s; }
+        .contact-card:nth-child(3) { transition-delay: 0.2s; }
+
+        .contact-card.primary {
+            background: rgba(240,90,26,0.1);
+            border-color: rgba(240,90,26,0.25);
+        }
+
+        .cc-icon {
+            width: 38px; height: 38px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; flex-shrink: 0;
+        }
+        .cc-icon.orange { background: linear-gradient(135deg, #f05a1a, #ff7a3d); }
+        .cc-icon.blue   { background: rgba(59,130,246,0.2); }
+        .cc-icon.green  { background: rgba(34,197,94,0.15); }
+
+        .cc-body { flex: 1; min-width: 0; }
+        .cc-label {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            color: rgba(255,255,255,0.35); margin-bottom: 3px;
+        }
+        .cc-value {
+            font-size: 13px; font-weight: 700; color: #fff;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .cc-value.highlight { color: #ff7a3d; }
+
+        /* ── Divider ──────────────────────────── */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 24px 0;
+        }
+        .div-line { flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+        .div-text {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: rgba(255,255,255,0.3);
+        }
+
+        /* ── Requirements ─────────────────────── */
+        .requirements {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 14px 16px 4px;
+        }
+
+        .req-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 10px;
+            padding: 12px 12px;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.45s ease, transform 0.45s ease;
+        }
+        .req-card.is-visible { opacity: 1; transform: translateY(0); }
+        .req-card:nth-child(2) { transition-delay: 0.1s; }
+        .req-card:nth-child(3) { transition-delay: 0.2s; }
+
+        .req-icon { font-size: 16px; margin-bottom: 7px; display: block; }
+        .req-title {
+            font-size: 10.5px; font-weight: 700;
+            color: rgba(255,255,255,0.85); margin-bottom: 4px;
+        }
+        .req-detail {
+            font-size: 9.5px; color: rgba(255,255,255,0.4); line-height: 1.5;
+        }
+        .req-detail strong { color: #ff7a3d; }
+
+        /* ── CTA strip ────────────────────────── */
+        .cta-strip {
+            margin: 12px 16px 20px;
+            background: linear-gradient(135deg, #f05a1a, #d94a0e);
+            border-radius: 14px;
+            padding: 18px 20px;
+            text-align: center;
+            box-shadow: 0 8px 28px rgba(240,90,26,0.4);
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.5s ease 0.3s, transform 0.5s ease 0.3s;
+        }
+        .cta-strip.is-visible { opacity: 1; transform: translateY(0); }
+        .cta-primary {
+            font-size: 16px; font-weight: 900;
+            color: #fff; margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+        .cta-detail {
+            font-size: 11px; color: rgba(255,255,255,0.75);
+            line-height: 1.5;
+        }
+        .cta-url {
+            display: inline-block;
+            margin-top: 10px;
+            background: rgba(255,255,255,0.18);
+            color: #fff;
+            font-size: 11px; font-weight: 700;
+            padding: 6px 16px; border-radius: 20px;
+            letter-spacing: 0.3px;
+        }
+
+        /* Closing line */
+        .closing {
+            padding: 0 24px 20px;
+            text-align: center;
+            font-size: 11.5px; font-style: italic;
+            color: rgba(255,255,255,0.3);
+            line-height: 1.6;
+        }
+
+        [data-animate] {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        [data-animate].is-visible { opacity: 1; transform: translateY(0); }
+        [data-animate][data-delay="1"] { transition-delay: 0.1s; }
+        [data-animate][data-delay="2"] { transition-delay: 0.2s; }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="bg-grid"></div>
+
+    <div class="inner">
+
+        <!-- Hero -->
+        <div class="hero">
+            <span class="hero-icon">📲</span>
+            <div class="hero-kicker">Book Your Spot</div>
+            <h2 class="hero-title">
+                Ready to <span>Advertise?</span>
+            </h2>
+            <p class="hero-sub">
+                Reach 10,000+ active subscribers in 24 hours.<br>
+                Your brand. Their screen. Every single day.
+            </p>
+        </div>
+
+        <!-- Contact cards -->
+        <div class="contacts">
+
+            <div class="contact-card primary" data-animate>
+                <div class="cc-icon orange">📱</div>
+                <div class="cc-body">
+                    <div class="cc-label">WhatsApp</div>
+                    <div class="cc-value highlight">+256 772 253804</div>
+                </div>
+            </div>
+
+            <div class="contact-card" data-animate>
+                <div class="cc-icon blue">✉️</div>
+                <div class="cc-body">
+                    <div class="cc-label">Email</div>
+                    <div class="cc-value">adverts@ug.kandanews.africa</div>
+                </div>
+            </div>
+
+            <div class="contact-card" data-animate>
+                <div class="cc-icon green">🌐</div>
+                <div class="cc-body">
+                    <div class="cc-label">Website</div>
+                    <div class="cc-value">www.kandanews.africa</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Requirements divider -->
+        <div class="divider" data-animate>
+            <div class="div-line"></div>
+            <div class="div-text">Submission Requirements</div>
+            <div class="div-line"></div>
+        </div>
+
+        <!-- Requirements -->
+        <div class="requirements">
+
+            <div class="req-card" data-animate>
+                <span class="req-icon">⏱️</span>
+                <div class="req-title">Deadline</div>
+                <div class="req-detail">At least <strong>24 hours</strong> before your publishing day</div>
+            </div>
+
+            <div class="req-card" data-animate>
+                <span class="req-icon">📁</span>
+                <div class="req-title">File Formats</div>
+                <div class="req-detail">JPG, PNG, MP4, MP3, GIF, DOCX, PDF</div>
+            </div>
+
+            <div class="req-card" data-animate>
+                <span class="req-icon">🎨</span>
+                <div class="req-title">Design Support</div>
+                <div class="req-detail"><strong>Free</strong> for full-page &amp; native content ads</div>
+            </div>
+
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-strip" data-animate>
+            <div class="cta-primary">Start Advertising Today</div>
+            <div class="cta-detail">
+                Message us on WhatsApp. Tell us your product and budget.<br>
+                We will handle the rest.
+            </div>
+            <div class="cta-url">ads.kandanews.africa</div>
+        </div>
+
+        <!-- Closing line -->
+        <div class="closing" data-animate>
+            KandaNews Africa &mdash; where Uganda's future reads, clicks, and buys.
+        </div>
+
+    </div>
+</div>
+<script>
+function initPage() {
+    document.querySelectorAll('[data-animate]').forEach(function(el, i) {
+        setTimeout(function() { el.classList.add('is-visible'); }, i * 110);
+    });
+}
+if (document.querySelector('.page-wrapper')) {
+    setTimeout(initPage, 300);
+}
+</script>
+</body>
+</html>

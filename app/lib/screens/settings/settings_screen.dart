@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/subscription_provider.dart';
 import '../../theme/kn_theme.dart';
+import '../../widgets/careers_bottom_sheet.dart';
 import '../../widgets/invite_bottom_sheet.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -209,6 +210,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               subtitle: 'Share KandaNews with your network',
               iconColor: KnColors.orange,
               onTap: () => InviteBottomSheet.show(context),
+            ),
+          ]),
+
+          const SizedBox(height: 20),
+
+          // ── Careers ───────────────────────────────────
+          _SectionHeader(label: 'Careers'),
+          _SettingsCard(children: [
+            _NavTile(
+              icon: Icons.work_outline_rounded,
+              label: 'Join Our Team',
+              subtitle: 'Explore opportunities at KandaNews Africa',
+              iconColor: KnColors.navy,
+              onTap: () => CareersBottomSheet.show(context),
             ),
           ]),
 

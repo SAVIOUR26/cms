@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../theme/kn_theme.dart';
+import '../screens/webview/kn_webview_screen.dart';
 
 /// Careers / Join Our Team bottom sheet.
 /// Call [CareersBottomSheet.show] from anywhere in the app.
@@ -21,11 +22,12 @@ class CareersBottomSheet extends StatelessWidget {
 
   Future<void> _launch(BuildContext context, String url) async {
     final uri = Uri.parse(url);
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+    if (uri.scheme == 'mailto' || uri.scheme == 'tel') {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not open link')),
-        );
+        Navigator.pop(context); // close the bottom sheet first
+        KnWebViewScreen.push(context, url, title: 'KandaNews Careers');
       }
     }
   }

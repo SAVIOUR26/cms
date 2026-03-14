@@ -9,6 +9,7 @@ import '../../providers/subscription_provider.dart';
 import '../../theme/kn_theme.dart';
 import '../../widgets/careers_bottom_sheet.dart';
 import '../../widgets/invite_bottom_sheet.dart';
+import '../webview/kn_webview_screen.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -55,14 +56,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     await prefs.setBool(key, value);
   }
 
-  Future<void> _openUrl(String url) async {
+  Future<void> _openUrl(String url, {String title = ''}) async {
     final uri = Uri.parse(url);
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not open link')),
-        );
-      }
+    // Play Store, WhatsApp, mailto, tel → leave the app (system handles them).
+    // All web pages open in the in-app browser.
+    if (uri.scheme == 'mailto' ||
+        uri.scheme == 'tel' ||
+        uri.host.contains('wa.me') ||
+        uri.host.contains('play.google.com')) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      KnWebViewScreen.push(context, url, title: title);
     }
   }
 
@@ -295,15 +299,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             _NavTile(
               icon: Icons.privacy_tip_outlined,
               label: 'Privacy Policy',
-              onTap: () =>
-                  _openUrl('https://kandanews.africa/privacy-policy'),
+              onTap: () => _openUrl(
+                'https://kandanews.africa/privacy-policy',
+                title: 'Privacy Policy',
+              ),
             ),
             const Divider(height: 1, indent: 16),
             _NavTile(
               icon: Icons.description_outlined,
               label: 'Terms of Service',
-              onTap: () =>
-                  _openUrl('https://kandanews.africa/terms'),
+              onTap: () => _openUrl(
+                'https://kandanews.africa/terms',
+                title: 'Terms of Service',
+              ),
             ),
           ]),
 

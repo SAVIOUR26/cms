@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../theme/kn_theme.dart';
+import '../webview/kn_webview_screen.dart';
 
 class AdvertiseEditorialScreen extends StatefulWidget {
   const AdvertiseEditorialScreen({super.key});
@@ -29,12 +30,13 @@ class _AdvertiseEditorialScreenState extends State<AdvertiseEditorialScreen>
 
   Future<void> _launch(String url) async {
     final uri = Uri.parse(url);
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not open link')),
-        );
-      }
+    // System protocols leave the app; all web content stays in-app.
+    if (uri.scheme == 'mailto' ||
+        uri.scheme == 'tel' ||
+        uri.host.contains('wa.me')) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      if (mounted) KnWebViewScreen.push(context, url);
     }
   }
 

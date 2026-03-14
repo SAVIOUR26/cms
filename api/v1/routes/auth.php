@@ -80,10 +80,11 @@ function auth_request_otp(): void {
  * A user is considered "new" if first_name is NULL (registration incomplete).
  */
 function auth_verify_otp(): void {
-    $input = json_input();
-    $country = $input['country'] ?? 'ug';
-    $phone = normalize_phone($input['phone'] ?? '', $country);
-    $code  = $input['code'] ?? '';
+    $input         = json_input();
+    $country       = $input['country'] ?? 'ug';
+    $phone         = normalize_phone($input['phone'] ?? '', $country);
+    $code          = $input['code'] ?? '';
+    $referralCode  = strtoupper(trim($input['referral_code'] ?? ''));
 
     if (!$phone || !$code) json_error('Phone and code are required');
 
@@ -119,6 +120,22 @@ function auth_verify_otp(): void {
             'role_detail' => null,
             'country'     => $country,
         ];
+
+        // Link referral if a valid code was provided
+        if ($referralCode) {
+            $stmt = $pdo->prepare("
+                SELECT user_id FROM referral_codes
+                WHERE code = ? AND user_id != ?
+            ");
+            $stmt->execute([$referralCode, $userId]);
+            $referrer = $stmt->fetch();
+            if ($referrer) {
+                $pdo->prepare("
+                    INSERT IGNORE INTO referrals (referrer_id, referred_user_id)
+                    VALUES (?, ?)
+                ")->execute([$referrer['user_id'], $userId]);
+            }
+        }
     }
 
     // Issue tokens

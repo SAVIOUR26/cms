@@ -825,6 +825,10 @@ function _section_active(string $section): string {
            class="nav-item">
             <i class="fas fa-coins"></i> Revenue
         </a>
+        <a href="<?php echo portal_url('referrals.php'); ?>"
+           class="nav-item<?php echo _nav_active('referrals.php'); ?>">
+            <i class="fas fa-share-alt"></i> Referrals
+        </a>
     </div>
 
     <!-- Advertising -->

@@ -40,6 +40,9 @@
  *
  *   GET  /events                 List published events
  *   GET  /events/{id}            Single event detail
+ *
+ *   GET  /referral/code          Get user's referral code + invite URL
+ *   GET  /referral/stats         Referral count and recent invitees
  */
 
 // ── Bootstrap ──
@@ -146,6 +149,11 @@ switch ($resource) {
     case 'events':
         require __DIR__ . '/routes/events.php';
         route_events($action, $method);
+        break;
+
+    case 'referral':
+        require __DIR__ . '/routes/referral.php';
+        route_referral($action, $method);
         break;
 
     case '':
